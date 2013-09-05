@@ -1,24 +1,22 @@
 package assignment1;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-public class PredatorRandom implements Predator
+public class PredatorRandom implements Agent
 {
 	@Override
-	public void move(Environment env)
+	public int getType()
 	{
-		List<Integer> availableMoves = new ArrayList<Integer>();
-		
-		availableMoves.add(Environment.AGENT_MOVE_STAY);
-		availableMoves.add(Environment.AGENT_MOVE_NORTH);
-		availableMoves.add(Environment.AGENT_MOVE_SOUTH);
-		availableMoves.add(Environment.AGENT_MOVE_EAST);
-		availableMoves.add(Environment.AGENT_MOVE_WEST);
-		
-		Collections.shuffle(availableMoves);
-		
-		env.movePredator(availableMoves.get(0));
+		return TYPE_PREDATOR;
+	}
+
+	@Override
+	public String getSymbol()
+	{
+		return "●";
+	}
+
+	@Override
+	public float pi(State env, int action)
+	{
+		return 0.2f;
 	}
 }

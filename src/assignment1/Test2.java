@@ -1,6 +1,6 @@
 package assignment1;
 
-public class Test
+public class Test2
 {
 	public static final int TEST_NUM_RUNS = 100000;
 	
@@ -10,31 +10,7 @@ public class Test
 		
 		for (int r = 0; r < TEST_NUM_RUNS; r++)
 		{
-			Prey prey = new Prey();
-			Predator predator = new PredatorRandom();
-			
-			Environment env = new EnvironmentSimple(0, 0, 5, 5);
-			
-			int turns = 0;
-			
-			while (true)
-			{
-				// Simulator.printEnvironment(env);
-				
-				prey.move(env);
-				predator.move(env);
-				
-				turns++;
-				
-				if (env.getPredatorX() == env.getPreyX() && env.getPredatorY() == env.getPreyY())
-				{
-					// System.out.println("The predator catched the prey in " + turns + " turns.");
-					
-					break;
-				}
-			}
-			
-			length[r] = turns;
+			length[r] = Simulator.runSimulation(0, false);
 		}
 		
 		long mean = 0;

@@ -2,36 +2,77 @@ package assignment1;
 
 public class Simulator
 {
-	public static void printEnvironment(Environment env)
+	public static int runSimulation(int wait, boolean show)
+	{
+		Agent prey     = new PreySimple();
+		Agent predator = new PredatorRandom();
+		
+		State env = new StateSimple(0, 0, 5, 5);
+		
+		int turns = 0;
+		
+		while (true)
+		{
+			if (show)
+			{
+				Simulator.printEnvironment(env, prey, predator);
+			}
+			
+			env.move(prey);
+			env.move(predator);
+			
+			turns++;
+			
+			if (env.isFinal())
+			{
+				return turns;
+			}
+			
+			if (wait > 0)
+			{
+				try
+				{
+					Thread.sleep(wait);
+				}
+				catch (InterruptedException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	public static void printEnvironment(State env, Agent prey, Agent predator)
 	{
 		System.out.print("┌");
 		
-		for (int i = 0; i < Environment.ENVIRONMENT_SIZE - 1; i++)
+		for (int i = 0; i < State.ENVIRONMENT_SIZE - 1; i++)
 		{
 			System.out.print("───┬");
 		}
 		
 		System.out.println("───┐");
 		
-		printEmptyLine(0, env);
+		printEmptyLine(0, env, prey, predator);
 		
-		for (int i = 1; i < Environment.ENVIRONMENT_SIZE; i++)
+		for (int i = 1; i < State.ENVIRONMENT_SIZE; i++)
 		{
 			System.out.print("├");
 			
-			for (int j = 0; j < Environment.ENVIRONMENT_SIZE - 1; j++)
+			for (int j = 0; j < State.ENVIRONMENT_SIZE - 1; j++)
 			{
 				System.out.print("───┼");
 			}
 			
 			System.out.println("───┤");
 			
-			printEmptyLine(i, env);
+			printEmptyLine(i, env, prey, predator);
 		}
 		
 		System.out.print("└");
 		
-		for (int i = 0; i < Environment.ENVIRONMENT_SIZE - 1; i++)
+		for (int i = 0; i < State.ENVIRONMENT_SIZE - 1; i++)
 		{
 			System.out.print("───┴");
 		}
@@ -39,19 +80,19 @@ public class Simulator
 		System.out.println("───┘");
 	}
 	
-	private static void printEmptyLine(int i, Environment env)
+	private static void printEmptyLine(int i, State env, Agent prey, Agent predator)
 	{
 		System.out.print("│");
 		
-		for (int j = 0; j < Environment.ENVIRONMENT_SIZE; j++)
+		for (int j = 0; j < State.ENVIRONMENT_SIZE; j++)
 		{
-			if (env.getPredatorX() == j && env.getPredatorY() == i)
+			if (env.getX(predator) == j && env.getY(predator) == i)
 			{
-				System.out.print(" " + Predator.PREDATOR_SYMBOL + " │");
+				System.out.print(" " + predator.getSymbol() + " │");
 			}
-			else if (env.getPreyX() == j && env.getPreyY() == i)
+			else if (env.getX(prey) == j && env.getY(prey) == i)
 			{
-				System.out.print(" " + Prey.PREY_SYMBOL + " │");
+				System.out.print(" " + prey.getSymbol() + " │");
 			}
 			else
 			{
