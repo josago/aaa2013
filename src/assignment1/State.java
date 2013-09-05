@@ -1,5 +1,7 @@
 package assignment1;
 
+import java.util.Iterator;
+
 public interface State
 {
 	public static final int ENVIRONMENT_SIZE = 11;
@@ -11,6 +13,8 @@ public interface State
 	public static final int AGENT_MOVE_WEST  = -2;
 	
 	public static final int[] AGENT_ACTIONS = {0, -1, 1, 2, -2};
+	
+	public Iterator<State> stateIterator();
 	
 	public boolean isFinal();
 	
