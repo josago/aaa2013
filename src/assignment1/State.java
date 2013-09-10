@@ -12,7 +12,7 @@ public interface State
 	public static final int AGENT_MOVE_EAST  = 2;
 	public static final int AGENT_MOVE_WEST  = -2;
 	
-	public static final int[] AGENT_ACTIONS = {0, -1, 1, 2, -2};
+	static final int[] AGENT_ACTIONS = {0, -1, 1, 2, -2};
 	
 	public Iterator<State> stateIterator();
 	

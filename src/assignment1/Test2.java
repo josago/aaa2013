@@ -7,10 +7,13 @@ public class Test2
 	public static void main(String[] args)
 	{
 		int[] length = new int[TEST_NUM_RUNS];
+	
+		Agent prey     = new PreySimple();
+		Agent predator = new PredatorRandom();
 		
 		for (int r = 0; r < TEST_NUM_RUNS; r++)
 		{
-			length[r] = Simulator.runSimulation(0, false);
+			length[r] = Simulator.runSimulation(prey, predator, 0, false);
 		}
 		
 		long mean = 0;

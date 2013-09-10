@@ -51,19 +51,19 @@ public class IterativePolicyEvaluation
 						State sPrime = (State) s2.clone();
 						sPrime.move(prey, actionPrey);
 						
-						float reward = 0;
-						
-						if (sPrime.isFinal())
-						{
-							reward = 10;
-						}
-						
 						if (!v.containsKey(sPrime))
 						{
 							v.put(sPrime, 0f);
 						}
 						
-						factor += probPrey * (reward + gamma * v.get(sPrime));
+						if (sPrime.isFinal())
+						{
+							factor += probPrey * 10;
+						}
+						else
+						{
+							factor += probPrey * gamma * v.get(sPrime);
+						}
 					}
 					
 					valueNew += probPredator * factor;
