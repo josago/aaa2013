@@ -5,7 +5,7 @@ import java.util.Iterator;
 
 public class StateSimple implements State
 {	
-	private final int[] x, y;
+	protected final int[] x, y;
 	
 	public StateSimple(int predatorX, int predatorY, int preyX, int preyY)
 	{
