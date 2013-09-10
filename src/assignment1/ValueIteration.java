@@ -126,7 +126,7 @@ public class ValueIteration
 					bestActions.add(actionPredator);
 				}
 			}
-			
+
 			pi.put(s, bestActions);
 		}
 	}

@@ -122,9 +122,11 @@ public class StateSimple implements State
 		{
 			sum += agent.pi(this, action);
 			
-			if (sum <= random)
+			if (sum >= random)
 			{
 				move(agent, action);
+				
+				break;
 			}
 		}
 	}

@@ -3,7 +3,7 @@ package assignment1;
 public class Test5
 {
 	public static final float THETA = 0.000000001f;
-	public static final float GAMMA = 0.8f;
+	public static final float GAMMA = 0.9f;
 	
 	public static void main(String[] args)
 	{
