@@ -14,7 +14,7 @@ public class Test5
 
 		Agent predator = vi.buildAgent();
 		
-		int turns = Simulator.runSimulation(prey, predator, 250, true);
+		int turns = Simulator.runSimulation(stateInitial, prey, predator, 250, true);
 		
 		System.out.println("The predator catched the prey in " + turns + " turns.");
 	}

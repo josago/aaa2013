@@ -32,7 +32,7 @@ public class AgentUtils
 			public float pi(State env, int action)
 			{
 				List<Integer> actions = pi.get(env);
-				
+
 				if (actions.contains(action))
 				{
 					return 1f / actions.size();

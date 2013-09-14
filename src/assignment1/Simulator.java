@@ -2,10 +2,8 @@ package assignment1;
 
 public class Simulator
 {
-	public static int runSimulation(Agent prey, Agent predator, int wait, boolean show)
+	public static int runSimulation(State env, Agent prey, Agent predator, int wait, boolean show)
 	{
-		State env = new StateSimple(0, 0, 5, 5);
-		
 		int turns = 0;
 		
 		while (true)

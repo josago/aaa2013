@@ -8,12 +8,14 @@ public class Test2
 	{
 		int[] length = new int[TEST_NUM_RUNS];
 	
+		StateSimple env = new StateSimple(0, 0, 5, 5);
+		
 		Agent prey     = new PreySimple();
 		Agent predator = new PredatorRandom();
 		
 		for (int r = 0; r < TEST_NUM_RUNS; r++)
 		{
-			length[r] = Simulator.runSimulation(prey, predator, 0, false);
+			length[r] = Simulator.runSimulation(env, prey, predator, 0, false);
 		}
 		
 		long mean = 0;
