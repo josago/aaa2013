@@ -2,13 +2,18 @@ package assignment1;
 
 import java.util.Iterator;
 
+/**
+ * This class implements a state space in which states are only encoded by the distance between prey and predator, and not by their coordinates.
+ * This greatly reduces the state space from 11^4 different states to only 11^2.
+ * @author josago
+ */
 public class StateReduced extends StateSimple
 {
 	private int distanceX, distanceY;
 	
 	public StateReduced(int predatorX, int predatorY, int preyX, int preyY)
 	{
-		super(predatorX, predatorY, preyX, preyY);
+		super(predatorX, predatorY, preyX, preyY); // The coordinates are internally preserved for a correct behaviour when printing the board.
 		
 		calculateDistances();
 	}

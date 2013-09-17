@@ -47,25 +47,32 @@ public class ValueIteration
 					State s2 = (State) s.clone();
 					s2.move(predator, actionPredator);
 					
-					for (int actionPrey: State.AGENT_ACTIONS)
+					if (s2.isFinal())
 					{
-						float probPrey = prey.pi(s2, actionPrey);
-						
-						State sPrime = (State) s2.clone();
-						sPrime.move(prey, actionPrey);
-						
-						if (!v.containsKey(sPrime))
+						factor = 10;
+					}
+					else
+					{
+						for (int actionPrey: State.AGENT_ACTIONS)
 						{
-							v.put(sPrime, 0f);
-						}
-						
-						if (sPrime.isFinal())
-						{
-							factor += probPrey * 10;
-						}
-						else
-						{
-							factor += probPrey * gamma * v.get(sPrime);
+							float probPrey = prey.pi(s2, actionPrey);
+							
+							State sPrime = (State) s2.clone();
+							sPrime.move(prey, actionPrey);
+							
+							if (!v.containsKey(sPrime))
+							{
+								v.put(sPrime, 0f);
+							}
+							
+							if (sPrime.isFinal())
+							{
+								factor += probPrey * 10;
+							}
+							else
+							{
+								factor += probPrey * gamma * v.get(sPrime);
+							}
 						}
 					}
 					
@@ -97,20 +104,27 @@ public class ValueIteration
 				State s2 = (State) s.clone();
 				s2.move(predator, actionPredator);
 				
-				for (int actionPrey: State.AGENT_ACTIONS)
+				if (s2.isFinal())
 				{
-					float probPrey = prey.pi(s2, actionPrey);
-					
-					State sPrime = (State) s2.clone();
-					sPrime.move(prey, actionPrey);
-					
-					if (sPrime.isFinal())
+					factor = 10;
+				}
+				else
+				{
+					for (int actionPrey: State.AGENT_ACTIONS)
 					{
-						factor += probPrey * 10;
-					}
-					else
-					{
-						factor += probPrey * gamma * v.get(sPrime);
+						float probPrey = prey.pi(s2, actionPrey);
+						
+						State sPrime = (State) s2.clone();
+						sPrime.move(prey, actionPrey);
+						
+						if (sPrime.isFinal())
+						{
+							factor += probPrey * 10;
+						}
+						else
+						{
+							factor += probPrey * gamma * v.get(sPrime);
+						}
 					}
 				}
 				

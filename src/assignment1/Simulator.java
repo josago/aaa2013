@@ -1,22 +1,43 @@
 package assignment1;
 
+/**
+ * This class runs and graphically displays simulations of the proposed world.
+ * Please note that you must configure your encoding to UTF-8 to correctly see the graphical output of this class.
+ * @author josago
+ * TODO: Change predator/prey movement behaviour!!!!
+ */
 public class Simulator
 {
+	/**
+	 * Runs a single simulation.
+	 * @param env Initial state.
+	 * @param prey The prey to use (which includes a policy for it).
+	 * @param predator The predator to use (which include a policy for it).
+	 * @param wait Time in milliseconds to wait between each simulation step. Set it to zero for the fastest simulation speed.
+	 * @param show True if the board must be graphically shown at each simulation step, false otherwise.
+	 * @return The number of steps the game lasted.
+	 */
 	public static int runSimulation(State env, Agent prey, Agent predator, int wait, boolean show)
 	{
 		int turns = 0;
 		
 		while (true)
 		{
+			turns++;
+			
 			if (show)
 			{
 				Simulator.printEnvironment(env, prey, predator);
 			}
 			
-			env.move(prey);
 			env.move(predator);
 			
-			turns++;
+			if (env.isFinal())
+			{
+				return turns;
+			}
+			
+			env.move(prey);
 			
 			if (env.isFinal())
 			{
@@ -38,6 +59,12 @@ public class Simulator
 		}
 	}
 	
+	/**
+	 * Graphically shows a state.
+	 * @param env The state to show.
+	 * @param prey The prey.
+	 * @param predator The predator.
+	 */
 	public static void printEnvironment(State env, Agent prey, Agent predator)
 	{
 		System.out.print("┌");

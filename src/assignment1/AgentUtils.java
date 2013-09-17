@@ -3,8 +3,17 @@ package assignment1;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * This class contains code to build an agent from a custom mapping from states to lists of actions that can be then taken.
+ * @author josago
+ */
 public class AgentUtils
 {
+	/**
+	 * Builds a custom predator.
+	 * @param pi A mapping from states to lists of actions that can be then taken.
+	 * @return The equivalent agent to the "pi" function. Available actions for each state will be given the same probability.
+	 */
 	public static Agent buildPredator(HashMap<State, List<Integer>> pi)
 	{
 		class PredatorCustom implements Agent

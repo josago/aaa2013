@@ -1,5 +1,9 @@
 package assignment1;
 
+/**
+ * This class implements a simple prey agent, as described in assignment 1.
+ * @author josago
+ */
 public class PreySimple implements Agent
 {
 	@Override
@@ -42,6 +46,12 @@ public class PreySimple implements Agent
 		}
 	}
 	
+	/**
+	 * Checks whether the given action is possible in the given state without colliding with the predator.
+	 * @param env A state.
+	 * @param action An action.
+	 * @return True if the prey can make the move, false otherwise.
+	 */
 	private boolean checkAction(State env, int action)
 	{
 		State temp = (State) env.clone();

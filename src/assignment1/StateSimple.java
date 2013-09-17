@@ -3,6 +3,10 @@ package assignment1;
 import java.util.Arrays;
 import java.util.Iterator;
 
+/**
+ * This class implements a simple state space in which states are encoded by the coordinates of both prey and predator.
+ * @author josago
+ */
 public class StateSimple implements State
 {	
 	protected final int[] x, y;
@@ -19,6 +23,11 @@ public class StateSimple implements State
 		y[Agent.TYPE_PREDATOR] = predatorY;
 	}
 	
+	/**
+	 * Fixes a coordinate so that it works correctly within the toroid-like world we are modelling.
+	 * @param c The coordinate to fix.
+	 * @return The fixed coordinate.
+	 */
 	public static int fixCoord(int c)
 	{
 		return (c + ENVIRONMENT_SIZE) % ENVIRONMENT_SIZE;
