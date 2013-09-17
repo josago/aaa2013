@@ -1,5 +1,18 @@
-package assignment1;
+package tests;
 
+import assignment1.Agent;
+import assignment1.IterativePolicyEvaluation;
+import assignment1.PredatorRandom;
+import assignment1.PreySimple;
+import assignment1.State;
+import assignment1.StateSimple;
+
+/**
+ * TEST 3 (Assignment 1.2)
+ * Tests the Iterative Policy Evaluation against the random predator's policy and then prints the state-value function for some states.
+ * The number of iterations performed by the algorithm is also displayed.
+ * @author josago
+ */
 public class Test3
 {
 	public static final float THETA = 0.000000001f;
