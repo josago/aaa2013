@@ -25,7 +25,7 @@ public class AgentUtils
 			@Override
 			public String getSymbol()
 			{
-				return "●";
+				return "â—�";
 			}
 
 			@Override
@@ -35,10 +35,15 @@ public class AgentUtils
 
 				if (actions.contains(action))
 				{
+					System.out.println("C");
+
 					return 1f / actions.size();
+					
 				}
 				else
 				{
+					System.out.println("N");
+
 					return 0;
 				}
 			}

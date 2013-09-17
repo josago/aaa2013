@@ -120,6 +120,7 @@ public class StateSimple implements State
 		
 		for (int action: AGENT_ACTIONS)
 		{
+			
 			sum += agent.pi(this, action);
 			
 			if (sum >= random)
