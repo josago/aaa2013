@@ -1,11 +1,11 @@
-package tests;
+package assignment1.tests;
 
 import assignment1.Agent;
 import assignment1.PreySimple;
 import assignment1.Simulator;
 import assignment1.State;
 import assignment1.StateReduced;
-import assignment1.ValueIteration;
+import assignment1.algorithms.ValueIteration;
 
 /**
  * This class tests that the reduced state space indeed works as expected by first calculating the optimal agent and then displaying its behaviour.

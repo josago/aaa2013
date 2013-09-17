@@ -1,14 +1,14 @@
-package tests;
+package assignment1.tests;
 
 import assignment1.Agent;
-import assignment1.IterativePolicyEvaluation;
-import assignment1.PolicyIteration;
 import assignment1.PredatorRandom;
 import assignment1.PreySimple;
 import assignment1.State;
 import assignment1.StateReduced;
 import assignment1.StateSimple;
-import assignment1.ValueIteration;
+import assignment1.algorithms.IterativePolicyEvaluation;
+import assignment1.algorithms.PolicyIteration;
+import assignment1.algorithms.ValueIteration;
 
 /**
  * TEST 7 (Assignment 1.5)

@@ -1,11 +1,11 @@
-package tests;
+package assignment1.tests;
 
 import assignment1.Agent;
 import assignment1.PreySimple;
 import assignment1.Simulator;
 import assignment1.State;
 import assignment1.StateSimple;
-import assignment1.ValueIteration;
+import assignment1.algorithms.ValueIteration;
 
 /**
  * TEST 5 (Assignment 1.4)

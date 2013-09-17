@@ -1,4 +1,4 @@
-package tests;
+package assignment1.tests;
 
 import assignment1.Agent;
 import assignment1.PredatorRandom;
