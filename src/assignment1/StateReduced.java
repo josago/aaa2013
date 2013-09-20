@@ -89,46 +89,46 @@ public class StateReduced extends StateSimple
 	
 	private void calculateDistances()
 	{
-		int distX1 = x[Agent.TYPE_PREY] - x[Agent.TYPE_PREDATOR];
-		int distX2;
+		int innerX = x[Agent.TYPE_PREY] - x[Agent.TYPE_PREDATOR];
+		int outterX;
 		
-		if (distX1 < 0)
+		if (innerX < 0)
 		{
-			distX2 = distX1 + ENVIRONMENT_SIZE;
+			outterX = innerX + ENVIRONMENT_SIZE;
 		}
 		else
 		{
-			distX2 = distX1 - ENVIRONMENT_SIZE;
+			outterX = innerX - ENVIRONMENT_SIZE;
 		}
 		
-		if (Math.abs(distX1) < Math.abs(distX2))
+		if (Math.abs(innerX) < Math.abs(outterX))
 		{
-			distanceX = distX1;
+			distanceX = innerX;
 		}
 		else
 		{
-			distanceX = distX2;
+			distanceX = outterX;
 		}
 		
-		int distY1 = y[Agent.TYPE_PREY] - y[Agent.TYPE_PREDATOR];
-		int distY2;
+		int innerY = y[Agent.TYPE_PREY] - y[Agent.TYPE_PREDATOR];
+		int outterY;
 		
-		if (distY1 < 0)
+		if (innerY < 0)
 		{
-			distY2 = distY1 + ENVIRONMENT_SIZE;
+			outterY = innerY + ENVIRONMENT_SIZE;
 		}
 		else
 		{
-			distY2 = distY1 - ENVIRONMENT_SIZE;
+			outterY = innerY - ENVIRONMENT_SIZE;
 		}
 		
-		if (Math.abs(distY1) < Math.abs(distY2))
+		if (Math.abs(innerY) < Math.abs(outterY))
 		{
-			distanceY = distY1;
+			distanceY = innerY;
 		}
 		else
 		{
-			distanceY = distY2;
+			distanceY = outterY;
 		}	
 	}
 	
