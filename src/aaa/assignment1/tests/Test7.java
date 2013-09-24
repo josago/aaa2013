@@ -1,14 +1,14 @@
-package assignment1.tests;
+package aaa.assignment1.tests;
 
-import assignment1.Agent;
-import assignment1.PredatorRandom;
-import assignment1.PreySimple;
-import assignment1.State;
-import assignment1.StateReduced;
-import assignment1.StateSimple;
-import assignment1.algorithms.IterativePolicyEvaluation;
-import assignment1.algorithms.PolicyIteration;
-import assignment1.algorithms.ValueIteration;
+import aaa.Agent;
+import aaa.PredatorRandom;
+import aaa.PreySimple;
+import aaa.State;
+import aaa.StateReduced;
+import aaa.StateSimple;
+import aaa.assignment1.algorithms.IterativePolicyEvaluation;
+import aaa.assignment1.algorithms.PolicyIteration;
+import aaa.assignment1.algorithms.ValueIteration;
 
 /**
  * TEST 7 (Assignment 1.5)

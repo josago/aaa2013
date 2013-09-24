@@ -1,4 +1,4 @@
-package assignment1;
+package aaa;
 
 /**
  * This class implements a simple prey agent, as described in assignment 1.

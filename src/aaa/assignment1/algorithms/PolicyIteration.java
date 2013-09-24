@@ -1,13 +1,13 @@
-package assignment1.algorithms;
+package aaa.assignment1.algorithms;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import assignment1.Agent;
-import assignment1.AgentUtils;
-import assignment1.State;
+import aaa.Agent;
+import aaa.AgentUtils;
+import aaa.State;
 
 /**
  * This class implements the Policy Iteration algorithm (assignment 1.3).

@@ -1,4 +1,4 @@
-package assignment1;
+package aaa;
 
 /**
  * This class runs and graphically displays simulations of the proposed world.

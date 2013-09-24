@@ -1,4 +1,4 @@
-package assignment1;
+package aaa;
 
 /**
  * This class implements a predator that always moves randomly.

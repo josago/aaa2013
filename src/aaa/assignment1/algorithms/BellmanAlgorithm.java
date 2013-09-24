@@ -1,11 +1,11 @@
-package assignment1.algorithms;
+package aaa.assignment1.algorithms;
 
 import java.util.HashMap;
 import java.util.List;
 
-import assignment1.Agent;
-import assignment1.PredatorRandom;
-import assignment1.State;
+import aaa.Agent;
+import aaa.PredatorRandom;
+import aaa.State;
 
 /**
  * This class contains the basic code shared by all Bellman-like algorithms implemented for assignment 1.

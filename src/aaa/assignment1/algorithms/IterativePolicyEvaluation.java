@@ -1,9 +1,9 @@
-package assignment1.algorithms;
+package aaa.assignment1.algorithms;
 
 import java.util.Iterator;
 
-import assignment1.Agent;
-import assignment1.State;
+import aaa.Agent;
+import aaa.State;
 
 /**
  * This class implements the Iterative Policy Evaluation algorithm (assignment 1.2).

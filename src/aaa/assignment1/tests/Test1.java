@@ -1,10 +1,10 @@
-package assignment1.tests;
+package aaa.assignment1.tests;
 
-import assignment1.Agent;
-import assignment1.PredatorRandom;
-import assignment1.PreySimple;
-import assignment1.Simulator;
-import assignment1.StateSimple;
+import aaa.Agent;
+import aaa.PredatorRandom;
+import aaa.PreySimple;
+import aaa.Simulator;
+import aaa.StateSimple;
 
 /**
  * TEST 1 (Assignment 1.1)

@@ -1,10 +1,11 @@
-package assignment1.tests;
+package aaa.assignment1.tests;
 
-import assignment1.Agent;
-import assignment1.PredatorRandom;
-import assignment1.PreySimple;
-import assignment1.Simulator;
-import assignment1.StateSimple;
+import aaa.Agent;
+import aaa.PredatorRandom;
+import aaa.PreySimple;
+import aaa.Simulator;
+import aaa.State;
+import aaa.StateSimple;
 
 /**
  * TEST 2 (Assignment 1.1)
@@ -20,8 +21,6 @@ public class Test2
 	{
 		int[] length = new int[TEST_NUM_RUNS];
 	
-		StateSimple env = new StateSimple(0, 0, 5, 5);
-		
 		Agent prey     = new PreySimple();
 		Agent predator = new PredatorRandom();
 		
@@ -29,6 +28,8 @@ public class Test2
 		
 		for (int r = 0; r < TEST_NUM_RUNS; r++)
 		{
+			StateSimple env = new StateSimple(0, 0, 5, 5);
+			
 			length[r] = Simulator.runSimulation(env, prey, predator, 0, false);
 		}
 		

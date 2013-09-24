@@ -1,4 +1,4 @@
-package assignment1;
+package aaa;
 
 /**
  * This interface contains the basic methods all agents (both predators and preys) must implement.

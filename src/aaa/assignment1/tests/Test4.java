@@ -1,11 +1,11 @@
-package assignment1.tests;
+package aaa.assignment1.tests;
 
-import assignment1.Agent;
-import assignment1.PredatorRandom;
-import assignment1.PreySimple;
-import assignment1.State;
-import assignment1.StateSimple;
-import assignment1.algorithms.PolicyIteration;
+import aaa.Agent;
+import aaa.PredatorRandom;
+import aaa.PreySimple;
+import aaa.State;
+import aaa.StateSimple;
+import aaa.assignment1.algorithms.PolicyIteration;
 
 /**
  * TEST 4 (Assignment 1.3)
