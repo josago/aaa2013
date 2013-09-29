@@ -29,30 +29,11 @@ public class QLearning
 			
 			while (!s.isFinal())
 			{
-				// Determine greedy action from Q:
+				// Determine greedy action(s) from Q:
 				
-				int actionGreedy = 0;
+				List<Integer> actionsGreedy = greedyActions(s);
 				
-				float maxQ = Float.MIN_VALUE;
-				
-				for (int action: State.AGENT_ACTIONS)
-				{
-					StateActionPair sa = new StateActionPair(s, action);
-					
-					if (!Q.containsKey(sa))
-					{
-						Q.put(sa, valueInitial);
-					}
-					
-					float thisQ = Q.get(sa);
-					
-					if (thisQ > maxQ)
-					{
-						actionGreedy = action;
-						
-						maxQ = thisQ;
-					}
-				}
+				int actionsOther = State.AGENT_ACTIONS.length - actionsGreedy.size();
 				
 				// Epsilon-greedy policy:
 				
@@ -60,15 +41,15 @@ public class QLearning
 				
 				float random = (float) Math.random();
 				
-				if (random < epsilon)
+				if (random < epsilon && actionsOther > 0)
 				{
 					float sum = 0;
 					
 					for (int actionOther: State.AGENT_ACTIONS)
 					{
-						if (actionOther != actionGreedy)
+						if (!actionsGreedy.contains(actionOther))
 						{
-							sum += epsilon / (State.AGENT_ACTIONS.length - 1);
+							sum += epsilon / actionsOther;
 							
 							if (sum > random)
 							{
@@ -79,8 +60,10 @@ public class QLearning
 				}
 				else
 				{
-					action = actionGreedy;
+					action = actionsGreedy.get(0);
 				}
+				
+				// int action = softmax(s, epsilon);
 				
 				// Q-value update:
 				
@@ -91,7 +74,7 @@ public class QLearning
 				sPrime.move(predator, action);
 				sPrime.move(prey);
 				
-				maxQ = Float.MIN_VALUE;
+				float maxQ = Float.MIN_VALUE;
 				
 				for (int a: State.AGENT_ACTIONS)
 				{
@@ -128,35 +111,76 @@ public class QLearning
 		{
 			State s = it.next();
 			
-			float maxQ = Float.MIN_VALUE;
-			
-			int actionGreedy = State.AGENT_MOVE_STAY;
-			
-			for (int action: State.AGENT_ACTIONS)
-			{
-				StateActionPair sa = new StateActionPair(s, action);
-				
-				if (!Q.containsKey(sa))
-				{
-					Q.put(sa, valueInitial);
-				}
-				
-				float thisQ = Q.get(new StateActionPair(s, action));
-				
-				if (thisQ > maxQ)
-				{
-					maxQ = thisQ;
-					
-					actionGreedy = action;
-				}
-			}
-			
-			List<Integer> l = new ArrayList<Integer>();
-			l.add(actionGreedy);
-			
-			pi.put(s, l);
+			pi.put(s, greedyActions(s));
 		}
 		
 		return AgentUtils.buildPredator(pi);
+	}
+	
+	private List<Integer> greedyActions(State s)
+	{
+		List<Integer> actions = new ArrayList<Integer>();
+		
+		float maxQ = Float.NEGATIVE_INFINITY;
+		
+		for (int action: State.AGENT_ACTIONS)
+		{
+			StateActionPair sa = new StateActionPair(s, action);
+			
+			if (!Q.containsKey(sa))
+			{
+				Q.put(sa, valueInitial);
+			}
+			
+			float thisQ = Q.get(sa);
+			
+			if (thisQ > maxQ)
+			{
+				actions.clear();
+				actions.add(action);
+				
+				maxQ = thisQ;
+			}
+			if (thisQ == maxQ)
+			{
+				actions.add(action);
+			}
+		}
+		
+		Collections.shuffle(actions);
+		
+		return actions;
+	}
+	
+	private int softmax(State s, float tau)
+	{
+		float total = 0;
+		
+		HashMap<Integer, Float> probs = new HashMap<Integer, Float>();
+		
+		for (int a: State.AGENT_ACTIONS)
+		{
+			float prob = (float) Math.exp(Q.get(new StateActionPair(s, a)) / tau);
+			
+			probs.put(a, prob);
+			
+			total += prob;
+		}
+		
+		float random = (float) Math.random() * total;
+		
+		float sum = 0;
+		
+		for (int a: State.AGENT_ACTIONS)
+		{
+			sum += probs.get(a);
+			
+			if (sum >= random)
+			{
+				return a;
+			}
+		}
+		
+		return State.AGENT_MOVE_STAY;
 	}
 }
