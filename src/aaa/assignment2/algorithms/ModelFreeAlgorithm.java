@@ -1,60 +1,18 @@
-package aaa.assignment2;
+package aaa.assignment2.algorithms;
 
 import java.util.*;
 
 import aaa.*;
+import aaa.assignment2.StateActionPair;
 
-public class Sarsa
+public abstract class ModelFreeAlgorithm
 {
 	public static final int NUM_EPISODES = 10000;
 	
-	private final HashMap<StateActionPair, Float> Q;
+	protected final HashMap<StateActionPair, Float> Q = new HashMap<StateActionPair, Float>();
 	
-	private final float valueInitial;
-	private final State env;
-	
-	public Sarsa(State env, float alpha, float gamma, float epsilon, float valueInitial)
-	{
-		Agent prey     = new PreySimple();
-		Agent predator = new PredatorRandom();
-	
-		this.valueInitial = valueInitial;
-		this.env = env;
-		
-		Q = new HashMap<StateActionPair, Float>();
-		
-		for (int i = 0; i < NUM_EPISODES; i++)
-		{
-			State s = (State) env.clone();
-			
-			int action = epsilonGreedy(s, epsilon);
-			
-			while (!s.isFinal())
-			{
-				State sPrime = (State) s.clone();
-				
-				sPrime.move(predator, action);
-				sPrime.move(prey);
-				
-				int actionPrime = epsilonGreedy(sPrime, epsilon);
-				
-				// Q-value update:
-				
-				StateActionPair sa      = new StateActionPair(s,      action);
-				StateActionPair saPrime = new StateActionPair(sPrime, actionPrime);
-				
-				float r = s.isFinal() ? 10 : 0;
-				
-				float oldQ = Q.get(sa);
-				float newQ = oldQ + alpha * (r + gamma * Q.get(saPrime) - oldQ);
-				
-				Q.put(sa, newQ);
-				
-				s      = sPrime;
-				action = actionPrime;
-			}
-		}
-	}
+	protected float valueInitial;
+	protected State env;
 	
 	public Agent buildAgent()
 	{
@@ -72,7 +30,7 @@ public class Sarsa
 		return AgentUtils.buildPredator(pi);
 	}
 	
-	private List<Integer> greedyActions(State s)
+	protected List<Integer> greedyActions(State s)
 	{
 		List<Integer> actions = new ArrayList<Integer>();
 		
@@ -107,7 +65,7 @@ public class Sarsa
 		return actions;
 	}
 	
-	private int epsilonGreedy(State s, float epsilon)
+	protected int epsilonGreedy(State s, float epsilon)
 	{
 		// Determine greedy action(s) from Q:
 		
@@ -139,7 +97,7 @@ public class Sarsa
 		return State.AGENT_MOVE_STAY;
 	}
 	
-	private int softmax(State s, float tau)
+	protected int softmax(State s, float tau)
 	{
 		float total = 0;
 		

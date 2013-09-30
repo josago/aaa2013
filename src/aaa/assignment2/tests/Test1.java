@@ -1,7 +1,7 @@
 package aaa.assignment2.tests;
 
 import aaa.*;
-import aaa.assignment2.QLearning;
+import aaa.assignment2.algorithms.QLearning;
 
 public class Test1
 {

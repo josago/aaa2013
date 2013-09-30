@@ -1,9 +1,9 @@
 package aaa.assignment2.tests;
 
 import aaa.*;
-import aaa.assignment2.algorithms.Sarsa;
+import aaa.assignment2.algorithms.MonteCarloOnPolicy;
 
-public class Test3
+public class Test4
 {
 	public static final int TEST_NUM_RUNS = 1000;
 	
@@ -12,12 +12,10 @@ public class Test3
 		Agent prey = new PreySimple();
 		State env  = new StateSimple(0, 0, 5, 5);
 		
-		for (float ALPHA = 0.1f; ALPHA <= 1.0; ALPHA += 0.1)
-		{
 			for (float GAMMA = 0; GAMMA < 1.0; GAMMA += 0.1)
 			{
-				Sarsa s = new Sarsa(env, ALPHA, GAMMA, 0.1f, 15);
-				Agent predator = s.buildAgent();
+				MonteCarloOnPolicy mc = new MonteCarloOnPolicy(env, GAMMA, 0.1f, 15);
+				Agent predator = mc.buildAgent();
 				
 				int[] length = new int[TEST_NUM_RUNS];
 
@@ -43,6 +41,5 @@ public class Test3
 			}
 			
 			System.out.println("\\\\");
-		}
 	}
 }
