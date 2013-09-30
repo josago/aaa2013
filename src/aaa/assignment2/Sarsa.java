@@ -4,7 +4,7 @@ import java.util.*;
 
 import aaa.*;
 
-public class QLearning
+public class Sarsa
 {
 	public static final int NUM_EPISODES = 10000;
 	
@@ -13,7 +13,7 @@ public class QLearning
 	private final float valueInitial;
 	private final State env;
 	
-	public QLearning(State env, float alpha, float gamma, float epsilon, float valueInitial)
+	public Sarsa(State env, float alpha, float gamma, float epsilon, float valueInitial)
 	{
 		Agent prey     = new PreySimple();
 		Agent predator = new PredatorRandom();
@@ -27,71 +27,31 @@ public class QLearning
 		{
 			State s = (State) env.clone();
 			
+			int action = epsilonGreedy(s, epsilon);
+			
 			while (!s.isFinal())
 			{
-				// Determine greedy action(s) from Q:
-				
-				List<Integer> actionsGreedy = greedyActions(s);
-				
-				// Epsilon-greedy policy:
-				
-				int action = 0;
-				
-				float random = (float) Math.random();
-				
-				if (random < epsilon)
-				{
-					float sum = 0;
-					
-					for (int actionOther: State.AGENT_ACTIONS)
-					{
-						sum += epsilon / State.AGENT_ACTIONS.length;
-							
-						if (sum > random)
-						{
-							action = actionOther;
-						}
-					}
-				}
-				else
-				{
-					action = actionsGreedy.get(0);
-				}
-				
-				// int action = softmax(s, epsilon);
-				
-				// Q-value update:
-				
-				StateActionPair sa = new StateActionPair(s, action);
-				
 				State sPrime = (State) s.clone();
 				
 				sPrime.move(predator, action);
 				sPrime.move(prey);
 				
-				float maxQ = Float.MIN_VALUE;
+				int actionPrime = epsilonGreedy(sPrime, epsilon);
 				
-				for (int a: State.AGENT_ACTIONS)
-				{
-					StateActionPair sa2 = new StateActionPair(sPrime, a);
-					
-					if (!Q.containsKey(sa2))
-					{
-						Q.put(sa2, valueInitial);
-					
-					}
-					
-					maxQ = Math.max(Q.get(sa2), maxQ);
-				}
+				// Q-value update:
+				
+				StateActionPair sa      = new StateActionPair(s,      action);
+				StateActionPair saPrime = new StateActionPair(sPrime, actionPrime);
 				
 				float r = s.isFinal() ? 10 : 0;
 				
 				float oldQ = Q.get(sa);
-				float newQ = oldQ + alpha * (r + gamma * maxQ - oldQ);
+				float newQ = oldQ + alpha * (r + gamma * Q.get(saPrime) - oldQ);
 				
 				Q.put(sa, newQ);
 				
-				s = sPrime;
+				s      = sPrime;
+				action = actionPrime;
 			}
 		}
 	}
@@ -145,6 +105,38 @@ public class QLearning
 		Collections.shuffle(actions);
 		
 		return actions;
+	}
+	
+	private int epsilonGreedy(State s, float epsilon)
+	{
+		// Determine greedy action(s) from Q:
+		
+		List<Integer> actionsGreedy = greedyActions(s);
+		
+		// Epsilon-greedy policy:
+		
+		float random = (float) Math.random();
+		
+		if (random < epsilon)
+		{
+			float sum = 0;
+			
+			for (int actionOther: State.AGENT_ACTIONS)
+			{
+				sum += epsilon / State.AGENT_ACTIONS.length;
+					
+				if (sum > random)
+				{
+					return actionOther;
+				}
+			}
+		}
+		else
+		{
+			return actionsGreedy.get(0);
+		}
+		
+		return State.AGENT_MOVE_STAY;
 	}
 	
 	private int softmax(State s, float tau)

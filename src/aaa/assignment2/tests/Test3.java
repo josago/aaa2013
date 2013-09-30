@@ -1,9 +1,9 @@
 package aaa.assignment2.tests;
 
 import aaa.*;
-import aaa.assignment2.QLearning;
+import aaa.assignment2.Sarsa;
 
-public class Test2
+public class Test3
 {
 	public static final int TEST_NUM_RUNS = 1000;
 	
@@ -12,15 +12,12 @@ public class Test2
 		Agent prey = new PreySimple();
 		State env  = new StateSimple(0, 0, 5, 5);
 		
-		float ALPHA = 0.8f;
-		float GAMMA = 0.9f;
-		
-		for (float epsilon = 0; epsilon <= 1.0; epsilon += 0.1)
+		for (float ALPHA = 0.1f; ALPHA <= 1.0; ALPHA += 0.1)
 		{
-			for (float valueInitial = 30; valueInitial >= -15; valueInitial -= 5)
+			for (float GAMMA = 0; GAMMA < 1.0; GAMMA += 0.1)
 			{
-				QLearning q = new QLearning(env, ALPHA, GAMMA, epsilon, valueInitial);
-				Agent predator = q.buildAgent();
+				Sarsa s = new Sarsa(env, ALPHA, GAMMA, 0.1f, 15);
+				Agent predator = s.buildAgent();
 				
 				int[] length = new int[TEST_NUM_RUNS];
 
