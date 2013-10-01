@@ -59,13 +59,13 @@ public class MonteCarloOnPolicy extends ModelFreeAlgorithm
 				
 				float returnThis = returnsTemp.get(sa);
 				
-				if (!super.Q.containsKey(sa))
+				if (!Q.containsKey(sa))
 				{
-					super.Q.put(sa, super.valueInitial);
+					Q.put(sa, valueInitial);
 				}
 				
-				float returnAverage = (super.Q.get(sa) * countPrev + returnThis) / (countPrev + 1);
-				super.Q.put(sa, returnAverage);
+				float returnAverage = (Q.get(sa) * countPrev + returnThis) / (countPrev + 1);
+				Q.put(sa, returnAverage);
 			}
 		}
 	}
