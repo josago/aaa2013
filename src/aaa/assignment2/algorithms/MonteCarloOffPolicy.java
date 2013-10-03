@@ -40,7 +40,9 @@ public class MonteCarloOffPolicy extends ModelFreeAlgorithm
 			{
 				List<Integer> greedyActions = greedyActions(stateActions.get(t).state);
 				
-				if (!greedyActions.contains(stateActions.get(t).action))
+				
+			   
+				if (greedyActions.get(0) != stateActions.get(t).action)
 				{
 					tau = t;
 				}
@@ -48,29 +50,37 @@ public class MonteCarloOffPolicy extends ModelFreeAlgorithm
 			
 			HashMap<StateActionPair, Float> w = new HashMap<StateActionPair, Float>();
 			
+	
+			
 			for (int t = tau; t < stateActions.size(); t++)
 			{
+				
+				int T = stateActions.size() - 1;
 				StateActionPair sa = stateActions.get(t);
 				
 				if (!w.containsKey(sa))
 				{
-					int T = stateActions.size() - 1;
+					
 					int times = Math.max((T - 1) - (t + 1) + 1, 0);
 					
 					w.put(sa, (float) Math.pow(State.AGENT_ACTIONS.length, times));
 					
-					float returnThis = (float) (10 * Math.pow(gamma, T - t));
 					
-					if (!N.containsKey(sa))
-					{
-						N.put(sa, 0f);
-						D.put(sa, 0f);
-					}
-					
-					N.put(sa, N.get(sa) + w.get(sa) * returnThis);
-					D.put(sa, D.get(sa) + w.get(sa));
-					Q.put(sa, N.get(sa) / D.get(sa));
 				}
+				
+				float returnThis = (float) (10 * Math.pow(gamma, T - t));
+				
+				if (!N.containsKey(sa))
+				{
+					N.put(sa, 0f);
+					D.put(sa, 0f);
+				}
+				
+				N.put(sa, N.get(sa) + w.get(sa) * returnThis);
+				D.put(sa, D.get(sa) + w.get(sa));
+				Q.put(sa, N.get(sa) / D.get(sa));
+				
+			
 			}
 		}
 	}
