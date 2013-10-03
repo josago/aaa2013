@@ -10,13 +10,13 @@ public class Test1
 	public static void main(String[] args)
 	{
 		Agent prey = new PreySimple();
-		State env  = new StateSimple(0, 0, 5, 5);
+		State env  = new StateReduced(0, 0, 5, 5);
 		
-		for (float ALPHA = 0.1f; ALPHA <= 1.0; ALPHA += 0.1)
+		for (float ALPHA = 0.1f; ALPHA <= 1.1; ALPHA += 0.1)
 		{
 			for (float GAMMA = 0; GAMMA < 1.0; GAMMA += 0.1)
 			{
-				QLearning q = new QLearning(env, ALPHA, GAMMA, 0.1f, 15);
+				QLearning q = new QLearning(env, ALPHA, GAMMA, 0.1f, 15, false);
 				Agent predator = q.buildAgent();
 				
 				int[] length = new int[TEST_NUM_RUNS];
@@ -39,10 +39,10 @@ public class Test1
 				
 				mean /= TEST_NUM_RUNS;
 				
-				System.out.print(mean + " & ");
+				System.out.print(mean + ", ");
 			}
 			
-			System.out.println("\\\\");
+			System.out.println("");
 		}
 	}
 }

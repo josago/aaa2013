@@ -9,7 +9,7 @@ public class Test5 {
 	public static void main(String[] args)
 	{
 		Agent prey = new PreySimple();
-		State env  = new StateSimple(0, 0, 5, 5);
+		State env  = new StateReduced(0, 0, 5, 5);
 		
 		for (float GAMMA = 0; GAMMA < 1.0; GAMMA += 0.1)
 		{

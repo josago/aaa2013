@@ -4,10 +4,11 @@ package aaa;
  * This class runs and graphically displays simulations of the proposed world.
  * Please note that you must configure your encoding to UTF-8 to correctly see the graphical output of this class.
  * @author josago
- * TODO: Change predator/prey movement behaviour!!!!
  */
 public class Simulator
 {
+	public static int TURNS_LIMIT = 1000;
+	
 	/**
 	 * Runs a single simulation.
 	 * @param env Initial state.
@@ -21,7 +22,7 @@ public class Simulator
 	{
 		int turns = 0;
 		
-		while (true)
+		while (turns < TURNS_LIMIT)
 		{
 			turns++;
 			
@@ -57,6 +58,8 @@ public class Simulator
 				}
 			}
 		}
+		
+		return Integer.MAX_VALUE;
 	}
 	
 	/**

@@ -10,7 +10,7 @@ public class Test2
 	public static void main(String[] args)
 	{
 		Agent prey = new PreySimple();
-		State env  = new StateSimple(0, 0, 5, 5);
+		State env  = new StateReduced(0, 0, 5, 5);
 		
 		float ALPHA = 0.8f;
 		float GAMMA = 0.9f;
@@ -19,7 +19,7 @@ public class Test2
 		{
 			for (float valueInitial = 30; valueInitial >= -15; valueInitial -= 5)
 			{
-				QLearning q = new QLearning(env, ALPHA, GAMMA, epsilon, valueInitial);
+				QLearning q = new QLearning(env, ALPHA, GAMMA, epsilon, valueInitial, false);
 				Agent predator = q.buildAgent();
 				
 				int[] length = new int[TEST_NUM_RUNS];

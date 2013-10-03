@@ -5,7 +5,7 @@ import aaa.assignment2.StateActionPair;
 
 public class QLearning extends ModelFreeAlgorithm
 {
-	public QLearning(State env, float alpha, float gamma, float epsilon, float valueInitial)
+	public QLearning(State env, float alpha, float gamma, float epsilon, float valueInitial, boolean wantPerformance)
 	{
 		Agent prey     = new PreySimple();
 		Agent predator = new PredatorRandom();
@@ -53,6 +53,11 @@ public class QLearning extends ModelFreeAlgorithm
 				Q.put(sa, newQ);
 				
 				s = sPrime;
+			}
+
+			if (wantPerformance && i % 10 == 0)
+			{
+				performanceAdd(i);
 			}
 		}
 	}

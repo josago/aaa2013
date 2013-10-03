@@ -7,12 +7,15 @@ import aaa.assignment2.StateActionPair;
 
 public abstract class ModelFreeAlgorithm
 {
-	public static final int NUM_EPISODES = 10000;
+	public static final int NUM_EPISODES  = 3000;
+	public static final int TEST_NUM_RUNS = 1000;
 	
 	protected final HashMap<StateActionPair, Float> Q = new HashMap<StateActionPair, Float>();
 	
 	protected float valueInitial;
 	protected State env;
+	
+	private static final HashMap<Integer, List<Integer>> performance = new HashMap<Integer, List<Integer>>();
 	
 	public Agent buildAgent()
 	{
@@ -127,5 +130,40 @@ public abstract class ModelFreeAlgorithm
 		}
 		
 		return State.AGENT_MOVE_STAY;
+	}
+	
+	protected void performanceAdd(int iterations)
+	{
+		if (!performance.containsKey(iterations))
+		{
+			performance.put(iterations, new ArrayList<Integer>());
+		}
+		
+		for (int r = 0; r < TEST_NUM_RUNS; r++)
+		{
+			performance.get(iterations).add(Simulator.runSimulation((State) env.clone(), new PreySimple(), buildAgent(), 0, false));
+		}
+	}
+	
+	public static void performanceClear()
+	{
+		performance.clear();
+	}
+	
+	public static void printPerformance()
+	{
+		for (int i = 0; i < NUM_EPISODES; i += 10)
+		{
+			long sum = 0;
+			
+			List<Integer> terms = performance.get(i);
+			
+			for (int term: terms)
+			{
+				sum += term;
+			}
+			
+			System.out.print("(" + i + ", " + (double) sum / terms.size() + ") ");
+		}
 	}
 }
