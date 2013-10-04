@@ -7,7 +7,7 @@ import aaa.assignment2.StateActionPair;
 
 public class MonteCarloOffPolicy extends ModelFreeAlgorithm
 {
-	public MonteCarloOffPolicy(State env, float gamma, float valueInitial)
+	public MonteCarloOffPolicy(State env, float gamma, float valueInitial, boolean wantPerformance)
 	{
 		super.valueInitial = valueInitial;
 		super.env = env;
@@ -81,6 +81,11 @@ public class MonteCarloOffPolicy extends ModelFreeAlgorithm
 				Q.put(sa, N.get(sa) / D.get(sa));
 				
 			
+			}
+			
+			if (wantPerformance && i % 10 == 0)
+			{
+				performanceAdd(i);
 			}
 		}
 	}
