@@ -140,16 +140,19 @@ public abstract class ModelFreeAlgorithm
 		return State.AGENT_MOVE_STAY;
 	}
 	
-	protected void performanceAdd(int iterations)
+	protected static void performanceAdd(int iterations, State env, Agent predator)
 	{
-		if (!performance.containsKey(iterations))
+		synchronized (performance)
 		{
-			performance.put(iterations, new ArrayList<Integer>());
-		}
-		
-		for (int r = 0; r < TEST_NUM_RUNS; r++)
-		{
-			performance.get(iterations).add(Simulator.runSimulation((State) env.clone(), new PreySimple(), buildAgent(), 0, false));
+			if (!performance.containsKey(iterations))
+			{
+				performance.put(iterations, new ArrayList<Integer>());
+			}
+			
+			for (int r = 0; r < TEST_NUM_RUNS; r++)
+			{
+				performance.get(iterations).add(Simulator.runSimulation((State) env.clone(), new PreySimple(), predator, 0, false));
+			}
 		}
 	}
 	

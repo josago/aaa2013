@@ -55,10 +55,10 @@ public class QLearning extends ModelFreeAlgorithm
 					maxQ = Math.max(Q.get(sa2), maxQ);
 				}
 				
-				float r = s.isFinal() ? 10 : 0;
+				float R = sPrime.isFinal() ? 10 : gamma * maxQ;
 				
 				float oldQ = Q.get(sa);
-				float newQ = oldQ + alpha * (r + gamma * maxQ - oldQ);
+				float newQ = oldQ + alpha * (R - oldQ);
 				
 				Q.put(sa, newQ);
 				
@@ -67,7 +67,7 @@ public class QLearning extends ModelFreeAlgorithm
 
 			if (wantPerformance && i % 10 == 0)
 			{
-				performanceAdd(i);
+				performanceAdd(i, env, buildAgent());
 			}
 		}
 	}

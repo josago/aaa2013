@@ -33,10 +33,10 @@ public class Sarsa extends ModelFreeAlgorithm
 				StateActionPair sa      = new StateActionPair(s,      action);
 				StateActionPair saPrime = new StateActionPair(sPrime, actionPrime);
 				
-				float r = s.isFinal() ? 10 : 0;
+				float R = sPrime.isFinal() ? 10 : gamma * Q.get(saPrime);
 				
 				float oldQ = Q.get(sa);
-				float newQ = oldQ + alpha * (r + gamma * Q.get(saPrime) - oldQ);
+				float newQ = oldQ + alpha * (R - oldQ);
 				
 				Q.put(sa, newQ);
 				

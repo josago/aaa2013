@@ -1,7 +1,7 @@
 package aaa.assignment2.tests;
 
 import aaa.*;
-import aaa.assignment2.algorithms.QLearning;
+import aaa.assignment2.algorithms.*;
 
 public class Test1
 {
@@ -9,40 +9,52 @@ public class Test1
 	
 	public static void main(String[] args)
 	{
-		Agent prey = new PreySimple();
-		State env  = new StateReduced(0, 0, 5, 5);
-		
-		for (float ALPHA = 0.1f; ALPHA <= 1.1; ALPHA += 0.1)
+		for (float ALPHA: new float[] {0.1f, 0.2f, 0.3f, 0.4f, 0.5f})
 		{
-			for (float GAMMA = 0; GAMMA < 1.0; GAMMA += 0.1)
+			for (float GAMMA: new float[] {0.1f, 0.3f, 0.5f, 0.7f, 0.9f})
 			{
-				QLearning q = new QLearning(env, ALPHA, GAMMA, 0.1f, 15, false, false);
-				Agent predator = q.buildAgent();
+				System.out.println("\n\\alpha = " + ALPHA + ", \\gamma = " + GAMMA);
 				
-				int[] length = new int[TEST_NUM_RUNS];
-
-				// Fast simulations (no waiting between game steps):
+				ModelFreeAlgorithm.performanceClear();
 				
-				for (int r = 0; r < TEST_NUM_RUNS; r++)
+				Thread[] t = new Thread[10];
+				
+				for (int i = 0; i < 10; i++)
 				{
-					length[r] = Simulator.runSimulation((State) env.clone(), prey, predator, 0, false);
+					t[i] = new runAlgorithm(ALPHA, GAMMA);
+					t[i].start();
 				}
 				
-				// Mean game length calculation:
-				
-				float mean = 0;
-				
-				for (int r = 0; r < TEST_NUM_RUNS; r++)
+				for (int i = 0; i < 10; i++)
 				{
-					mean += length[r];
+					try {
+						t[i].join();
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 				
-				mean /= TEST_NUM_RUNS;
-				
-				System.out.print(mean + ", ");
+				ModelFreeAlgorithm.printPerformance();
 			}
-			
-			System.out.println("");
 		}
+	}
+}
+
+class runAlgorithm extends Thread
+{
+	private aaa.State env = new StateReduced(0, 0, 5, 5);
+	
+	private final float ALPHA, GAMMA;
+	
+	public runAlgorithm(float ALPHA, float GAMMA)
+	{
+		this.ALPHA = ALPHA;
+		this.GAMMA = GAMMA;
+	}
+	
+	public void run()
+	{
+		new QLearning(env, this.ALPHA, this.GAMMA, 0.1f, 15, false, true);
 	}
 }

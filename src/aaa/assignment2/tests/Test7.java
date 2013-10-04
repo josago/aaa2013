@@ -10,38 +10,77 @@ public class Test7
 	
 	public static void main(String[] args)
 	{
-		State env = new StateReduced(0, 0, 5, 5);
-
-		/*for (float epsilon: new float[] {0f, 0.25f, 0.5f, 0.75f, 1f})
+		for (float epsilon: new float[] {0f, 0.25f, 0.5f, 0.75f, 1f})
 		{
 			System.out.println("\nepsilon-greedy " + epsilon + ":");
 					
 			ModelFreeAlgorithm.performanceClear();
-					
+			
+			Thread[] t = new Thread[10];
+			
 			for (int i = 0; i < 10; i++)
 			{
-				System.out.print(i + "...");
-				new QLearning(env, ALPHA, GAMMA, epsilon, 15, false, true);
+				t[i] = new runAlgorithm7(epsilon, false);
+				t[i].start();
 			}
-					
-			System.out.println("");
+			
+			for (int i = 0; i < 10; i++)
+			{
+				try {
+					t[i].join();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
 			ModelFreeAlgorithm.printPerformance();
-		}*/
+		}
 		
-		for (float tau: new float[] {0.1f, 0.2f, 0.3f, 0.4f, 1f})
+		for (float tau: new float[] {0.1f, 1f, 10f})
 		{
 			System.out.println("\nsoftmax " + tau + ":");
 					
 			ModelFreeAlgorithm.performanceClear();
-					
+			
+			Thread[] t = new Thread[10];
+			
 			for (int i = 0; i < 10; i++)
 			{
-				System.out.print(i + "...");
-				new QLearning(env, ALPHA, GAMMA, tau, 15, true, true);
+				t[i] = new runAlgorithm7(tau, true);
+				t[i].start();
 			}
-					
-			System.out.println("");
+			
+			for (int i = 0; i < 10; i++)
+			{
+				try {
+					t[i].join();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
 			ModelFreeAlgorithm.printPerformance();
 		}
+	}
+}
+
+class runAlgorithm7 extends Thread
+{
+	private aaa.State env = new StateReduced(0, 0, 5, 5);
+	
+	private final float param;
+	private final boolean useSoftmax;
+	
+	public runAlgorithm7(float param, boolean useSoftmax)
+	{
+		this.param = param;
+		this.useSoftmax = useSoftmax;
+	}
+	
+	public void run()
+	{
+		new QLearning(env, 0.1f, 0.1f, param, 15, useSoftmax, true);
 	}
 }
