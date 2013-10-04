@@ -7,7 +7,7 @@ import aaa.assignment2.StateActionPair;
 
 public class MonteCarloOnPolicy extends ModelFreeAlgorithm
 {
-	public MonteCarloOnPolicy(State env, float gamma, float epsilon, float valueInitial)
+	public MonteCarloOnPolicy(State env, float gamma, float epsilon, float valueInitial, boolean wantPerformance)
 	{
 		HashMap<StateActionPair, Integer> counts = new HashMap<StateActionPair, Integer>();
 		
@@ -66,6 +66,11 @@ public class MonteCarloOnPolicy extends ModelFreeAlgorithm
 				
 				float returnAverage = (Q.get(sa) * countPrev + returnThis) / (countPrev + 1);
 				Q.put(sa, returnAverage);
+			}
+			
+			if (wantPerformance && i % 10 == 0)
+			{
+				performanceAdd(i);
 			}
 		}
 	}

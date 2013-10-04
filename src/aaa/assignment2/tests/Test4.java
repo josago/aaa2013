@@ -14,7 +14,7 @@ public class Test4
 		
 			for (float GAMMA = 0; GAMMA < 1.0; GAMMA += 0.1)
 			{
-				MonteCarloOnPolicy mc = new MonteCarloOnPolicy(env, GAMMA, 0.1f, 15);
+				MonteCarloOnPolicy mc = new MonteCarloOnPolicy(env, GAMMA, 0.1f, 15, false);
 				Agent predator = mc.buildAgent();
 				
 				int[] length = new int[TEST_NUM_RUNS];
