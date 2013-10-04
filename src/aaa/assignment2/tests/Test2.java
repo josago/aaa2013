@@ -1,6 +1,7 @@
 package aaa.assignment2.tests;
 
 import aaa.*;
+import aaa.assignment2.algorithms.ModelFreeAlgorithm;
 import aaa.assignment2.algorithms.QLearning;
 
 public class Test2
@@ -9,43 +10,28 @@ public class Test2
 	
 	public static void main(String[] args)
 	{
-		Agent prey = new PreySimple();
 		State env  = new StateReduced(0, 0, 5, 5);
 		
 		float ALPHA = 0.8f;
 		float GAMMA = 0.9f;
 		
-		for (float epsilon = 0; epsilon <= 1.0; epsilon += 0.1)
+		for (float epsilon: new float[] {0f, 0.25f, 0.5f, 0.75f, 1f})
 		{
-			for (float valueInitial = 30; valueInitial >= -15; valueInitial -= 5)
+			for (float valueInitial: new float[] {30f, 15f, 0f, -15f})
 			{
-				QLearning q = new QLearning(env, ALPHA, GAMMA, epsilon, valueInitial, false);
-				Agent predator = q.buildAgent();
+				System.out.println("\n\\epsilon = " + epsilon + ", valueInitial = " + valueInitial);
 				
-				int[] length = new int[TEST_NUM_RUNS];
-
-				// Fast simulations (no waiting between game steps):
+				ModelFreeAlgorithm.performanceClear();
 				
-				for (int r = 0; r < TEST_NUM_RUNS; r++)
+				for (int i = 0; i < 10; i++)
 				{
-					length[r] = Simulator.runSimulation((State) env.clone(), prey, predator, 0, false);
+					System.out.print(i + "...");
+					new QLearning(env, ALPHA, GAMMA, epsilon, valueInitial, false, true);
 				}
 				
-				// Mean game length calculation:
-				
-				float mean = 0;
-				
-				for (int r = 0; r < TEST_NUM_RUNS; r++)
-				{
-					mean += length[r];
-				}
-				
-				mean /= TEST_NUM_RUNS;
-				
-				System.out.print(mean + " & ");
+				System.out.println("");
+				ModelFreeAlgorithm.printPerformance();
 			}
-			
-			System.out.println("\\\\");
 		}
 	}
 }

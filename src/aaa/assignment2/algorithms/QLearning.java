@@ -5,7 +5,7 @@ import aaa.assignment2.StateActionPair;
 
 public class QLearning extends ModelFreeAlgorithm
 {
-	public QLearning(State env, float alpha, float gamma, float epsilon, float valueInitial, boolean wantPerformance)
+	public QLearning(State env, float alpha, float gamma, float epsilon, float valueInitial, boolean useSoftmax, boolean wantPerformance)
 	{
 		Agent prey     = new PreySimple();
 		Agent predator = new PredatorRandom();
@@ -19,7 +19,17 @@ public class QLearning extends ModelFreeAlgorithm
 			
 			while (!s.isFinal())
 			{
-				int action = epsilonGreedy(s, epsilon);
+				int action;
+				
+				if (useSoftmax)
+				{
+					action = softmax(s, epsilon); // epsilon used as tau when useSoftmax is true.
+				}
+				else
+				{
+					action = epsilonGreedy(s, epsilon);
+				}
+				
 				
 				// Q-value update:
 				

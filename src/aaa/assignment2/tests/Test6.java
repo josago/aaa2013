@@ -21,7 +21,7 @@ public class Test6
 				for (int i = 0; i < 10; i++)
 				{
 					System.out.print(i + "...");
-					new QLearning(env, ALPHA, GAMMA, 0.1f, 15, true);
+					new QLearning(env, ALPHA, GAMMA, 0.1f, 15, false, true);
 				}
 				
 				System.out.println("");

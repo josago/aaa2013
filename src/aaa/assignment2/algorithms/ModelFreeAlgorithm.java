@@ -109,7 +109,14 @@ public abstract class ModelFreeAlgorithm
 		
 		for (int a: State.AGENT_ACTIONS)
 		{
-			float prob = (float) Math.exp(Q.get(new StateActionPair(s, a)) / tau);
+			StateActionPair sa = new StateActionPair(s, a);
+			
+			if (!Q.containsKey(sa))
+			{
+				Q.put(sa, valueInitial);
+			}
+			
+			float prob = (float) Math.exp(Q.get(sa) / tau);
 			
 			probs.put(a, prob);
 			

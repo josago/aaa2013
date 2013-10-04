@@ -16,7 +16,7 @@ public class Test1
 		{
 			for (float GAMMA = 0; GAMMA < 1.0; GAMMA += 0.1)
 			{
-				QLearning q = new QLearning(env, ALPHA, GAMMA, 0.1f, 15, false);
+				QLearning q = new QLearning(env, ALPHA, GAMMA, 0.1f, 15, false, false);
 				Agent predator = q.buildAgent();
 				
 				int[] length = new int[TEST_NUM_RUNS];
