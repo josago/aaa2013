@@ -42,24 +42,32 @@ public class AgentSparse implements Agent
 	{
 		StateActionPair sa = new StateActionPair(env, action);
 		
-		if (!Q.containsKey(sa))
-		{
-			Q.put(sa, valueInitial);
-		}
-		
 		int   optimalActions = 0;
-		float valueAction    = Q.get(sa);
+		float valueAction    = valueInitial;
+		
+		try
+		{
+			valueAction = Q.get(sa);
+		}
+		catch (NullPointerException ex)
+		{
+			
+		}
 		
 		for (int possibleAction: State.AGENT_ACTIONS)
 		{
 			sa = new StateActionPair(env, possibleAction);
-				
-			if (!Q.containsKey(sa))
-			{
-				Q.put(sa, valueInitial);
-			}
 			
-			float valuePossibleAction = Q.get(sa);
+			float valuePossibleAction = valueInitial;
+			
+			try
+			{
+				valuePossibleAction = Q.get(sa);
+			}
+			catch (NullPointerException ex)
+			{
+				
+			}
 				
 			if (valuePossibleAction > valueAction)
 			{

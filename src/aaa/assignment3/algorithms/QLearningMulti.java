@@ -9,7 +9,7 @@ import aaa.assignment3.StateMulti;
 
 public class QLearningMulti extends ModelFreeAlgorithm
 {
-	public static final int NUM_EPISODES = 100000;
+	public static final int NUM_EPISODES = 10000;
 	
 	private final HashMap<Agent, HashMap<StateActionPair, Float>> Q = new HashMap<Agent, HashMap<StateActionPair, Float>>();
 	
@@ -31,11 +31,16 @@ public class QLearningMulti extends ModelFreeAlgorithm
 		
 		for (int i = 0; i < NUM_EPISODES; i++)
 		{
+			if (i % 100 == 0)
+			{
+				System.out.println(i);
+			}
+			
 			StateMulti s = (StateMulti) env.clone();
 			
 			while (!s.isFinal())
 			{
-				StateMulti state = (StateMulti) s.clone();
+				StateMulti state = (StateMulti) s.clone(); // state -> State before movements
 				HashMap<Agent, Integer> actions = new HashMap<Agent, Integer>();
 				
 				for (Agent agent: Q.keySet())
@@ -48,14 +53,14 @@ public class QLearningMulti extends ModelFreeAlgorithm
 					
 					if (useSoftmax)
 					{
-						action = softmax(q, s, epsilon); // epsilon used as tau when useSoftmax is true.
+						action = softmax(q, state, epsilon); // epsilon used as tau when useSoftmax is true.
 					}
 					else
 					{
-						action = epsilonGreedy(q, s, epsilon);
+						action = epsilonGreedy(q, state, epsilon);
 					}
 					
-					s.move(agent, action);
+					s.move(agent, action); // s -> State after movements
 					actions.put(agent, action);
 				}
 					
@@ -65,7 +70,7 @@ public class QLearningMulti extends ModelFreeAlgorithm
 					
 					// Q-value update:
 					
-					StateActionPair sa = new StateActionPair(state, actions.get(agent)); // state -> State before movements
+					StateActionPair sa = new StateActionPair(state, actions.get(agent));
 					
 					if (!q.containsKey(sa))
 					{
@@ -76,12 +81,11 @@ public class QLearningMulti extends ModelFreeAlgorithm
 					
 					for (int a: State.AGENT_ACTIONS)
 					{
-						StateActionPair sa2 = new StateActionPair(s, a); // s -> State after movements
+						StateActionPair sa2 = new StateActionPair(s, a);
 						
 						if (!q.containsKey(sa2))
 						{
 							q.put(sa2, valueInitial);
-						
 						}
 						
 						maxQ = Math.max(q.get(sa2), maxQ);
