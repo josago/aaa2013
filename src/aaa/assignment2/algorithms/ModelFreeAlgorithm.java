@@ -35,6 +35,11 @@ public abstract class ModelFreeAlgorithm
 	
 	protected List<Integer> greedyActions(State s)
 	{
+		return greedyActions(this.Q, s);
+	}
+	
+	protected List<Integer> greedyActions(HashMap<StateActionPair, Float> Q, State s)
+	{
 		
 		List<Integer> actions = new ArrayList<Integer>();
 		
@@ -71,9 +76,14 @@ public abstract class ModelFreeAlgorithm
 	
 	protected int epsilonGreedy(State s, float epsilon)
 	{
+		return epsilonGreedy(this.Q, s, epsilon);
+	}
+	
+	protected int epsilonGreedy(HashMap<StateActionPair, Float> Q, State s, float epsilon)
+	{
 		// Determine greedy action(s) from Q:
 		
-		List<Integer> actionsGreedy = greedyActions(s);
+		List<Integer> actionsGreedy = greedyActions(Q, s);
 		
 		// Epsilon-greedy policy:
 		
@@ -102,6 +112,11 @@ public abstract class ModelFreeAlgorithm
 	}
 	
 	protected int softmax(State s, float tau)
+	{
+		return softmax(this.Q, s, tau);
+	}
+	
+	protected int softmax(HashMap<StateActionPair, Float> Q, State s, float tau)
 	{
 		float total = 0;
 		

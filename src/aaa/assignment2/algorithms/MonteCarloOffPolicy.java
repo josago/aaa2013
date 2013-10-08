@@ -85,7 +85,7 @@ public class MonteCarloOffPolicy extends ModelFreeAlgorithm
 			
 			if (wantPerformance && i % 10 == 0)
 			{
-				performanceAdd(i);
+				performanceAdd(i, env, buildAgent());
 			}
 		}
 	}
