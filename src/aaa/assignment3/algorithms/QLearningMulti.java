@@ -11,21 +11,23 @@ public class QLearningMulti extends ModelFreeAlgorithm
 {
 	public static final int NUM_EPISODES = 10000;
 	
+	private final List<Agent> predators;
 	private final HashMap<Agent, HashMap<StateActionPair, Float>> Q = new HashMap<Agent, HashMap<StateActionPair, Float>>();
 	
 	public QLearningMulti(StateMulti env, Agent prey, List<Agent> predators, float alpha, float gamma, float epsilon, float valueInitial, boolean useSoftmax, boolean wantPerformance)
 	{
 		// Initialization of variables:
 		
+		this.predators = predators;
+		
 		super.valueInitial = valueInitial;
 		super.env = env;
 		
-		Q.put(prey, new HashMap<StateActionPair, Float>());
+		List<Agent> allAgents = new ArrayList<Agent>(predators);
+		allAgents.add(prey);
 		
-		for (Agent predator: predators)
-		{
-			Q.put(predator, new HashMap<StateActionPair, Float>());
-		}
+		Q.put(prey, new HashMap<StateActionPair, Float>());
+		Q.put(predators.get(0), new HashMap<StateActionPair, Float>());
 		
 		// Q-Learning:
 		
@@ -43,9 +45,14 @@ public class QLearningMulti extends ModelFreeAlgorithm
 				StateMulti state = (StateMulti) s.clone(); // state -> State before movements
 				HashMap<Agent, Integer> actions = new HashMap<Agent, Integer>();
 				
-				for (Agent agent: Q.keySet())
+				for (Agent agent: allAgents)
 				{
 					HashMap<StateActionPair, Float> q = Q.get(agent);
+					
+					if (q == null)
+					{
+						q = Q.get(predators.get(0));
+					}
 					
 					// Action selection:
 					
@@ -64,9 +71,14 @@ public class QLearningMulti extends ModelFreeAlgorithm
 					actions.put(agent, action);
 				}
 					
-				for (Agent agent: Q.keySet())
+				for (Agent agent: allAgents)
 				{
 					HashMap<StateActionPair, Float> q = Q.get(agent);
+					
+					if (q == null)
+					{
+						q = Q.get(predators.get(0));
+					}
 					
 					// Q-value update:
 					
@@ -117,6 +129,13 @@ public class QLearningMulti extends ModelFreeAlgorithm
 	
 	public Agent buildAgent(Agent agent)
 	{
-		return new AgentSparse(agent.getType(), valueInitial, Q.get(agent));
+		HashMap<StateActionPair, Float> q = Q.get(agent);
+		
+		if (q == null)
+		{
+			q = Q.get(predators.get(0));
+		}
+		
+		return new AgentSparse(agent.getType(), valueInitial, q);
 	}
 }

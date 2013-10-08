@@ -40,7 +40,6 @@ public abstract class ModelFreeAlgorithm
 	
 	protected List<Integer> greedyActions(HashMap<StateActionPair, Float> Q, State s)
 	{
-		
 		List<Integer> actions = new ArrayList<Integer>();
 		
 		float maxQ = Float.NEGATIVE_INFINITY;
