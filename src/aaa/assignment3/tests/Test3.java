@@ -27,7 +27,7 @@ public class Test3
 			predators.add(new PredatorRandom());
 		}
 		
-		StateMulti     env = new StateMulti(prey, predators);
+		StateMulti     env = new StateMulti(prey, prey, predators);
 		QLearningMulti ql  = new QLearningMulti(env, prey, predators, ALPHA, GAMMA, EPSILON, VALUE_INITIAL, false, false);
 		
 		Agent preyNew = ql.buildAgent(prey);
@@ -46,7 +46,7 @@ public class Test3
 		
 		for (int r = 0; r < NUM_THREADS; r++)
 		{
-			env = new StateMulti(preyNew, predatorsNew);
+			env = new StateMulti(preyNew, preyNew, predatorsNew);
 			
 			SimulatorThread thread = new SimulatorThread(env, preyNew, predatorsNew, score);
 			

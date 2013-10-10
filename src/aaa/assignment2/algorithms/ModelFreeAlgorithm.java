@@ -46,7 +46,7 @@ public abstract class ModelFreeAlgorithm
 		
 		for (int action: State.AGENT_ACTIONS)
 		{
-			StateActionPair sa = new StateActionPair(s, action);
+			StateActionPair sa = new StateActionPair((State) s.clone(), action);
 			
 			if (!Q.containsKey(sa))
 			{
@@ -123,7 +123,7 @@ public abstract class ModelFreeAlgorithm
 		
 		for (int a: State.AGENT_ACTIONS)
 		{
-			StateActionPair sa = new StateActionPair(s, a);
+			StateActionPair sa = new StateActionPair((State) s.clone(), a);
 			
 			if (!Q.containsKey(sa))
 			{

@@ -11,23 +11,21 @@ public class QLearningMulti extends ModelFreeAlgorithm
 {
 	public static final int NUM_EPISODES = 10000;
 	
-	private final List<Agent> predators;
-	private final HashMap<Agent, HashMap<StateActionPair, Float>> Q = new HashMap<Agent, HashMap<StateActionPair, Float>>();
+	@SuppressWarnings("unchecked")
+	private final HashMap<StateActionPair, Float>[] Q = new HashMap[2];
 	
 	public QLearningMulti(StateMulti env, Agent prey, List<Agent> predators, float alpha, float gamma, float epsilon, float valueInitial, boolean useSoftmax, boolean wantPerformance)
 	{
 		// Initialization of variables:
 		
-		this.predators = predators;
+		Q[Agent.TYPE_PREDATOR] = new HashMap<StateActionPair, Float>();
+		Q[Agent.TYPE_PREY]     = new HashMap<StateActionPair, Float>();
 		
 		super.valueInitial = valueInitial;
 		super.env = env;
 		
 		List<Agent> allAgents = new ArrayList<Agent>(predators);
 		allAgents.add(prey);
-		
-		Q.put(prey, new HashMap<StateActionPair, Float>());
-		Q.put(predators.get(0), new HashMap<StateActionPair, Float>());
 		
 		// Q-Learning:
 		
@@ -47,12 +45,7 @@ public class QLearningMulti extends ModelFreeAlgorithm
 				
 				for (Agent agent: allAgents)
 				{
-					HashMap<StateActionPair, Float> q = Q.get(agent);
-					
-					if (q == null)
-					{
-						q = Q.get(predators.get(0));
-					}
+					state.changeViewPoint(agent);
 					
 					// Action selection:
 					
@@ -60,11 +53,11 @@ public class QLearningMulti extends ModelFreeAlgorithm
 					
 					if (useSoftmax)
 					{
-						action = softmax(q, state, epsilon); // epsilon used as tau when useSoftmax is true.
+						action = softmax(Q[agent.getType()], state, epsilon); // epsilon used as tau when useSoftmax is true.
 					}
 					else
 					{
-						action = epsilonGreedy(q, state, epsilon);
+						action = epsilonGreedy(Q[agent.getType()], state, epsilon);
 					}
 					
 					s.move(agent, action); // s -> State after movements
@@ -73,69 +66,50 @@ public class QLearningMulti extends ModelFreeAlgorithm
 					
 				for (Agent agent: allAgents)
 				{
-					HashMap<StateActionPair, Float> q = Q.get(agent);
-					
-					if (q == null)
-					{
-						q = Q.get(predators.get(0));
-					}
+					s.changeViewPoint(agent);
+					state.changeViewPoint(agent);
 					
 					// Q-value update:
 					
-					StateActionPair sa = new StateActionPair(state, actions.get(agent));
+					StateActionPair sa = new StateActionPair((StateMulti) state.clone(), actions.get(agent));
 					
-					if (!q.containsKey(sa))
+					if (!Q[agent.getType()].containsKey(sa))
 					{
-						q.put(sa, valueInitial);
+						Q[agent.getType()].put(sa, valueInitial);
 					}
 					
 					float maxQ = Float.MIN_VALUE;
 					
 					for (int a: State.AGENT_ACTIONS)
 					{
-						StateActionPair sa2 = new StateActionPair(s, a);
+						StateActionPair sa2 = new StateActionPair((StateMulti) s.clone(), a);
 						
-						if (!q.containsKey(sa2))
+						if (!Q[agent.getType()].containsKey(sa2))
 						{
-							q.put(sa2, valueInitial);
+							Q[agent.getType()].put(sa2, valueInitial);
 						}
 						
-						maxQ = Math.max(q.get(sa2), maxQ);
+						maxQ = Math.max(Q[agent.getType()].get(sa2), maxQ);
 					}
 					
 					float R = s.isFinal() ? s.getReward(agent) : gamma * maxQ;
 					
-					float oldQ = q.get(sa);
+					float oldQ = Q[agent.getType()].get(sa);
 					float newQ = oldQ + alpha * (R - oldQ);
-					
-					q.put(sa, newQ);
+					if (agent.getType() == agent.TYPE_PREDATOR) System.out.println(newQ);
+					Q[agent.getType()].put(sa, newQ);
 				}
 			}
 
 			if (wantPerformance && i % 10 == 0)
 			{
-				for (Agent agent: Q.keySet())
-				{
-					if (agent.getType() == Agent.TYPE_PREDATOR)
-					{
-						performanceAdd(i, env, buildAgent());
-						
-						break;
-					}
-				}
+				performanceAdd(i, env, buildAgent(predators.get(0)));
 			}
 		}
 	}
 	
 	public Agent buildAgent(Agent agent)
 	{
-		HashMap<StateActionPair, Float> q = Q.get(agent);
-		
-		if (q == null)
-		{
-			q = Q.get(predators.get(0));
-		}
-		
-		return new AgentSparse(agent.getType(), valueInitial, q);
+		return new AgentSparse(agent.getType(), valueInitial, Q[agent.getType()]);
 	}
 }

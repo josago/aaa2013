@@ -25,7 +25,7 @@ public class Test2
 			predators.add(new PredatorRandom());
 		}
 		
-		StateMulti     env = new StateMulti(prey, predators);
+		StateMulti     env = new StateMulti(prey, prey, predators);
 		QLearningMulti ql  = new QLearningMulti(env, prey, predators, ALPHA, GAMMA, EPSILON, VALUE_INITIAL, false, false);
 		
 		Agent preyNew = ql.buildAgent(prey);
@@ -36,7 +36,7 @@ public class Test2
 			predatorsNew.add(ql.buildAgent(predator));
 		}
 		
-		env = new StateMulti(preyNew, predatorsNew);
+		env = new StateMulti(preyNew, preyNew, predatorsNew);
 		int turns = SimulatorMulti.runSimulation(env, preyNew, predatorsNew, 250, true);
 		
 		System.out.println("The game finished in " + turns + " turns.");
