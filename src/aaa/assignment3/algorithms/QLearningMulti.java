@@ -7,10 +7,12 @@ import aaa.assignment2.StateActionPair;
 import aaa.assignment2.algorithms.ModelFreeAlgorithm;
 import aaa.assignment3.SimulatorMulti;
 import aaa.assignment3.StateMulti;
+import aaa.assignment3.tests.Test4;
 
 public class QLearningMulti extends ModelFreeAlgorithm
 {
-	public static final int NUM_EPISODES = 100000;
+	public static final int NUM_EPISODES  = 50000;
+	public static final int TEST_NUM_RUNS = 100;
 	
 	@SuppressWarnings("unchecked")
 	private final HashMap<StateActionPair, Float>[] Q = new HashMap[2];
@@ -34,11 +36,6 @@ public class QLearningMulti extends ModelFreeAlgorithm
 		
 		for (int i = 0; i < NUM_EPISODES; i++)
 		{
-			if (i % 100 == 0)
-			{
-				System.out.println(i);
-			}
-			
 			StateMulti s = (StateMulti) env.clone();
 			
 			while (!s.isFinal())
@@ -104,7 +101,7 @@ public class QLearningMulti extends ModelFreeAlgorithm
 				}
 			}
 
-			if (wantPerformance && i % 100 == 0)
+			if (wantPerformance && i % 200 == 0)
 			{
 				performanceAdd(i, prey, predators);
 			}
@@ -148,6 +145,23 @@ public class QLearningMulti extends ModelFreeAlgorithm
 				performance.get(iterations).add((float) (reward * Math.pow(0.9, turns - 1)));
 			}
 		}
+		
+		synchronized (performance)
+		{
+			List<Float> terms = performance.get(iterations);
+
+			if (terms.size() == TEST_NUM_RUNS * Test4.NUM_THREADS)
+			{
+				float sum = 0;
+				
+				for (float term: terms)
+				{
+					sum += term;
+				}
+				
+				System.out.print("(" + iterations + ", " + sum / terms.size() + ") ");
+			}
+		}
 	}
 	
 	public static void performanceClear()
@@ -157,7 +171,7 @@ public class QLearningMulti extends ModelFreeAlgorithm
 	
 	public static void printPerformance()
 	{
-		for (int i = 0; i < NUM_EPISODES; i += 100)
+		for (int i = 0; i < NUM_EPISODES; i += 200)
 		{
 			float sum = 0;
 			

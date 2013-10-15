@@ -8,8 +8,13 @@ import aaa.assignment3.algorithms.QLearningMulti;
 
 public class Test4
 {
-	public static final int NUM_PREDATORS   = 4;
+	public static final int NUM_PREDATORS   = 3;
 	public static final int NUM_THREADS     = 10;
+	
+	public static final float ALPHA         = 0.9f;
+	public static final float GAMMA         = 0.9f;
+	public static final float EPSILON       = 0.1f;
+	public static final float VALUE_INITIAL = 15;
 
 	public static void main(String[] args)
 	{
@@ -29,49 +34,13 @@ public class Test4
 		
 		QLearningMulti.performanceClear();
 		
-		Thread[] t = new Thread[NUM_THREADS];
-		
 		for (int i = 0; i < NUM_THREADS; i++)
 		{
-			t[i] = new QLearningMultiThread(env, prey, predators);
-			t[i].start();
-		}
-		
-		for (int i = 0; i < NUM_THREADS; i++)
-		{
-			try {
-				t[i].join();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			new QLearningMulti(env, prey, predators, ALPHA, GAMMA, EPSILON, VALUE_INITIAL, false, true);
+			
+			System.out.println(i + " iterations for " + NUM_PREDATORS + " predators...");
 		}
 		
 		QLearningMulti.printPerformance();
-	}
-}
-
-class QLearningMultiThread extends Thread
-{
-	public static final float ALPHA         = 0.9f;
-	public static final float GAMMA         = 0.9f;
-	public static final float EPSILON       = 0.1f;
-	public static final float VALUE_INITIAL = 15;
-	
-	private final StateMulti env;
-	
-	private final Agent prey;
-	private final List<Agent> predators;
-	
-	public QLearningMultiThread(StateMulti env, Agent prey, List<Agent> predators)
-	{
-		this.env       = env;
-		this.prey      = prey;
-		this.predators = predators;
-	}
-	
-	public void run()
-	{
-		new QLearningMulti(env, prey, predators, ALPHA, GAMMA, EPSILON, VALUE_INITIAL, false, true);
 	}
 }
