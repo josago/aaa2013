@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/Debian) (format=pdflatex 2013.8.2)  15 OCT 2013 11:49
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/Debian) (format=pdflatex 2013.8.2)  15 OCT 2013 17:05
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -775,23 +775,21 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <6> on input line 13.
 ! Package pgfplots Warning: the current plot has no coordinates (or all have be
 en filtered away)
-! Package pgfplots Warning: the current plot has no coordinates (or all have be
-en filtered away)
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 47.
+(Font)              <7> on input line 52.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 47.
+(Font)              <5> on input line 52.
 [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2] (./report3.aux) ) 
 Here is how much of TeX's memory you used:
- 17926 strings out of 495059
- 420287 string characters out of 3182031
- 588586 words of memory out of 3000000
- 20774 multiletter control sequences out of 15000+200000
- 7280 words of font info for 26 fonts, out of 3000000 for 9000
+ 18179 strings out of 495059
+ 426065 string characters out of 3182031
+ 608957 words of memory out of 3000000
+ 21027 multiletter control sequences out of 15000+200000
+ 7587 words of font info for 27 fonts, out of 3000000 for 9000
  14 hyphenation exceptions out of 8191
- 63i,17n,82p,4894b,1654s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 63i,17n,82p,4914b,1654s stack positions out of 5000i,500n,10000p,200000b,50000s
 </usr
 /share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share
 /texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texli
@@ -800,7 +798,7 @@ f-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/
 fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/t
 ype1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/pub
 lic/amsfonts/cm/cmsy10.pfb>
-Output written on report3.pdf (2 pages, 77886 bytes).
+Output written on report3.pdf (2 pages, 80319 bytes).
 PDF statistics:
  42 PDF objects out of 1000 (max. 8388607)
  30 compressed objects within 1 object stream

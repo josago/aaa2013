@@ -103,6 +103,7 @@ public class QLearningMulti extends ModelFreeAlgorithm
 
 			if (wantPerformance && i % 200 == 0)
 			{
+				// System.out.println(Q[Agent.TYPE_PREDATOR].size() + " vs. " + Q[Agent.TYPE_PREY].size());
 				performanceAdd(i, prey, predators);
 			}
 		}
@@ -150,17 +151,14 @@ public class QLearningMulti extends ModelFreeAlgorithm
 		{
 			List<Float> terms = performance.get(iterations);
 
-			if (terms.size() == TEST_NUM_RUNS * Test4.NUM_THREADS)
+			float sum = 0;
+				
+			for (float term: terms)
 			{
-				float sum = 0;
-				
-				for (float term: terms)
-				{
-					sum += term;
-				}
-				
-				System.out.print("(" + iterations + ", " + sum / terms.size() + ") ");
+				sum += term;
 			}
+				
+			System.out.print("(" + iterations + ", " + sum / terms.size() + ") ");
 		}
 	}
 	

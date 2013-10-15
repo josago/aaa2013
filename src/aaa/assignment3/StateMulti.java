@@ -11,11 +11,8 @@ public class StateMulti implements State
 	private final Agent prey;
 	private final List<Agent> predators;
 	
-	private HashMap<Agent, Integer> x;
-	private HashMap<Agent, Integer> y;
-	
-	private int[] xDist;
-	private int[] yDist;
+	private HashMap<Agent, Coordinate> positions;
+	private List<Coordinate> distances;
 	
 	public StateMulti(Agent me, Agent prey, List<Agent> predators)
 	{
@@ -23,29 +20,21 @@ public class StateMulti implements State
 		this.prey      = prey;
 		this.predators = predators;
 		
-		x = new HashMap<Agent, Integer>();
-		y = new HashMap<Agent, Integer>();
+		positions = new HashMap<Agent, Coordinate>();
+		distances = new ArrayList<Coordinate>();
 		
-		xDist = new int[predators.size()];
-		yDist = new int[predators.size()];
-		
-		x.put(prey, 5);
-		y.put(prey, 5);
+		positions.put(prey, new Coordinate(5, 5));
 		
 		switch (predators.size())
 		{
 			case 4:
-				x.put(predators.get(3), 0);
-				y.put(predators.get(3), 10);
+				positions.put(predators.get(3), new Coordinate(0, 10));
 			case 3:
-				x.put(predators.get(2), 10);
-				y.put(predators.get(2), 0);
+				positions.put(predators.get(2), new Coordinate(10, 0));
 			case 2:
-				x.put(predators.get(1), 10);
-				y.put(predators.get(1), 10);
+				positions.put(predators.get(1), new Coordinate(10, 10));
 			case 1:
-				x.put(predators.get(0), 0);
-				y.put(predators.get(0), 0);
+				positions.put(predators.get(0), new Coordinate(0, 0));
 		}
 		
 		calculateDistances();
@@ -67,13 +56,13 @@ public class StateMulti implements State
 	@Override
 	public int getX(Agent agent)
 	{
-		return x.get(agent);
+		return positions.get(agent).x;
 	}
 
 	@Override
 	public int getY(Agent agent)
 	{
-		return y.get(agent);
+		return positions.get(agent).y;
 	}
 
 	@Override
@@ -102,14 +91,20 @@ public class StateMulti implements State
 		
 		if (agent.getType() != Agent.TYPE_PREY || random > 0.2f) // Prey tripping behaviour.
 		{
+			int newX, newY;
+			
 			if (action % 2 == 0)
 			{
-				x.put(agent, StateSimple.fixCoord(x.get(agent) + action / 2));
+				newX = StateSimple.fixCoord(positions.get(agent).x + action / 2);
+				newY = positions.get(agent).y;
 			}
 			else
 			{
-				y.put(agent, StateSimple.fixCoord(y.get(agent) + action));
+				newX = positions.get(agent).x;
+				newY = StateSimple.fixCoord(positions.get(agent).y + action);
 			}
+			
+			positions.put(agent, new Coordinate(newX, newY));
 		}
 		
 		calculateDistances();
@@ -184,27 +179,40 @@ public class StateMulti implements State
 		return false;
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void calculateDistances()
 	{
-		int index = 0;
+		// Initial calculation of distances:
 		
-		if (me.getType() == Agent.TYPE_PREDATOR)
-		{
-			calculateDistance(prey, index++);
-		}
+		List<Coordinate> distances = new ArrayList<Coordinate>();
 		
 		for (Agent predator: predators)
 		{
 			if (predator != me)
 			{
-				calculateDistance(predator, index++);
+				distances.add(calculateDistance(predator));
 			}
 		}
+		
+		// Ordering of the predators by distance:
+		
+		Collections.sort(distances);
+		
+		// We finally add the prey:
+		
+		if (me.getType() == Agent.TYPE_PREDATOR)
+		{
+			distances.add(0, calculateDistance(prey));
+		}
+		
+		this.distances = distances;
 	}
 	
-	private void calculateDistance(Agent agent, int index)
+	private Coordinate calculateDistance(Agent agent)
 	{
-		int innerX = x.get(me) - x.get(agent);
+		int distX, distY;
+		
+		int innerX = positions.get(me).x - positions.get(agent).x;
 		int outterX;
 		
 		if (innerX < 0)
@@ -218,14 +226,14 @@ public class StateMulti implements State
 		
 		if (Math.abs(innerX) < Math.abs(outterX))
 		{
-			xDist[index] = innerX;
+			distX = innerX;
 		}
 		else
 		{
-			xDist[index] = outterX;
+			distX = outterX;
 		}
 		
-		int innerY = y.get(me) - y.get(agent);
+		int innerY = positions.get(me).y - positions.get(agent).y;
 		int outterY;
 		
 		if (innerY < 0)
@@ -239,30 +247,24 @@ public class StateMulti implements State
 		
 		if (Math.abs(innerY) < Math.abs(outterY))
 		{
-			yDist[index] = innerY;
+			distY = innerY;
 		}
 		else
 		{
-			yDist[index] = outterY;
+			distY = outterY;
 		}
+		
+		return new Coordinate(distX, distY);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public Object clone()
 	{
 		StateMulti clone = new StateMulti(me, prey, predators);
-		
-		clone.x = new HashMap<Agent, Integer>();
-		clone.y = new HashMap<Agent, Integer>();
-		
-		clone.x.put(prey, this.x.get(prey));
-		clone.y.put(prey, this.y.get(prey));
-		
-		for (Agent predator: predators)
-		{
-			clone.x.put(predator, this.x.get(predator));
-			clone.y.put(predator, this.y.get(predator));
-		}
+
+		clone.positions = (HashMap<Agent, Coordinate>) this.positions.clone();
+		clone.distances = new ArrayList<Coordinate>();
 		
 		clone.calculateDistances();
 		
@@ -273,18 +275,14 @@ public class StateMulti implements State
 	public int hashCode()
 	{
 		final int[] primes = new int[] {19, 23, 29, 31};
-		final int   prime  = primes[xDist.length - 1];
+		final int   prime  = primes[distances.size() - 1];
 		
 		int result = 1;
 		
-		for (int v: xDist)
+		for (Coordinate c: distances)
 		{
-			result = prime * result + v;
-		}
-		
-		for (int v: yDist)
-		{
-			result = prime * result + v;
+			result = prime * result + c.x;
+			result = prime * result + c.y;
 		}
 		
 		return result;
@@ -295,11 +293,11 @@ public class StateMulti implements State
 	{
 		StateMulti other = (StateMulti) obj;
 		
-		if (this.xDist.length == other.xDist.length)
+		if (this.distances.size() == other.distances.size())
 		{
-			for (int i = 0; i < xDist.length; i++)
+			for (int i = 0; i < distances.size(); i++)
 			{
-				if (this.xDist[i] != other.xDist[i] || this.yDist[i] != other.yDist[i])
+				if (!this.distances.get(i).equals(other.distances.get(i)))
 				{
 					return false;
 				}
