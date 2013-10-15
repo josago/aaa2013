@@ -68,7 +68,7 @@ public class AgentSparse implements Agent
 			{
 				
 			}
-				
+			
 			if (valuePossibleAction > valueAction)
 			{
 				return 0;

@@ -8,12 +8,12 @@ import aaa.assignment3.algorithms.QLearningMulti;
 
 public class Test2 
 {
-	public static final int NUM_PREDATORS = 1;
+	public static final int NUM_PREDATORS = 3;
 	
 	public static final float ALPHA         = 0.9f;
 	public static final float GAMMA         = 0.9f;
-	public static final float EPSILON       = 1.0f;
-	public static final float VALUE_INITIAL = 0;
+	public static final float EPSILON       = 0.1f;
+	public static final float VALUE_INITIAL = 15;
 	
 	public static void main(String[] args)
 	{

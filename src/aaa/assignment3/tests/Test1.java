@@ -19,7 +19,7 @@ public class Test1
 			predators.add(new PredatorRandom());
 		}
 		
-		State env = new StateMulti(prey, prey, predators);
+		StateMulti env = new StateMulti(prey, prey, predators);
 		int turns = SimulatorMulti.runSimulation(env, prey, predators, 250, true);
 		
 		System.out.println("The game finished in " + turns + " turns.");

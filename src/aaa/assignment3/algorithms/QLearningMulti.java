@@ -5,14 +5,17 @@ import java.util.*;
 import aaa.*;
 import aaa.assignment2.StateActionPair;
 import aaa.assignment2.algorithms.ModelFreeAlgorithm;
+import aaa.assignment3.SimulatorMulti;
 import aaa.assignment3.StateMulti;
 
 public class QLearningMulti extends ModelFreeAlgorithm
 {
-	public static final int NUM_EPISODES = 10000;
+	public static final int NUM_EPISODES = 100000;
 	
 	@SuppressWarnings("unchecked")
 	private final HashMap<StateActionPair, Float>[] Q = new HashMap[2];
+	
+	private static final HashMap<Integer, List<Float>> performance = new HashMap<Integer, List<Float>>();
 	
 	public QLearningMulti(StateMulti env, Agent prey, List<Agent> predators, float alpha, float gamma, float epsilon, float valueInitial, boolean useSoftmax, boolean wantPerformance)
 	{
@@ -96,14 +99,14 @@ public class QLearningMulti extends ModelFreeAlgorithm
 					
 					float oldQ = Q[agent.getType()].get(sa);
 					float newQ = oldQ + alpha * (R - oldQ);
-					if (agent.getType() == agent.TYPE_PREDATOR) System.out.println(newQ);
+					
 					Q[agent.getType()].put(sa, newQ);
 				}
 			}
 
-			if (wantPerformance && i % 10 == 0)
+			if (wantPerformance && i % 100 == 0)
 			{
-				performanceAdd(i, env, buildAgent(predators.get(0)));
+				performanceAdd(i, prey, predators);
 			}
 		}
 	}
@@ -111,5 +114,61 @@ public class QLearningMulti extends ModelFreeAlgorithm
 	public Agent buildAgent(Agent agent)
 	{
 		return new AgentSparse(agent.getType(), valueInitial, Q[agent.getType()]);
+	}
+	
+	private void performanceAdd(int iterations, Agent prey, List<Agent> predators)
+	{
+		Agent preyNew = buildAgent(prey);
+		List<Agent> predatorsNew = new ArrayList<Agent>();
+		
+		for (Agent predator: predators)
+		{
+			predatorsNew.add(buildAgent(predator));
+		}
+		
+		StateMulti env = new StateMulti(preyNew, preyNew, predatorsNew);
+		
+		synchronized (performance)
+		{
+			if (!performance.containsKey(iterations))
+			{
+				performance.put(iterations, new ArrayList<Float>());
+			}
+		}
+			
+		for (int r = 0; r < TEST_NUM_RUNS; r++)
+		{
+			StateMulti state = (StateMulti) env.clone();
+			
+			int turns  = SimulatorMulti.runSimulation(state, preyNew, predatorsNew, 0, false);
+			int reward = state.getReward(predatorsNew.get(0));
+				
+			synchronized (performance)
+			{
+				performance.get(iterations).add((float) (reward * Math.pow(0.9, turns - 1)));
+			}
+		}
+	}
+	
+	public static void performanceClear()
+	{
+		performance.clear();
+	}
+	
+	public static void printPerformance()
+	{
+		for (int i = 0; i < NUM_EPISODES; i += 100)
+		{
+			float sum = 0;
+			
+			List<Float> terms = performance.get(i);
+			
+			for (float term: terms)
+			{
+				sum += term;
+			}
+			
+			System.out.print("(" + i + ", " + sum / terms.size() + ") ");
+		}
 	}
 }

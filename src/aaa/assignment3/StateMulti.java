@@ -248,13 +248,21 @@ public class StateMulti implements State
 	}
 	
 	@Override
-	@SuppressWarnings("unchecked")
 	public Object clone()
 	{
 		StateMulti clone = new StateMulti(me, prey, predators);
 		
-		clone.x = (HashMap<Agent, Integer>) x.clone();
-		clone.y = (HashMap<Agent, Integer>) y.clone();
+		clone.x = new HashMap<Agent, Integer>();
+		clone.y = new HashMap<Agent, Integer>();
+		
+		clone.x.put(prey, this.x.get(prey));
+		clone.y.put(prey, this.y.get(prey));
+		
+		for (Agent predator: predators)
+		{
+			clone.x.put(predator, this.x.get(predator));
+			clone.y.put(predator, this.y.get(predator));
+		}
 		
 		clone.calculateDistances();
 		

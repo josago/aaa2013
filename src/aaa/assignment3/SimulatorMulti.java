@@ -11,7 +11,7 @@ import aaa.*;
  */
 public class SimulatorMulti
 {
-	public static int TURNS_LIMIT = 10000;
+	public static int TURNS_LIMIT = 1000;
 	
 	/**
 	 * Runs a single simulation.
@@ -22,7 +22,7 @@ public class SimulatorMulti
 	 * @param show True if the board must be graphically shown at each simulation step, false otherwise.
 	 * @return The number of steps the game lasted.
 	 */
-	public static int runSimulation(State env, Agent prey, List<Agent> predators, int wait, boolean show)
+	public static int runSimulation(StateMulti env, Agent prey, List<Agent> predators, int wait, boolean show)
 	{
 		int turns = 0;
 		
@@ -35,10 +35,12 @@ public class SimulatorMulti
 				printEnvironment(env, prey, predators);
 			}
 			
+			env.changeViewPoint(prey);
 			env.move(prey);
 			
 			for (Agent predator: predators)
 			{
+				env.changeViewPoint(predator);
 				env.move(predator);
 			}
 			
