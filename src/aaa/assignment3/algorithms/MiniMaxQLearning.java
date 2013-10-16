@@ -165,15 +165,12 @@ public class MiniMaxQLearning
 			V.put(s, 1.0f);
 		}
 		
-		float oldV;
 		float newV;
 		
 		int iterations = 0;
 		
 		do
 		{
-			oldV = V.get(s);
-			
 			// Opponent minimization:
 			
 			int opponentMin = Agent.ACTION_STAY;

@@ -5,13 +5,11 @@ import java.util.*;
 import aaa.*;
 import aaa.assignment2.StateActionPair;
 import aaa.assignment2.algorithms.ModelFreeAlgorithm;
-import aaa.assignment3.SimulatorMulti;
-import aaa.assignment3.StateMulti;
-import aaa.assignment3.tests.Test4;
+import aaa.assignment3.*;
 
 public class QLearningMulti extends ModelFreeAlgorithm
 {
-	public static final int NUM_EPISODES  = 50000;
+	public static final int NUM_EPISODES  = 40000;
 	public static final int TEST_NUM_RUNS = 100;
 	
 	@SuppressWarnings("unchecked")
