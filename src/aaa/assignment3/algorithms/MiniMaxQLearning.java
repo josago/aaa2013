@@ -6,14 +6,19 @@ import aaa.*;
 import aaa.assignment2.StateActionPair;
 import aaa.assignment3.*;
 
+import lpsolve.*;
+
 public class MiniMaxQLearning
 {
-	public static final int NUM_EPISODES = 50000;
+	public static final int NUM_EPISODES = 1;
 	
 	private final HashMap<State, Float> V;
 	private final HashMap<StateActionOpponent, Float> Q;
 	
 	private final HashMap<StateActionPair, Float> pi;
+	
+	
+	private final float[][] qMatrix = new float [5][5];
 	
 	public MiniMaxQLearning(float epsilon, float decay, float gamma)
 	{
@@ -36,10 +41,9 @@ public class MiniMaxQLearning
 		
 		for (int i = 0; i < NUM_EPISODES; i++)
 		{
-			//if (i % 100 == 0)
-			//{
-				System.out.println(i);
-			//}
+			
+			
+			
 			
 			StateMulti s = (StateMulti) env.clone();
 			
@@ -79,6 +83,8 @@ public class MiniMaxQLearning
 				
 				s = stateAfter;
 			}
+			
+			System.out.println(i);
 		}
 	}
 	
@@ -158,26 +164,15 @@ public class MiniMaxQLearning
 	
 	private void linearProg(State s)
 	{
-		float DELTA = 0.01f;
-		
+	
 		if (!V.containsKey(s))
 		{
 			V.put(s, 1.0f);
 		}
-		
-		float oldV;
-		float newV;
-		
-		int iterations = 0;
-		
-		do
-		{
-			oldV = V.get(s);
+	
 			
-			// Opponent minimization:
-			
-			int opponentMin = Agent.ACTION_STAY;
-			float sumMin = Float.POSITIVE_INFINITY;
+			int i = 0;
+			int j = 0;
 			
 			for (int opponent: State.AGENT_ACTIONS)
 			{
@@ -199,69 +194,166 @@ public class MiniMaxQLearning
 						Q.put(sao, 1.0f);
 					}
 					
-					sum += Q.get(sao) * pi.get(sa);
-				}
-				
-				if (sum < sumMin)
-				{
-					sumMin = sum;
-					opponentMin = opponent;
-				}
-			}
-			
-			// Action maximization:
-			
-			float actionMax = Float.NEGATIVE_INFINITY;
-			List<Integer> actionsGreedy = new ArrayList<Integer>();
-			
-			for (int action: State.AGENT_ACTIONS)
-			{
-				StateActionOpponent sao = new StateActionOpponent((State) s.clone(), action, opponentMin);
-				
-				float value = Q.get(sao);
-				
-				if (value > actionMax)
-				{
-					actionMax = value;
 					
-					actionsGreedy.clear();
-					actionsGreedy.add(action);
+					qMatrix[j][i] = Q.get(sao);
+					
+					j++;
+					
 				}
-				else if (Math.abs(value - actionMax) < DELTA)
-				{
-					actionsGreedy.add(action);
-				}
-			}
-			
-			for (int action: State.AGENT_ACTIONS)
-			{
-				StateActionPair sa = new StateActionPair((State) s.clone(), action);
 				
-				if (actionsGreedy.contains(action))
-				{
-					pi.put(sa, 1.0f / actionsGreedy.size());
+				try{
+					
+					miniMax(s);
+				
+				}catch(Exception e){
+					
+					e.printStackTrace();
 				}
-				else
-				{
-					pi.put(sa, 0.0f);
-				}
+				
+				j = 0;
+				i++;
 			}
 			
-			// Final update:
 			
-			newV = 0.0f;
 			
-			for (int action: State.AGENT_ACTIONS)
-			{
-				StateActionPair sa = new StateActionPair((State) s.clone(), action);
+			
+		
+	}
+	
+	public void miniMax(State s) throws LpSolveException{
+		  LpSolve lp;
+          int Ncol, j, ret = 0;
+          float coef = 0;
+          
+          Ncol = 6; 
 
-				StateActionOpponent sao = new StateActionOpponent((State) s.clone(), action, opponentMin);
-				
-				newV += Q.get(sao) * pi.get(sa);
-			}
-			
-			V.put(s, newV);
-		//} while (Math.abs(oldV - newV) > DELTA);
-		} while (++iterations < 5);
+          
+   
+
+          int[] colno = new int[Ncol];
+          double[] row = new double[Ncol];
+
+          lp = LpSolve.makeLp(0, Ncol);
+          
+          if(lp.getLp() == 0)
+            ret = 1; 
+          
+          lp.setColName(1, "pi1");
+          lp.setColName(2, "pi2");
+          lp.setColName(3, "pi3");
+          lp.setColName(4, "pi4");
+          lp.setColName(5, "pi5");
+          lp.setColName(6, "t");
+      
+          
+          for (int i = 0; i < 5; i++){
+          
+          if(ret == 0) {
+            
+        	  
+            
+            
+            lp.setAddRowmode(true);
+            for (j = 0; j < 6; j++){
+            		
+            		if (j == 5) coef = -1;
+            		else coef = qMatrix[j][i];
+            		
+            		
+
+            		colno[j] = j+1; /* first column */
+            		row[j] = coef ;
+            
+            		
+          }
+            
+            lp.addConstraintex(j, row, colno, LpSolve.GE, 0);
+          }
+          }
+          
+          for (j = 0; j < 6; j++){
+      		
+      		if (j == 5) coef = 0;
+      		else coef = 1;
+      		
+      		
+
+      		colno[j] = j+1; /* first column */
+      		row[j] = coef ;
+      
+      		
+    }
+          
+          lp.addConstraintex(j, row, colno, LpSolve.EQ, 1);
+          
+          if(ret == 0) {
+              lp.setAddRowmode(false); 
+              
+              
+              for (j = 0; j < 6; j++){
+          		
+          		if (j == 5) coef = 1;
+          		else coef = 0;
+          		
+
+          		colno[j] = j+1; /* first column */
+          		row[j] = coef ;
+          
+              }
+
+         
+
+              /* set the objective in lpsolve */
+              lp.setObjFnex(j, row, colno);
+            }
+          if(ret == 0) {
+         
+              lp.setMaxim();
+
+              lp.writeLp("madwaodel.lp");
+         
+              
+              lp.setVerbose(LpSolve.IMPORTANT);
+
+              ret = lp.solve();
+              
+              if(ret == LpSolve.OPTIMAL)
+                ret = 0;
+              else
+                ret = 5;
+            }
+          
+           lp.getObjective();
+          
+          //lp.getVariables(row);
+          double[] var = lp.getPtrVariables();
+          
+          for(j = 0; j < 5; j++){
+        	pi.put(new StateActionPair(s, State.AGENT_ACTIONS[j]), (float) var[j]);
+            //System.out.println(lp.getColName(j + 1) + ": " + var[j] );
+          }
+          
+          float min = Float.MAX_VALUE; 
+          float sum = 0;
+            
+          for(int i = 0; i < 5; i++){
+        	  sum = 0;
+  
+        	  for(j = 0; j < 5; j++)
+        	  {
+        		sum += row[j] * qMatrix[i][j]; 
+        	  }
+        	  if (sum < min) min = sum;
+          }
+          
+          V.put(s,  min);
+        	  
+          if(lp.getLp() != 0)
+              lp.deleteLp();
+          
+          
+          
+            
+
 	}
 }
