@@ -6,15 +6,16 @@ import aaa.*;
 import aaa.assignment3.*;
 import aaa.assignment3.algorithms.*;
 
-public class Test5
+public class Test6
 {
-	public static final int NUM_PREDATORS   = 2;
+	public static final int NUM_PREDATORS   = 1;
 	public static final int NUM_THREADS     = 8;
 	public static final int NUM_SIMULATIONS = 125; // (per thread)
 	
-	public static final float GAMMA = 0.9f;
-	public static final float ETA   = 0.01f;
-	public static final float DECAY = 1.0f;
+	public static final float ALPHA         = 0.9f;
+	public static final float GAMMA         = 0.9f;
+	public static final float EPSILON       = 0.1f;
+	public static final float VALUE_INITIAL = 15;
 	
 	public static void main(String[] args)
 	{
@@ -26,14 +27,14 @@ public class Test5
 			predators.add(new PredatorRandom());
 		}
 		
-		GIGAWoLF wolf = new GIGAWoLF(prey, predators, GAMMA, ETA, DECAY, true);
+		MiniMaxQLearning ql  = new MiniMaxQLearning(EPSILON, 0.999999f, GAMMA);
 		
-		Agent preyNew = wolf.buildAgent(prey);
+		Agent preyNew = ql.buildAgent(prey);
 		List<Agent> predatorsNew = new ArrayList<Agent>();
 		
 		for (Agent predator: predators)
 		{
-			predatorsNew.add(wolf.buildAgent(predator));
+			predatorsNew.add(ql.buildAgent(predator));
 		}
 		
 		// Fast simulations (no waiting between game steps):

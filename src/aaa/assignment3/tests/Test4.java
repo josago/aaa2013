@@ -8,7 +8,7 @@ import aaa.assignment3.algorithms.QLearningMulti;
 
 public class Test4
 {
-	public static final int NUM_PREDATORS   = 4;
+	public static final int NUM_PREDATORS   = 2;
 	public static final int NUM_THREADS     = 10;
 	
 	public static final float ALPHA         = 0.9f;

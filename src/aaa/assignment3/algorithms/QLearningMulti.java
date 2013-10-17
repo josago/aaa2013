@@ -17,6 +17,11 @@ public class QLearningMulti extends ModelFreeAlgorithm
 	
 	private static final HashMap<Integer, List<Float>> performance = new HashMap<Integer, List<Float>>();
 	
+	protected QLearningMulti()
+	{
+		
+	}
+	
 	public QLearningMulti(StateMulti env, Agent prey, List<Agent> predators, float alpha, float gamma, float epsilon, float valueInitial, boolean useSoftmax, boolean wantPerformance)
 	{
 		// Initialization of variables:
@@ -101,7 +106,6 @@ public class QLearningMulti extends ModelFreeAlgorithm
 
 			if (wantPerformance && i % 200 == 0)
 			{
-				// System.out.println(Q[Agent.TYPE_PREDATOR].size() + " vs. " + Q[Agent.TYPE_PREY].size());
 				performanceAdd(i, prey, predators);
 			}
 		}
@@ -112,7 +116,7 @@ public class QLearningMulti extends ModelFreeAlgorithm
 		return new AgentSparse(agent.getType(), valueInitial, Q[agent.getType()]);
 	}
 	
-	private void performanceAdd(int iterations, Agent prey, List<Agent> predators)
+	protected void performanceAdd(int iterations, Agent prey, List<Agent> predators)
 	{
 		Agent preyNew = buildAgent(prey);
 		List<Agent> predatorsNew = new ArrayList<Agent>();

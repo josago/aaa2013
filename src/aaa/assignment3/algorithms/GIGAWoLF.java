@@ -5,14 +5,14 @@ import java.util.*;
 import aaa.*;
 import aaa.assignment3.*;
 
-public class GIGAWoLF
+public class GIGAWoLF extends QLearningMulti
 {
 	public static final int NUM_EPISODES = 40000;
 	
 	private final HashMap<State, HashMap<Integer, Float>> preyX, preyZ;
 	private final HashMap<State, HashMap<Integer, Float>> predatorsX, predatorsZ;
 	
-	public GIGAWoLF(Agent prey, List<Agent> predators, float gamma, float eta, float decay)
+	public GIGAWoLF(Agent prey, List<Agent> predators, float gamma, float eta, float decay, boolean wantPerformance)
 	{
 		// Initialization of variables:
 		
@@ -29,6 +29,7 @@ public class GIGAWoLF
 		
 		for (int i = 0; i < NUM_EPISODES; i++)
 		{
+			System.out.println(preyX.size() + " vs " + predatorsX.size());
 			StateMulti s = (StateMulti) env.clone();
 			
 			List<StateMulti> states = new ArrayList<StateMulti>();
@@ -52,6 +53,8 @@ public class GIGAWoLF
 				{
 					HashMap<State, HashMap<Integer, Float>> table = agent.getType() == Agent.TYPE_PREDATOR ? predatorsX : preyX;
 					
+					s.changeViewPoint(agent);
+					
 					int action = getAction(getPi(table, s));
 					actions.get(agent).add(action);
 					
@@ -65,17 +68,21 @@ public class GIGAWoLF
 			
 			// GIGA-WoLF:
 			
+			int t = 0;
+			
 			for (StateMulti state: states)
 			{
 				for (Agent agent: agents)
 				{
 					int   action = actions.get(agent).remove(0);
-					float reward = (float) (rewardPrey * Math.pow(gamma, states.size() - 1));
+					float reward = (float) (rewardPrey * Math.pow(gamma, states.size() - 1 - (t++)));
 					
 					if (agent.getType() == Agent.TYPE_PREDATOR)
 					{
 						reward *= -1;
 					}
+					
+					state.changeViewPoint(agent);
 					
 					// Step (1):
 					
@@ -110,6 +117,13 @@ public class GIGAWoLF
 			}
 			
 			eta *= decay;
+			
+			// Performance graph plot:
+			
+			if (wantPerformance && i % 200 == 0)
+			{
+				performanceAdd(i, prey, predators);
+			}
 		}
 	}
 	
