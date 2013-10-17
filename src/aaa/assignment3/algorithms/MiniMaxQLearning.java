@@ -10,7 +10,7 @@ import lpsolve.*;
 
 public class MiniMaxQLearning
 {
-	public static final int NUM_EPISODES = 50000;
+	public static final int NUM_EPISODES = 10000;
 	
 	private final HashMap<State, Float> V;
 	private final HashMap<StateActionOpponent, Float> Q;
@@ -41,10 +41,9 @@ public class MiniMaxQLearning
 		
 		for (int i = 0; i < NUM_EPISODES; i++)
 		{
-			//if (i % 100 == 0)
-			//{
+			
 				System.out.println(i);
-			//}
+			
 			
 			StateMulti s = (StateMulti) env.clone();
 			
@@ -163,24 +162,12 @@ public class MiniMaxQLearning
 	
 	private void linearProg(State s)
 	{
-		float DELTA = 0.01f;
-		
+	
 		if (!V.containsKey(s))
 		{
 			V.put(s, 1.0f);
 		}
-		
-		float oldV;
-		float newV;
-		
-		int iterations = 0;
-		
-			oldV = V.get(s);
-			
-			// Opponent minimization:
-			
-			int opponentMin = Agent.ACTION_STAY;
-			float sumMin = Float.POSITIVE_INFINITY;
+	
 			
 			int i = 0;
 			int j = 0;
@@ -205,20 +192,24 @@ public class MiniMaxQLearning
 						Q.put(sao, 1.0f);
 					}
 					
+					
 					qMatrix[j][i] = Q.get(sao);
+					
+					j++;
 					
 				}
 				
 				try{
 					
-					miniMax();
+					miniMax(s);
 				
 				}catch(Exception e){
 					
 					e.printStackTrace();
 				}
 				
-				
+				j = 0;
+				i++;
 			}
 			
 			
@@ -227,13 +218,15 @@ public class MiniMaxQLearning
 		
 	}
 	
-	public void miniMax() throws LpSolveException{
+	public void miniMax(State s) throws LpSolveException{
 		  LpSolve lp;
           int Ncol, j, ret = 0;
           float coef = 0;
           
           Ncol = 6; 
 
+          
+   
 
           int[] colno = new int[Ncol];
           double[] row = new double[Ncol];
@@ -269,8 +262,10 @@ public class MiniMaxQLearning
             		colno[j] = j+1; /* first column */
             		row[j] = coef ;
             
-            		lp.addConstraintex(j, row, colno, LpSolve.LE, 0);
+            		
           }
+            
+            lp.addConstraintex(j, row, colno, LpSolve.GE, 0);
           }
           }
           
@@ -284,8 +279,10 @@ public class MiniMaxQLearning
       		colno[j] = j+1; /* first column */
       		row[j] = coef ;
       
-      		lp.addConstraintex(j, row, colno, LpSolve.EQ, 1);
+      		
     }
+          
+          lp.addConstraintex(j, row, colno, LpSolve.EQ, 1);
           
           if(ret == 0) {
               lp.setAddRowmode(false); 
@@ -311,7 +308,7 @@ public class MiniMaxQLearning
          
               lp.setMaxim();
 
-         
+              lp.writeLp("madwaodel.lp");
          
               
               lp.setVerbose(LpSolve.IMPORTANT);
@@ -324,13 +321,31 @@ public class MiniMaxQLearning
                 ret = 5;
             }
           
-          float maxT = (float) lp.getObjective();
+           lp.getObjective();
           
-          lp.getVariables(row);
+          //lp.getVariables(row);
+          double[] var = lp.getPtrVariables();
           
-          for(j = 0; j < Ncol; j++)
-            System.out.println(lp.getColName(j + 1) + ": " + row[j]);
+          for(j = 0; j < 5; j++){
+        	pi.put(new StateActionPair(s, State.AGENT_ACTIONS[j]), (float) var[j]);
+            System.out.println(lp.getColName(j + 1) + ": " + var[j] );
+          }
           
+          float min = Float.MAX_VALUE; 
+          float sum = 0;
+            
+          for(int i = 0; i < 5; i++){
+        	  sum = 0;
+  
+        	  for(j = 0; j < 5; j++)
+        	  {
+        		sum += row[j] * qMatrix[i][j]; 
+        	  }
+        	  if (sum < min) min = sum;
+          }
+          
+          V.put(s,  min);
+        	  
           if(lp.getLp() != 0)
               lp.deleteLp();
           
