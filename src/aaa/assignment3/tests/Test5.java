@@ -8,12 +8,12 @@ import aaa.assignment3.algorithms.*;
 
 public class Test5
 {
-	public static final int NUM_PREDATORS   = 2;
+	public static final int NUM_PREDATORS   = 3;
 	public static final int NUM_THREADS     = 8;
 	public static final int NUM_SIMULATIONS = 125; // (per thread)
 	
 	public static final float GAMMA = 0.9f;
-	public static final float ETA   = 0.01f;
+	public static final float ETA   = 0.1f;
 	public static final float DECAY = 1.0f;
 	
 	public static void main(String[] args)

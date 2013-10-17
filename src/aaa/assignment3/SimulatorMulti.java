@@ -11,7 +11,7 @@ import aaa.*;
  */
 public class SimulatorMulti
 {
-	public static int TURNS_LIMIT = 500;
+	public static int TURNS_LIMIT = 1000;
 	
 	/**
 	 * Runs a single simulation.

@@ -104,7 +104,7 @@ public class QLearningMulti extends ModelFreeAlgorithm
 				}
 			}
 
-			if (wantPerformance && i % 200 == 0)
+			if (wantPerformance && i % 400 == 0)
 			{
 				performanceAdd(i, prey, predators);
 			}
@@ -171,7 +171,7 @@ public class QLearningMulti extends ModelFreeAlgorithm
 	
 	public static void printPerformance()
 	{
-		for (int i = 0; i < NUM_EPISODES; i += 200)
+		for (int i = 0; i < NUM_EPISODES; i += 400)
 		{
 			float sum = 0;
 			
