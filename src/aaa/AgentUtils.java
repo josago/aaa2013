@@ -41,6 +41,10 @@ public class AgentUtils
 			public float pi(State env, int action)
 			{
 				List<Integer> actions = pi.get(env);
+				
+				if (actions== null){
+					return 1/5;
+				}
 
 				if (actions.contains(action))
 				{

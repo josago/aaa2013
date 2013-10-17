@@ -6,7 +6,7 @@ import aaa.*;
 import aaa.assignment3.*;
 import aaa.assignment3.algorithms.*;
 
-public class Test5
+public class Test7
 {
 	public static final int NUM_PREDATORS   = 3;
 	public static final int NUM_THREADS     = 8;
@@ -101,6 +101,8 @@ public class Test5
 					score[0] += reward * Math.pow(GAMMA, length - 1);
 				}
 			}
+			
+			System.out.println("Score:"+score[0]);
 		}
 	}
 }
