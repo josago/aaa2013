@@ -5,15 +5,19 @@ import java.util.*;
 import aaa.*;
 import aaa.assignment2.StateActionPair;
 import aaa.assignment3.*;
+import lpsolve.*;
 
-public class MiniMaxQLearning
+public class MiniMaxQLearning extends QLearningMulti
 {
-	public static final int NUM_EPISODES = 50000;
+	public static final int NUM_EPISODES = 1000;
 	
 	private final HashMap<State, Float> V;
 	private final HashMap<StateActionOpponent, Float> Q;
 	
-	private final HashMap<StateActionPair, Float> pi;
+	public final HashMap<StateActionPair, Float> pi;
+	
+	
+	private final float[][] qMatrix = new float [5][5];
 	
 	public MiniMaxQLearning(float epsilon, float decay, float gamma)
 	{
@@ -30,21 +34,25 @@ public class MiniMaxQLearning
 		List<Agent> predators = new ArrayList<Agent>();
 		predators.add(predator);
 		
+		
 		StateMulti env = new StateMulti(prey, prey, predators);
 		
 		// Q-Learning:
 		
 		for (int i = 0; i < NUM_EPISODES; i++)
 		{
-			//if (i % 100 == 0)
-			//{
-				System.out.println(i);
-			//}
+			
+			
+			
+			//System.out.println(pi.size());
+			
 			
 			StateMulti s = (StateMulti) env.clone();
 			
+			int x = 0;
 			while (!s.isFinal())
 			{
+				
 				StateMulti stateBefore = (StateMulti) s.clone();
 				
 				stateBefore.changeViewPoint(predator);
@@ -78,16 +86,29 @@ public class MiniMaxQLearning
 				alpha *= decay;
 				
 				s = stateAfter;
+				
+				
 			}
+			
+			
+			
+			if (i%5 == 0) performanceAdd(i, prey, predators);
 		}
 	}
 	
 	public Agent buildAgent(Agent agent)
+	
+	
 	{
+		
+		
+		
 		HashMap<State, List<Integer>> pi = new HashMap<State, List<Integer>>();
+		
 		
 		for (StateActionPair sa: this.pi.keySet())
 		{
+			
 			if (!pi.containsKey(sa.state))
 			{
 				pi.put(sa.state, new ArrayList<Integer>());
@@ -103,6 +124,13 @@ public class MiniMaxQLearning
 			}
 		}
 		
+		for(State s : pi.keySet()){
+			for(Integer i: pi.get(s)){
+				System.out.println("State"+s+":"+i);
+			}
+		}
+	
+	
 		return AgentUtils.buildPredator(pi);
 	}
 	
@@ -158,27 +186,21 @@ public class MiniMaxQLearning
 	
 	private void linearProg(State s)
 	{
-		float DELTA = 0.01f;
 		
+	
 		if (!V.containsKey(s))
 		{
 			V.put(s, 1.0f);
 		}
-		
-		float newV;
-		
-		int iterations = 0;
-		
-		do
-		{
-			// Opponent minimization:
+	
 			
-			int opponentMin = Agent.ACTION_STAY;
-			float sumMin = Float.POSITIVE_INFINITY;
+			int i = 0;
+			int j = 0;
+			
+			
 			
 			for (int opponent: State.AGENT_ACTIONS)
 			{
-				float sum = 0;
 				
 				for (int action: State.AGENT_ACTIONS)
 				{
@@ -196,69 +218,176 @@ public class MiniMaxQLearning
 						Q.put(sao, 1.0f);
 					}
 					
-					sum += Q.get(sao) * pi.get(sa);
-				}
-				
-				if (sum < sumMin)
-				{
-					sumMin = sum;
-					opponentMin = opponent;
-				}
-			}
-			
-			// Action maximization:
-			
-			float actionMax = Float.NEGATIVE_INFINITY;
-			List<Integer> actionsGreedy = new ArrayList<Integer>();
-			
-			for (int action: State.AGENT_ACTIONS)
-			{
-				StateActionOpponent sao = new StateActionOpponent((State) s.clone(), action, opponentMin);
-				
-				float value = Q.get(sao);
-				
-				if (value > actionMax)
-				{
-					actionMax = value;
 					
-					actionsGreedy.clear();
-					actionsGreedy.add(action);
+					
+					qMatrix[j][i] = Q.get(sao);
+					
+					
+					j++;
+					
 				}
-				else if (Math.abs(value - actionMax) < DELTA)
-				{
-					actionsGreedy.add(action);
-				}
-			}
-			
-			for (int action: State.AGENT_ACTIONS)
-			{
-				StateActionPair sa = new StateActionPair((State) s.clone(), action);
 				
-				if (actionsGreedy.contains(action))
-				{
-					pi.put(sa, 1.0f / actionsGreedy.size());
-				}
-				else
-				{
-					pi.put(sa, 0.0f);
-				}
+				
+				
+				j = 0;
+				i++;
 			}
 			
-			// Final update:
 			
-			newV = 0.0f;
+			try{
+				
+				miniMax(s);
 			
-			for (int action: State.AGENT_ACTIONS)
-			{
-				StateActionPair sa = new StateActionPair((State) s.clone(), action);
+			}catch(Exception e){
+				
+				e.printStackTrace();
+			}
+			
+			
+			
+			
+		
+	}
+	
+	public void miniMax(State s) throws LpSolveException{
+		
+			 
+		
+		  //System.out.println(qMatrix[0]);
+		  LpSolve lp;
+          int Ncol, j, ret = 0;
+          float coef = 0;
+          
+          Ncol = 6; 
 
-				StateActionOpponent sao = new StateActionOpponent((State) s.clone(), action, opponentMin);
-				
-				newV += Q.get(sao) * pi.get(sa);
-			}
-			
-			V.put(s, newV);
-		//} while (Math.abs(oldV - newV) > DELTA);
-		} while (++iterations < 5);
+          
+   
+
+          int[] colno = new int[Ncol];
+          double[] row = new double[Ncol];
+
+          lp = LpSolve.makeLp(0, Ncol);
+          
+          if(lp.getLp() == 0)
+            ret = 1; 
+          
+          lp.setColName(1, "pi1");
+          lp.setColName(2, "pi2");
+          lp.setColName(3, "pi3");
+          lp.setColName(4, "pi4");
+          lp.setColName(5, "pi5");
+          lp.setColName(6, "t");
+      
+          
+          for (int i = 0; i < 5; i++){
+          
+          if(ret == 0) {
+            
+        	  
+            
+            
+            lp.setAddRowmode(true);
+            for (j = 0; j < 6; j++){
+            		
+            		if (j == 5) coef = -1;
+            		else coef = qMatrix[j][i];
+            		
+            		
+
+            		colno[j] = j+1; /* first column */
+            		row[j] = coef ;
+            
+            		
+          }
+            
+            lp.addConstraintex(j, row, colno, LpSolve.GE, 0);
+          }
+          }
+          
+          for (j = 0; j < 6; j++){
+      		
+      		if (j == 5) coef = 0;
+      		else coef = 1;
+      		
+      		
+
+      		colno[j] = j+1; /* first column */
+      		row[j] = coef ;
+      
+      		
+          	}
+          
+          lp.addConstraintex(j, row, colno, LpSolve.EQ, 1);
+          
+          if(ret == 0) {
+              lp.setAddRowmode(false); 
+              
+              
+              for (j = 0; j < 6; j++){
+          		
+          		if (j == 5) coef = 1;
+          		else coef = 0;
+          		
+
+          		colno[j] = j+1; /* first column */
+          		row[j] = coef ;
+          
+              }
+
+         
+
+              /* set the objective in lpsolve */
+              lp.setObjFnex(j, row, colno);
+            }
+          if(ret == 0) {
+         
+              lp.setMaxim();
+
+              lp.writeLp("modeladw.lp");
+         
+              
+              lp.setVerbose(LpSolve.IMPORTANT);
+
+              ret = lp.solve();
+              
+              if(ret == LpSolve.OPTIMAL)
+                ret = 0;
+              else
+                ret = 5;
+            }
+          
+           lp.getObjective();
+          
+          //lp.getVariables(row);
+          double[] var = lp.getPtrVariables();
+          
+          for(j = 0; j < 5; j++){
+        	pi.put(new StateActionPair((State) s.clone(), State.AGENT_ACTIONS[j]), (float) var[j]);
+            //System.out.println(lp.getColName(j + 1) + ": " + var[j] );
+          }
+          
+          float min = Float.POSITIVE_INFINITY; 
+          float sum = 0;
+            
+          for(int i = 0; i < 5; i++){
+        	  sum = 0;
+  
+        	  for(j = 0; j < 5; j++)
+        	  {
+        		sum += var[j] * qMatrix[j][i]; 
+        		
+        	  }
+        	  if (sum < min) min = sum;
+          }
+          
+          V.put(s,  min);
+        	  
+          if(lp.getLp() != 0)
+              lp.deleteLp();
+          
+          
+          
+            
+
 	}
 }
