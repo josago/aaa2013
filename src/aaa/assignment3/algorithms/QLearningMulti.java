@@ -5,19 +5,22 @@ import java.util.*;
 import aaa.*;
 import aaa.assignment2.StateActionPair;
 import aaa.assignment2.algorithms.ModelFreeAlgorithm;
-import aaa.assignment3.SimulatorMulti;
-import aaa.assignment3.StateMulti;
-import aaa.assignment3.tests.Test4;
+import aaa.assignment3.*;
 
 public class QLearningMulti extends ModelFreeAlgorithm
 {
-	public static final int NUM_EPISODES  = 50000;
+	public static final int NUM_EPISODES  = 40000;
 	public static final int TEST_NUM_RUNS = 100;
 	
 	@SuppressWarnings("unchecked")
 	private final HashMap<StateActionPair, Float>[] Q = new HashMap[2];
 	
 	private static final HashMap<Integer, List<Float>> performance = new HashMap<Integer, List<Float>>();
+	
+	protected QLearningMulti()
+	{
+		
+	}
 	
 	public QLearningMulti(StateMulti env, Agent prey, List<Agent> predators, float alpha, float gamma, float epsilon, float valueInitial, boolean useSoftmax, boolean wantPerformance)
 	{
@@ -103,7 +106,6 @@ public class QLearningMulti extends ModelFreeAlgorithm
 
 			if (wantPerformance && i % 200 == 0)
 			{
-				// System.out.println(Q[Agent.TYPE_PREDATOR].size() + " vs. " + Q[Agent.TYPE_PREY].size());
 				performanceAdd(i, prey, predators);
 			}
 		}
@@ -114,7 +116,7 @@ public class QLearningMulti extends ModelFreeAlgorithm
 		return new AgentSparse(agent.getType(), valueInitial, Q[agent.getType()]);
 	}
 	
-	private void performanceAdd(int iterations, Agent prey, List<Agent> predators)
+	protected void performanceAdd(int iterations, Agent prey, List<Agent> predators)
 	{
 		Agent preyNew = buildAgent(prey);
 		List<Agent> predatorsNew = new ArrayList<Agent>();

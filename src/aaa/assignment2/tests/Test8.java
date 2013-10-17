@@ -1,10 +1,7 @@
 package aaa.assignment2.tests;
 
 import aaa.*;
-import aaa.assignment2.algorithms.ModelFreeAlgorithm;
-import aaa.assignment2.algorithms.MonteCarloOffPolicy;
-import aaa.assignment2.algorithms.MonteCarloOnPolicy;
-import aaa.assignment2.algorithms.QLearning;
+import aaa.assignment2.algorithms.*;
 
 public class Test8
 {
