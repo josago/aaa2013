@@ -5,17 +5,16 @@ import java.util.*;
 import aaa.*;
 import aaa.assignment2.StateActionPair;
 import aaa.assignment3.*;
-
 import lpsolve.*;
 
-public class MiniMaxQLearning
+public class MiniMaxQLearning extends QLearningMulti
 {
-	public static final int NUM_EPISODES = 10000;
+	public static final int NUM_EPISODES = 1000;
 	
 	private final HashMap<State, Float> V;
 	private final HashMap<StateActionOpponent, Float> Q;
 	
-	private final HashMap<StateActionPair, Float> pi;
+	public final HashMap<StateActionPair, Float> pi;
 	
 	
 	private final float[][] qMatrix = new float [5][5];
@@ -35,6 +34,7 @@ public class MiniMaxQLearning
 		List<Agent> predators = new ArrayList<Agent>();
 		predators.add(predator);
 		
+		
 		StateMulti env = new StateMulti(prey, prey, predators);
 		
 		// Q-Learning:
@@ -42,13 +42,17 @@ public class MiniMaxQLearning
 		for (int i = 0; i < NUM_EPISODES; i++)
 		{
 			
-				System.out.println(i);
+			
+			
+			//System.out.println(pi.size());
 			
 			
 			StateMulti s = (StateMulti) env.clone();
 			
+			int x = 0;
 			while (!s.isFinal())
 			{
+				
 				StateMulti stateBefore = (StateMulti) s.clone();
 				
 				stateBefore.changeViewPoint(predator);
@@ -82,16 +86,29 @@ public class MiniMaxQLearning
 				alpha *= decay;
 				
 				s = stateAfter;
+				
+				
 			}
+			
+			
+			
+			if (i%5 == 0) performanceAdd(i, prey, predators);
 		}
 	}
 	
 	public Agent buildAgent(Agent agent)
+	
+	
 	{
+		
+		
+		
 		HashMap<State, List<Integer>> pi = new HashMap<State, List<Integer>>();
+		
 		
 		for (StateActionPair sa: this.pi.keySet())
 		{
+			
 			if (!pi.containsKey(sa.state))
 			{
 				pi.put(sa.state, new ArrayList<Integer>());
@@ -107,6 +124,13 @@ public class MiniMaxQLearning
 			}
 		}
 		
+		for(State s : pi.keySet()){
+			for(Integer i: pi.get(s)){
+				System.out.println("State"+s+":"+i);
+			}
+		}
+	
+	
 		return AgentUtils.buildPredator(pi);
 	}
 	
@@ -162,6 +186,7 @@ public class MiniMaxQLearning
 	
 	private void linearProg(State s)
 	{
+		
 	
 		if (!V.containsKey(s))
 		{
@@ -172,9 +197,10 @@ public class MiniMaxQLearning
 			int i = 0;
 			int j = 0;
 			
+			
+			
 			for (int opponent: State.AGENT_ACTIONS)
 			{
-				float sum = 0;
 				
 				for (int action: State.AGENT_ACTIONS)
 				{
@@ -193,23 +219,28 @@ public class MiniMaxQLearning
 					}
 					
 					
+					
 					qMatrix[j][i] = Q.get(sao);
+					
 					
 					j++;
 					
 				}
 				
-				try{
-					
-					miniMax(s);
 				
-				}catch(Exception e){
-					
-					e.printStackTrace();
-				}
 				
 				j = 0;
 				i++;
+			}
+			
+			
+			try{
+				
+				miniMax(s);
+			
+			}catch(Exception e){
+				
+				e.printStackTrace();
 			}
 			
 			
@@ -219,6 +250,10 @@ public class MiniMaxQLearning
 	}
 	
 	public void miniMax(State s) throws LpSolveException{
+		
+			 
+		
+		  //System.out.println(qMatrix[0]);
 		  LpSolve lp;
           int Ncol, j, ret = 0;
           float coef = 0;
@@ -280,7 +315,7 @@ public class MiniMaxQLearning
       		row[j] = coef ;
       
       		
-    }
+          	}
           
           lp.addConstraintex(j, row, colno, LpSolve.EQ, 1);
           
@@ -308,7 +343,7 @@ public class MiniMaxQLearning
          
               lp.setMaxim();
 
-              lp.writeLp("madwaodel.lp");
+              lp.writeLp("modeladw.lp");
          
               
               lp.setVerbose(LpSolve.IMPORTANT);
@@ -327,11 +362,11 @@ public class MiniMaxQLearning
           double[] var = lp.getPtrVariables();
           
           for(j = 0; j < 5; j++){
-        	pi.put(new StateActionPair(s, State.AGENT_ACTIONS[j]), (float) var[j]);
-            System.out.println(lp.getColName(j + 1) + ": " + var[j] );
+        	pi.put(new StateActionPair((State) s.clone(), State.AGENT_ACTIONS[j]), (float) var[j]);
+            //System.out.println(lp.getColName(j + 1) + ": " + var[j] );
           }
           
-          float min = Float.MAX_VALUE; 
+          float min = Float.POSITIVE_INFINITY; 
           float sum = 0;
             
           for(int i = 0; i < 5; i++){
@@ -339,7 +374,8 @@ public class MiniMaxQLearning
   
         	  for(j = 0; j < 5; j++)
         	  {
-        		sum += row[j] * qMatrix[i][j]; 
+        		sum += var[j] * qMatrix[j][i]; 
+        		
         	  }
         	  if (sum < min) min = sum;
           }
