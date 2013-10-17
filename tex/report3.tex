@@ -1,7 +1,7 @@
 \documentclass[a4paper,12pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage{pgfplots}
-
+\usepackage[hidelinks]{hyperref}
 \usepackage[left=2cm,top=2cm,right=2cm,bottom=2cm]{geometry}
 
 %opening
@@ -13,8 +13,16 @@
 \maketitle
 
 \section{Introduction}
+In this assignment we worked on a predator versus prey grid world scenario, in which both the predator and the prey are learning agents  \cite{Assignment}. \cite{vlasis} There are small changes made to the grid world scenario compared to previous assignments.%We have implemented and evaluated several algorithms for each agent to use. For one algorithm, Independent Q-Learning, we have used a scenario in which several predators chase a single prey. The results of these evaluations will be presented in section 3.
 
-Something here...
+\section{Theoretical description of the algorithms}
+For this assignment we have implemented the following algorithms: Independent Q-Learning \cite{vlasis}, Minimax Q-Learning \cite{minimax}, Generalized Infinitesimal Gradient Ascent Win or Learn Fast(GIGA-WoLF) \cite{GIGA-wolf}. Each algorithm will be described concisely below.
+
+\subsection{Independent Q-Learning}
+In Independent Q-Learning each agent in the environment treats all other agents as being part of the environment. An agent employing Independent Q-Learning does not try to model other agents, or try to learn their behavior \cite{vlasis}. The agent then uses Q-Learning to learn a state-actionvalue function, mapping actions in states to values.
+A problem with this algorithm is that the Q-Learning algorithm assumes a static environment, in which state transition probabilities do not change. This assumption is not valid for independent Q-Learning, as other learning agents might change their behavior over time. Since the agent models other agents as part of the environment, the environment thus becomes dynamic.
+\subsection{Minimax Q-Learning}
+\subsection{GIGA-WoLF}
 
 \section{Method}
 
@@ -71,5 +79,31 @@ Something here...
 Something here...
 
 \thebibliography{}
+%\url{http://www.wikibooks.org}
+%\href{http://www.wikibooks.org}{Wikibooks home}
+\bibitem{Assignment}
+  \emph{Assignment}.\\
+  Assignments Autonomous Agents, D.M Roijers, September 2, 2013
+
+\bibitem{vlasis}  
+	\emph{Vlassis Nicos} \\
+	A Concise Introduction to Multiagent Systems and Distributed Artificial Intelligence \\
+	Morgan and Claypool Publishers, 2007 
+	
+\bibitem{SB}
+  \emph{Sutton and Barto}.\\
+  Reinforcement Learning: An Introduction, Richard S. Sutton, Andrew G Barto. \\
+  \url{http://webdocs.cs.ualberta.ca/~sutton/book/ebook/}
+ 
+ \bibitem{minimax}
+ Michael L. Littman \\
+ Markov games as a framework for multi-agent reinforcement learning \\
+ Brown University / Bellcore \\
+ \url{http://www.cs.rutgers.edu/~mlittman/papers/refer.html} \\
+ 
+ \bibitem{GIGA-wolf}
+ Michael Bowling \\
+ Convergence and no-regret in Multiagent Learning \\
+ \url{http://webdocs.cs.ualberta.ca/~bowling/papers/04nips.pdf}
 
 \end{document}
