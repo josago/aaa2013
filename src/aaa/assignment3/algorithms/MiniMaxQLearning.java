@@ -26,7 +26,7 @@ public class MiniMaxQLearning extends QLearningMulti
 		
 		pi = new HashMap<StateActionPair, Float>();
 		
-		float alpha = 1.0f;
+		float alpha = 0.5f;
 		
 		Agent prey     = new PreySimple();
 		Agent predator = new PredatorRandom();
@@ -44,49 +44,49 @@ public class MiniMaxQLearning extends QLearningMulti
 			StateMulti s = (StateMulti) env.clone();
 
 			int x = 0;
-			while (!s.isFinal()&&x < SimulatorMulti.TURNS_LIMIT)
-
+			
+			while (!s.isFinal() && x < SimulatorMulti.TURNS_LIMIT)
 			{
-				StateMulti stateBefore = (StateMulti) s.clone();
+				s.changeViewPoint(predator);
+				int action   = getAction(s, epsilon, predator);
 				
-				stateBefore.changeViewPoint(predator);
-				int action   = getAction(stateBefore, epsilon, predator);
+				s.changeViewPoint(prey);
+				int opponent = getAction(s, epsilon, prey);
 				
-				stateBefore.changeViewPoint(prey);
-				int opponent = getAction(stateBefore, epsilon, prey);
+				StateMulti sPrime = (StateMulti) s.clone();
+				sPrime.move(predator, action);
+				sPrime.move(prey,     opponent);
 				
-				StateMulti stateAfter = (StateMulti) stateBefore.clone();
-				stateAfter.move(predator, action);
-				stateAfter.move(prey,     opponent);
+				int reward = sPrime.getReward(predator);
 				
-				int reward = stateAfter.getReward(predator);
-				
-				StateActionOpponent sao = new StateActionOpponent(stateBefore, action, opponent);
+				s.changeViewPoint(predator);
+				StateActionOpponent sao = new StateActionOpponent((StateMulti) s.clone(), action, opponent);
 				
 				if (!Q.containsKey(sao))
 				{
 					Q.put(sao, 1.0f);
 				}
 				
-				if (!V.containsKey(stateAfter))
+				if (!V.containsKey(sPrime))
 				{
-					V.put(stateAfter, 1.0f);
+					V.put(sPrime, 1.0f);
 				}
 				
-				Q.put(sao, (1 - alpha) * Q.get(sao) + alpha * (reward + gamma * V.get(stateAfter)));
+				Q.put(sao, (1 - alpha) * Q.get(sao) + alpha * (reward + gamma * V.get(sPrime)));
 				
-				linearProg(stateBefore);
+				linearProg(s);
 				
 				alpha *= decay;
 				
-				s = stateAfter;
+				s = sPrime;
 				
 				x++;
 			}
 			
-			
-			
-			if (i%5 == 0) performanceAdd(i, prey, predators);
+			if (i % 5 == 0)
+			{
+				performanceAdd(i, prey, predators);
+			}
 		}
 	}
 	
