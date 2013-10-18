@@ -14,8 +14,13 @@ public class Test6
 	
 	public static final float ALPHA         = 0.9f;
 	public static final float GAMMA         = 0.9f;
+<<<<<<< HEAD
 	public static final float EPSILON       = 0.1f;
 	public static final float VALUE_INITIAL = -15;
+=======
+	public static final float EPSILON       = 1.0f;
+	public static final float VALUE_INITIAL = 15;
+>>>>>>> 1cd87fffd51e70ae8fdd228e9e4245443cfce6e8
 	
 	public static void main(String[] args)
 	{

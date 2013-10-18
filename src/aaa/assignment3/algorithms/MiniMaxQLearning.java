@@ -9,7 +9,7 @@ import lpsolve.*;
 
 public class MiniMaxQLearning extends QLearningMulti
 {
-	public static final int NUM_EPISODES = 5000;
+	public static final int NUM_EPISODES = 5100;
 	
 	public static final float Q_INITIAL = -15f;
 	
