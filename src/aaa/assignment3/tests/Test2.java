@@ -10,13 +10,14 @@ public class Test2
 {
 	public static final int NUM_PREDATORS = 3;
 	
-	public static final float ALPHA         = 0.9f;
+	public static final float ALPHA         = 0.1f;
 	public static final float GAMMA         = 0.9f;
 	public static final float EPSILON       = 0.1f;
 	public static final float VALUE_INITIAL = 15;
 	
 	public static void main(String[] args)
 	{
+		
 		Agent prey = new PreySimple();
 		List<Agent> predators = new ArrayList<Agent>();
 		

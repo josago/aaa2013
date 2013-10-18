@@ -12,5 +12,6 @@
 *.bbl
 *.blg
 *.out
+*.backup
 
 /bin

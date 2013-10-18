@@ -13,8 +13,8 @@ public class Test6
 	public static final int NUM_SIMULATIONS = 125; // (per thread)
 	
 	public static final float ALPHA         = 0.9f;
-	public static final float GAMMA         = 0.9f;
-	public static final float EPSILON       = 1f;
+	public static final float GAMMA         = 0f;
+	public static final float EPSILON       = 0.1f;
 	public static final float VALUE_INITIAL = 15;
 	
 	public static void main(String[] args)
@@ -28,7 +28,7 @@ public class Test6
 			predators.add(new PredatorRandom());
 		}
 		
-		MiniMaxQLearning ql  = new MiniMaxQLearning(EPSILON, 0.999999f, GAMMA);
+		MiniMaxQLearning ql  = new MiniMaxQLearning(EPSILON, 0.999999f, ALPHA, GAMMA);
 		
 		Agent preyNew = ql.buildAgent(prey);
 		List<Agent> predatorsNew = new ArrayList<Agent>();

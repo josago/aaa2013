@@ -9,7 +9,9 @@ import lpsolve.*;
 
 public class MiniMaxQLearning extends QLearningMulti
 {
-	public static final int NUM_EPISODES = 50000;
+	public static final int NUM_EPISODES = 5000;
+	
+	public static final float Q_INITIAL = 1;
 	
 	private final HashMap<State, Float> V;
 	private final HashMap<StateActionOpponent, Float> Q;
@@ -19,14 +21,14 @@ public class MiniMaxQLearning extends QLearningMulti
 	
 	private final float[][] qMatrix = new float [5][5];
 	
-	public MiniMaxQLearning(float epsilon, float decay, float gamma)
+	public MiniMaxQLearning(float epsilon, float decay, float alpha, float gamma)
 	{
 		V = new HashMap<State, Float>();
 		Q = new HashMap<StateActionOpponent, Float>();
 		
 		pi = new HashMap<StateActionPair, Float>();
 		
-		float alpha = 0.5f;
+		
 		
 		Agent prey     = new PreySimple();
 		Agent predator = new PredatorRandom();
@@ -45,7 +47,7 @@ public class MiniMaxQLearning extends QLearningMulti
 
 			int x = 0;
 			
-			while (!s.isFinal() && x < SimulatorMulti.TURNS_LIMIT/3)
+			while (!s.isFinal() && x < SimulatorMulti.TURNS_LIMIT)
 				
 				
 			{
@@ -71,12 +73,17 @@ public class MiniMaxQLearning extends QLearningMulti
 				
 				if (!Q.containsKey(sao))
 				{
-					Q.put(sao, 10.0f);
+					Q.put(sao, Q_INITIAL);
+				}
+				
+				if (!V.containsKey(s))
+				{
+					V.put(s, Q_INITIAL);
 				}
 				
 				if (!V.containsKey(sPrime))
 				{
-					V.put(sPrime, 1.0f);
+					V.put(sPrime, Q_INITIAL);
 				}
 				
 				Q.put(sao, (1 - alpha) * Q.get(sao) + alpha * (reward + gamma * V.get(sPrime)));
@@ -90,9 +97,9 @@ public class MiniMaxQLearning extends QLearningMulti
 				x++;
 			}
 			
+		
 			
-			
-				if(i % 50 == 0) performanceAdd(i, prey, predators);
+				if(i % 100 == 0) performanceAdd(i, prey, predators);
 		
 		}
 	}
@@ -123,15 +130,18 @@ public class MiniMaxQLearning extends QLearningMulti
 			public float pi(State env, int action) {
 				
 				
-
-				for(StateActionPair sa: pi2.keySet()){
-					if (sa.state == env&& sa.action == action){
+				StateActionPair sa = new StateActionPair((State)env.clone(), action);
+			
+				if (pi.containsKey(sa)){
 						if (agent.getType()== Agent.TYPE_PREDATOR) return pi2.get(sa); 
-						else return 1-pi2.get(sa);
+						else return (1-pi2.get(sa))/4.0f;
 					}
+				else{
+					pi.put(sa, 0.2f);
+					return 0.2f;
 				}
 				
-			    return 0.2f;
+			    
 				
 			
 				}
@@ -182,7 +192,7 @@ public class MiniMaxQLearning extends QLearningMulti
 				}
 				else // TYPE_PREY:
 				{
-					sum += (1 - epsilon) * (1 - pi.get(sa));
+					sum += (1 - epsilon) * (1 - pi.get(sa))/4.0f;
 				}
 					
 				if (sum > random)
@@ -201,7 +211,7 @@ public class MiniMaxQLearning extends QLearningMulti
 	
 		if (!V.containsKey(s))
 		{
-			V.put(s, 1.0f);
+			V.put(s, Q_INITIAL);
 		}
 	
 			
@@ -226,7 +236,7 @@ public class MiniMaxQLearning extends QLearningMulti
 					
 					if (!Q.containsKey(sao))
 					{
-						Q.put(sao, 1.0f);
+						Q.put(sao, Q_INITIAL);
 					}
 					
 					
