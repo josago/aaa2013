@@ -42,15 +42,49 @@ Nash equilibria found by agents using Independent Q-Learning might not be Pareto
 
 \subsection{Minimax Q-Learning}
 
-Minimax Q-Learning \cite{minimax}, avoids the problem of Independent Q-Learning by taking the actions of the opponent of each agent into account. A policy for each agent is computed by finding assigning probabilities to actions for each agent in each state, assuming that the opponent will try to minimize the reward of the agent. 
-<<<<<<< HEAD
-=======
-The Minimax Q-Learning algorithm is implemented by following the steps in \cite{hk} which in this assignment is tested for a one predator one pray scenario.
-prey scenario,
+Minimax Q-Learning \cite{minimax}, avoids the problem of Independent Q-Learning by taking the actions of the opponent of each agent into account. As noted in [4], by taking into account the actions of other players and the ensuing rewards, an agent using this algorithm explicitly learns a Nash equilibrium. Thus this algorithm is a so called Equilibrium learner.
 
->>>>>>> f63a425cc677c970e4f1d0bba052f1bf0ac07b79
+A policy for each agent is computed by finding assigning probabilities to actions for each agent in each state, assuming that the opponent will try to minimize the reward of the agent. 
+
+\begin{figure}[ht!]
+\centering
+\def\arraystretch{1}% 
+    \begin{tabular}{|l |l | c | r|}
+    \hline
+    &P&S&R\\
+\hline
+P&0&-1&1\\
+\hline
+S&1&0&-1\\
+\hline
+S&-1&1&0\\
+\hline
+\end{tabular}
+        \caption{Paper-Scissors-Rock, an Example of a Matrix game that can be solved by linear programming}
+        \label{fig:psr}
+\end{figure}
+If we Consider the two player game Rock-Scissors-Paper", where two persons simultaneously make a hand sign corresponding to one of the three items. Playing Rock (R) beats Scissors (S), Scissors beats Paper(P), and Paper beats Rock. 
+When both persons play the same action(both R, both S, or both P), then it is a draw game. For two players, we have the following payoff table listed in figure \ref{fig:psr}. The payoffs are as following, -1 for losing, 0 for a draw and 1 for wining.
+In game theory, this is the two player zero-sum game and based on the definition of Nash equilibrium, we know there is no pure strategy solution for this game and the optimal mixed solution is a distribution of 1/3,1/3,1/3. 
+
 \subsection{GIGA-WoLF}
+WoLF Win or Learn Fast \cite{GIGA-wolf} ANDRA which as the name suggest makes the agent learn fast when losing, and learn slowly when winning by changing the learning rate based on the performance of the agents policy. This approach can be combined with different learning schemes such as GIGA and Policy Hill Climbing (PHC)\cite{PHC}.
+\\
 
+The WoLF approach is a so called Best-response learner. Instead of taking the optimal move in a state, the policy of the agent is now updated by increasing the probability of picking
+the optimal move in the updated state with a learning rate $ \gamma $. The fast learning when losing and the slowly learning when winning is achieved by maintaining an average policy, and after making a move and observing the new state and the reward of the move, comparing whether the used policy or the average policy would have performed better in the previous state. The policy is then updated, in the GIGA method this is done by keeping the two strategies $x_t$ and $z_t$ and takes its actions from the distribution $x_t$ but updates both $x_t$ and $z_t$ after each iteration:
+\begin{enumerate}
+\centering
+  \item $\hat{x}_{t+1} = P(x_t + \eta_tr_t)$
+  \item $z_{t+1} = P(z_t + \eta_tr_t/3)$ \\
+  $\delta_t+1 = \min(1, \frac{||z_t+1-z_t||}{||z_{t+1}-\hat{x}_{t+1}||})$ 
+  \item $x_{t+1} = \hat{x}_{t+1} + \delta{t+1}(z_{t+1} - \hat{x}_{t+1} )$
+\end{enumerate}
+Where P is a function that normalizes a vector so that this vector is a probability distribution.
+ \\
+ \\
+ In the PHC \cite{PHC} the agent performs hill climbing in the space of policies by decreasing the probability of picking any other move then the optimal move in a state by $ \frac{\delta}{|(A)(s)|-1} $.
+The policy is then updated, with the exception that two values are kept for $ \delta$, one for if the current policy performs better than the average policy $ \delta_w$, and one for if the current policy performs worse than the average policy $\delta_l$.
 \section{Method}
 
 All results plotted in our figures represent the average performance of ten executions of the corresponding algorithm. We did this in order to reduce the noise present in our plots and thus be able to better visualize and interpret the results. Furthermore, and in order to provide more robust results, the scores of the algorithms are always averaged across 1000 games.
@@ -389,8 +423,8 @@ Something here...
  Convergence and no-regret in Multiagent Learning, 2004 \\
  \url{http://webdocs.cs.ualberta.ca/~bowling/papers/04nips.pdf}
 
-%WoLF PHC:
-%Bowling and Veloso (2001),
-% Rational and Convergent Learning in Stochastic Games
-%  http://www.cs.cmu.edu/~mmv/papers/01ijcai-mike.pdf
+\bibitem{PHC}
+ Bowling and Veloso, \\
+ Rational and Convergent Learning in Stochastic Games, (2001) \\
+\url{http://www.cs.cmu.edu/~mmv/papers/01ijcai-mike.pdf}
 \end{document}
