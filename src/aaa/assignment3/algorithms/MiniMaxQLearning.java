@@ -59,8 +59,10 @@ public class MiniMaxQLearning extends QLearningMulti
 				
 				int reward = sPrime.getReward(predator);
 				
+
 				s.changeViewPoint(predator);
 				StateActionOpponent sao = new StateActionOpponent((StateMulti) s.clone(), action, opponent);
+
 				
 				if (!Q.containsKey(sao))
 				{
