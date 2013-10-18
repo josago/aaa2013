@@ -53,8 +53,8 @@ S&-1&1&0\\
         \caption{Paper-Scissors-Rock, an Example of a Matrix game that can be solved by linear programming}
         \label{fig:psr}
 \end{figure}
-If we Consider the two player game Rock-Scissors-Paper", where two persons simultaneously make a hand sign corresponding to one of the three items. Playing Rock (R) beats Scissors (S), Scissors beats Paper(P), and Paper beats Rock. 
-When both persons play the same action(both R, both S, or both P), then it is a draw game. For two players, we have the following payoff table listed in figure \ref{fig:psr}. The payoffs are as following, -1 for losing, 0 for a draw and 1 for wining.
+If we Consider the two player game Rock-Scissors-Paper, where two persons simultaneously make a hand sign corresponding to one of the three items. Playing Rock (R) beats Scissors (S), Scissors beats Paper(P), and Paper beats Rock. 
+When both persons play the same action(both R, both S, or both P), then it is a draw game. For a two players game, we have the following payoff table listed in figure \ref{fig:psr} listing only one agents payoff. The payoffs are as following, -1 for losing, 0 for a draw and 1 for wining.
 In game theory, this is the two player zero-sum game and based on the definition of Nash equilibrium, we know there is no pure strategy solution for this game and the optimal mixed solution is a distribution of 1/3,1/3,1/3. 
 
 Minimax Q-Learning \cite{minimax}, avoids the problem of Independent Q-Learning by taking the actions of the opponent of each agent into account. A policy for each agent is computed by finding assigning probabilities to actions for each agent in each state, assuming that the opponent will try to minimize the reward of the agent. 
@@ -66,7 +66,7 @@ WoLF Win or Learn Fast \cite{GIGA-wolf} \cite{PHC} which as the name suggest mak
 \\
 
 The WoLF approach is a so called Best-response learner. Instead of taking the optimal move in a state, the policy of the agent is now updated by increasing the probability of picking
-the optimal move in the updated state with a learning rate $ \gamma $. The fast learning when losing and the slowly learning when winning is achieved by maintaining an average policy, and after making a move and observing the new state and the reward of the move, comparing whether the used policy or the average policy would have performed better in the previous state. The policy is then updated, in the GIGA method this is done by keeping the two strategies $x_t$ and $z_t$ and takes its actions from the distribution $x_t$ but updates both $x_t$ and $z_t$ after each iteration:
+the optimal move in the updated state with a learning rate $ \delta $. The fast learning when losing and the slowly learning when winning is achieved by maintaining an average policy, and after making a move and observing the new state and the reward of the move, comparing whether the used policy or the average policy would have performed better in the previous state. The policy is then updated, in the GIGA method this is done by keeping the two strategies $x_t$ and $z_t$ and takes its actions from the distribution $x_t$ but updates both $x_t$ and $z_t$ after each iteration:
 \begin{enumerate}
 \centering
   \item $\hat{x}_{t+1} = P(x_t + \eta_tr_t)$

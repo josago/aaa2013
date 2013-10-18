@@ -11,7 +11,7 @@ public class MiniMaxQLearning extends QLearningMulti
 {
 	public static final int NUM_EPISODES = 5000;
 	
-	public static final float Q_INITIAL = 1;
+	public static final float Q_INITIAL = -15f;
 	
 	private final HashMap<State, Float> V;
 	private final HashMap<StateActionOpponent, Float> Q;
