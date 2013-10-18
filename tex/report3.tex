@@ -15,28 +15,18 @@
 
 \section{Introduction}
 
-In this assignment we worked on a predator versus prey grid world scenario, in which both the predator and the prey are learning agents  \cite{Assignment}. There are small changes made to the grid world scenario compared to previous assignments.%We have implemented and evaluated several algorithms for each agent to use. For one algorithm, Independent Q-Learning, we have used a scenario in which several predators chase a single prey. 
-\\
-\\
-Unlike the previous assignments, the prey is now also a learning agent. In addition the environment is extended so that it can contain more than one predator. A terminal state is now defined as any state in which any two or more agents in the environment (predator or prey) occupy the same square in the grid.
+In this assignment we worked on a predator versus prey grid world scenario, in which both the predator and the prey are learning agents \cite{Assignment}. There are small changes made to the grid world scenario compared to previous assignments. Unlike previous assignments, the prey is now also a learning agent. In addition, the environment is extended so that it can contain more than one predator. A terminal state is now defined as any state in which any two or more agents in the environment (predator or prey) occupy the same square in the grid.
 
-Predators must work together in this scenario to catch the prey. If any predator catches the
-prey, all predators receive a reward of 10. The prey receives a reward of -10 in this case.
-However, if two or more predators occupy the same square the prey receives a reward of
-10 and all predators receive a reward of -10. This situation trumps catching the prey: if two
-predators occupy the same square while a third predator caught the prey, the prey ‘gets away’
-and receives a positive reward, while all other agents receive a negative reward. Similarly, if two
-predators catch the prey at the same time, and thus occupy the same square, the prey also gets
-away.
+Predators must work together in this scenario to catch the prey. If any predator catches the prey, all predators receive a reward of +10. The prey receives a reward of -10 in this case. However, if two or more predators occupy the same square, the prey receives a reward of +10 and all predators receive a reward of -10. This situation trumps catching the prey: if two predators occupy the same square while a third predator caught the prey, the prey ``gets away'' and receives a positive reward, while all the other agents receive a negative reward. Similarly, if two predators catch the prey at the same time, and thus occupy the same square, the prey also gets away.
 
 \section{Theoretical description of the algorithms}
 
-For this assignment we have implemented the following algorithms: Independent Q-Learning \cite{vlasis}, Minimax Q-Learning \cite{minimax}, Generalized Infinitesimal Gradient Ascent Win or Learn Fast(GIGA-WoLF) \cite{GIGA-wolf}. Each algorithm will be described concisely below.
+For this assignment we have implemented the following algorithms: independent Q-Learning \cite{vlasis}, minimax Q-Learning \cite{minimax} and Generalized Infinitesimal Gradient Ascent-Win or Learn Fast (GIGA-WoLF) \cite{GIGA-wolf}. Each algorithm will be described concisely below.
 
 \subsection{Independent Q-Learning}
 
-In Independent Q-Learning each agent in the environment treats all other agents as being part of the environment. An agent employing Independent Q-Learning does not try to model other agents, or try to learn their behavior \cite{vlasis}. The agent then uses Q-Learning to learn a state-actionvalue function, mapping actions in states to values.
-A problem with this algorithm is that the Q-Learning algorithm \cite{SB} assumes a static environment, in which state transition probabilities do not change. This assumption is not valid for independent Q-Learning, as other learning agents might change their behavior over time. Since the agent models other agents as part of the environment in other words the environment becomes dynamic.
+In Independent Q-Learning each agent in the environment treats all other agents as being part of the environment. An agent employing Independent Q-Learning does not try to model other agents, or try to learn their behavior \cite{vlasis}. The agent then uses Q-Learning to learn a state-action value function, mapping actions in states to values.
+A problem with this algorithm is that the Q-Learning algorithm \cite{SB} assumes a static environment, in which state transition probabilities do not change. This assumption is not valid for independent Q-Learning, as other learning agents might change their behavior over time. Since the agent models other agents as part of the environment, the environment becomes dynamic.
 \\ \\
 Nash equilibria found by agents using Independent Q-Learning might not be Pareto optimal. Furthermore in a self play scenario, i.e. when an Independent Q-Learning agent plays another Independent Q-Learning agent, it is possible that neither of their policies converge. This happens in situations where the only equilibria are mixed equilibria, i.e. using policies that are not fully deterministic.
 
@@ -254,6 +244,127 @@ There is another subtlety we need to take care of. If we are in a setting with $
 \begin{figure}[ht!]
  \centering
  
+ \begin{tabular}{cc}
+
+\begin{tikzpicture}
+\begin{axis}[height=7.75cm, width=7.75cm, grid=major, xlabel=Number of episodes, ylabel=Average score, xmin=0, xmax=5000, ymin=-0.5, ymax=3.5, legend pos=south east]
+% \addplot[blue] coordinates {
+% };
+% \addlegendentry{$\gamma = 0$}
+
+\addplot[cyan] coordinates {
+(0, 0.24019068) (100, 0.086535975) (200, 0.021884544) (300, 0.6695074) (400, 0.20556265) (500, 0.46540916) (600, 0.6276946) (700, 0.5977449) (800, 0.8557811) (900, 0.504657) (1000, 1.0947102) (1100, 1.5386682) (1200, 0.41207418) (1300, 1.5033295) (1400, 1.9939443) (1500, 1.3769149) (1600, 1.7092875) (1700, 1.5175939) (1800, 0.3021351) (1900, 0.3570217) (2000, 0.9693309) (2100, 2.3176484) (2200, 1.4480205) (2300, 1.9855485) (2400, 0.9363186) (2500, 1.4990823) (2600, 1.0925311) (2700, 0.91996855) (2800, 1.7204973) (2900, 1.6718495) (3000, 1.9668694) (3100, 1.5954415) (3200, 2.2254913) (3300, 2.3075585) (3400, 1.1530557) (3500, 1.3405211) (3600, 1.866747) (3700, 1.379714) (3800, 1.4860759) (3900, 1.2998141) (4000, 0.7074839) (4100, 1.2861505) (4200, 1.5714715) (4300, 1.4292024) (4400, 1.0303098) (4500, 1.0564508) (4600, 0.93953514) (4700, 1.099314) (4800, 0.89675003) (4900, 0.86541384)
+};
+\addlegendentry{$\gamma = 0.3$}
+
+\addplot[olive] coordinates {
+(0, 0.16610637) (100, 0.48563656) (200, 0.5540212) (300, 1.1089855) (400, 0.86939836) (500, 0.21821758) (600, 0.38123426) (700, 0.4987786) (800, 0.5707362) (900, 1.1891972) (1000, 1.2644156) (1100, 1.1770762) (1200, 1.1291239) (1300, 0.9470017) (1400, 1.3742715) (1500, 1.4558307) (1600, 0.52523583) (1700, 1.3547359) (1800, 1.8974947) (1900, 1.3656644) (2000, 1.6856433) (2100, 1.8653886) (2200, 1.5939571) (2300, 1.997956) (2400, 1.7877682) (2500, 2.4303896) (2600, 1.6956869) (2700, 1.9895085) (2800, 2.0728118) (2900, 2.1021101) (3000, 1.2098619) (3100, 2.2305248) (3200, 2.0944762) (3300, 2.035708) (3400, 2.6126614) (3500, 2.060516) (3600, 2.4235563) (3700, 2.1030645) (3800, 2.0244393) (3900, 2.0026414) (4000, 1.8198824) (4100, 2.6172874) (4200, 2.2438881) (4300, 3.1694236) (4400, 2.2643862) (4500, 2.1468163) (4600, 2.2421365) (4700, 2.45173) (4800, 2.525833) (4900, 2.84297)
+};
+\addlegendentry{$\gamma = 0.6$}
+
+\addplot[orange] coordinates {
+(0, 0.046459362) (100, 0.086777486) (200, 0.34701955) (300, 0.7021876) (400, 0.74912524) (500, 0.6881235) (600, 0.09215304) (700, 0.65425897) (800, 0.80900145) (900, 0.68840134) (1000, 1.4111269) (1100, 1.0782071) (1200, 2.011735) (1300, 1.901412) (1400, 0.6643786) (1500, 1.1655734) (1600, 1.4373999) (1700, 1.5262848) (1800, 1.0903087) (1900, 1.5450555) (2000, 2.1790001) (2100, 1.6609112) (2200, 1.4441974) (2300, 2.2514858) (2400, 2.2640066) (2500, 2.054192) (2600, 2.05643) (2700, 1.6811329) (2800, 1.3473744) (2900, 1.7148299) (3000, 1.4489069) (3100, 1.333591) (3200, 1.868292) (3300, 1.5771114) (3400, 2.223491) (3500, 2.003037) (3600, 2.2220948) (3700, 1.7694572) (3800, 2.1869361) (3900, 2.1263793) (4000, 1.4574677) (4100, 2.12546) (4200, 2.0298264) (4300, 2.2655075) (4400, 1.9079212) (4500, 2.7400007) (4600, 2.7095385) (4700, 2.8769479) (4800, 2.1872087) (4900, 2.0776663)
+};
+\addlegendentry{$\gamma = 0.9$}
+
+\end{axis}
+\end{tikzpicture}
+
+&
+
+\begin{tikzpicture}
+\begin{axis}[height=7.75cm, width=7.75cm, grid=major, xlabel=Number of episodes, ylabel=Average score, xmin=0, xmax=5000, ymin=-0.5, ymax=3.5, legend pos=south east]
+\addplot[blue] coordinates {
+(0, 0.046459362) (100, 0.086777486) (200, 0.34701955) (300, 0.7021876) (400, 0.74912524) (500, 0.6881235) (600, 0.09215304) (700, 0.65425897) (800, 0.80900145) (900, 0.68840134) (1000, 1.4111269) (1100, 1.0782071) (1200, 2.011735) (1300, 1.901412) (1400, 0.6643786) (1500, 1.1655734) (1600, 1.4373999) (1700, 1.5262848) (1800, 1.0903087) (1900, 1.5450555) (2000, 2.1790001) (2100, 1.6609112) (2200, 1.4441974) (2300, 2.2514858) (2400, 2.2640066) (2500, 2.054192) (2600, 2.05643) (2700, 1.6811329) (2800, 1.3473744) (2900, 1.7148299) (3000, 1.4489069) (3100, 1.333591) (3200, 1.868292) (3300, 1.5771114) (3400, 2.223491) (3500, 2.003037) (3600, 2.2220948) (3700, 1.7694572) (3800, 2.1869361) (3900, 2.1263793) (4000, 1.4574677) (4100, 2.12546) (4200, 2.0298264) (4300, 2.2655075) (4400, 1.9079212) (4500, 2.7400007) (4600, 2.7095385) (4700, 2.8769479) (4800, 2.1872087) (4900, 2.0776663)
+};
+\addlegendentry{$\alpha = 0.1$}
+
+\addplot[cyan] coordinates {
+(0, 0.046459362) (100, 0.086777486) (200, 0.34701955) (300, 0.7021876) (400, 0.74912524) (500, 0.6881235) (600, 0.09215304) (700, 0.65425897) (800, 0.80900145) (900, 0.68840134) (1000, 1.4111269) (1100, 1.0782071) (1200, 2.011735) (1300, 1.901412) (1400, 0.6643786) (1500, 1.1655734) (1600, 1.4373999) (1700, 1.5262848) (1800, 1.0903087) (1900, 1.5450555) (2000, 2.1790001) (2100, 1.6609112) (2200, 1.4441974) (2300, 2.2514858) (2400, 2.2640066) (2500, 2.054192) (2600, 2.05643) (2700, 1.6811329) (2800, 1.3473744) (2900, 1.7148299) (3000, 1.4489069) (3100, 1.333591) (3200, 1.868292) (3300, 1.5771114) (3400, 2.223491) (3500, 2.003037) (3600, 2.2220948) (3700, 1.7694572) (3800, 2.1869361) (3900, 2.1263793) (4000, 1.4574677) (4100, 2.12546) (4200, 2.0298264) (4300, 2.2655075) (4400, 1.9079212) (4500, 2.7400007) (4600, 2.7095385) (4700, 2.8769479) (4800, 2.1872087) (4900, 2.0776663)
+};
+\addlegendentry{$\alpha = 0.4$}
+
+\addplot[olive] coordinates {
+(0, 0.046459362) (100, 0.086777486) (200, 0.34701955) (300, 0.7021876) (400, 0.74912524) (500, 0.6881235) (600, 0.09215304) (700, 0.65425897) (800, 0.80900145) (900, 0.68840134) (1000, 1.4111269) (1100, 1.0782071) (1200, 2.011735) (1300, 1.901412) (1400, 0.6643786) (1500, 1.1655734) (1600, 1.4373999) (1700, 1.5262848) (1800, 1.0903087) (1900, 1.5450555) (2000, 2.1790001) (2100, 1.6609112) (2200, 1.4441974) (2300, 2.2514858) (2400, 2.2640066) (2500, 2.054192) (2600, 2.05643) (2700, 1.6811329) (2800, 1.3473744) (2900, 1.7148299) (3000, 1.4489069) (3100, 1.333591) (3200, 1.868292) (3300, 1.5771114) (3400, 2.223491) (3500, 2.003037) (3600, 2.2220948) (3700, 1.7694572) (3800, 2.1869361) (3900, 2.1263793) (4000, 1.4574677) (4100, 2.12546) (4200, 2.0298264) (4300, 2.2655075) (4400, 1.9079212) (4500, 2.7400007) (4600, 2.7095385) (4700, 2.8769479) (4800, 2.1872087) (4900, 2.0776663)
+};
+\addlegendentry{$\alpha = 0.7$}
+
+\addplot[orange] coordinates {
+(0, 0.046459362) (100, 0.086777486) (200, 0.34701955) (300, 0.7021876) (400, 0.74912524) (500, 0.6881235) (600, 0.09215304) (700, 0.65425897) (800, 0.80900145) (900, 0.68840134) (1000, 1.4111269) (1100, 1.0782071) (1200, 2.011735) (1300, 1.901412) (1400, 0.6643786) (1500, 1.1655734) (1600, 1.4373999) (1700, 1.5262848) (1800, 1.0903087) (1900, 1.5450555) (2000, 2.1790001) (2100, 1.6609112) (2200, 1.4441974) (2300, 2.2514858) (2400, 2.2640066) (2500, 2.054192) (2600, 2.05643) (2700, 1.6811329) (2800, 1.3473744) (2900, 1.7148299) (3000, 1.4489069) (3100, 1.333591) (3200, 1.868292) (3300, 1.5771114) (3400, 2.223491) (3500, 2.003037) (3600, 2.2220948) (3700, 1.7694572) (3800, 2.1869361) (3900, 2.1263793) (4000, 1.4574677) (4100, 2.12546) (4200, 2.0298264) (4300, 2.2655075) (4400, 1.9079212) (4500, 2.7400007) (4600, 2.7095385) (4700, 2.8769479) (4800, 2.1872087) (4900, 2.0776663)
+};
+\addlegendentry{$\alpha = 1$}
+
+\end{axis}
+\end{tikzpicture}
+
+\\
+
+\begin{tikzpicture}
+\begin{axis}[height=7.75cm, width=7.75cm, grid=major, xlabel=Number of episodes, ylabel=Average score, xmin=0, xmax=5000, ymin=-0.5, ymax=3.5, legend pos=south east]
+\addplot[blue] coordinates {
+(0, 0.046459362) (100, 0.086777486) (200, 0.34701955) (300, 0.7021876) (400, 0.74912524) (500, 0.6881235) (600, 0.09215304) (700, 0.65425897) (800, 0.80900145) (900, 0.68840134) (1000, 1.4111269) (1100, 1.0782071) (1200, 2.011735) (1300, 1.901412) (1400, 0.6643786) (1500, 1.1655734) (1600, 1.4373999) (1700, 1.5262848) (1800, 1.0903087) (1900, 1.5450555) (2000, 2.1790001) (2100, 1.6609112) (2200, 1.4441974) (2300, 2.2514858) (2400, 2.2640066) (2500, 2.054192) (2600, 2.05643) (2700, 1.6811329) (2800, 1.3473744) (2900, 1.7148299) (3000, 1.4489069) (3100, 1.333591) (3200, 1.868292) (3300, 1.5771114) (3400, 2.223491) (3500, 2.003037) (3600, 2.2220948) (3700, 1.7694572) (3800, 2.1869361) (3900, 2.1263793) (4000, 1.4574677) (4100, 2.12546) (4200, 2.0298264) (4300, 2.2655075) (4400, 1.9079212) (4500, 2.7400007) (4600, 2.7095385) (4700, 2.8769479) (4800, 2.1872087) (4900, 2.0776663)
+};
+\addlegendentry{$\epsilon = 0$}
+
+\addplot[cyan] coordinates {
+(0, 0.046459362) (100, 0.086777486) (200, 0.34701955) (300, 0.7021876) (400, 0.74912524) (500, 0.6881235) (600, 0.09215304) (700, 0.65425897) (800, 0.80900145) (900, 0.68840134) (1000, 1.4111269) (1100, 1.0782071) (1200, 2.011735) (1300, 1.901412) (1400, 0.6643786) (1500, 1.1655734) (1600, 1.4373999) (1700, 1.5262848) (1800, 1.0903087) (1900, 1.5450555) (2000, 2.1790001) (2100, 1.6609112) (2200, 1.4441974) (2300, 2.2514858) (2400, 2.2640066) (2500, 2.054192) (2600, 2.05643) (2700, 1.6811329) (2800, 1.3473744) (2900, 1.7148299) (3000, 1.4489069) (3100, 1.333591) (3200, 1.868292) (3300, 1.5771114) (3400, 2.223491) (3500, 2.003037) (3600, 2.2220948) (3700, 1.7694572) (3800, 2.1869361) (3900, 2.1263793) (4000, 1.4574677) (4100, 2.12546) (4200, 2.0298264) (4300, 2.2655075) (4400, 1.9079212) (4500, 2.7400007) (4600, 2.7095385) (4700, 2.8769479) (4800, 2.1872087) (4900, 2.0776663)
+};
+\addlegendentry{$\epsilon = 0.25$}
+
+\addplot[teal] coordinates {
+(0, 0.046459362) (100, 0.086777486) (200, 0.34701955) (300, 0.7021876) (400, 0.74912524) (500, 0.6881235) (600, 0.09215304) (700, 0.65425897) (800, 0.80900145) (900, 0.68840134) (1000, 1.4111269) (1100, 1.0782071) (1200, 2.011735) (1300, 1.901412) (1400, 0.6643786) (1500, 1.1655734) (1600, 1.4373999) (1700, 1.5262848) (1800, 1.0903087) (1900, 1.5450555) (2000, 2.1790001) (2100, 1.6609112) (2200, 1.4441974) (2300, 2.2514858) (2400, 2.2640066) (2500, 2.054192) (2600, 2.05643) (2700, 1.6811329) (2800, 1.3473744) (2900, 1.7148299) (3000, 1.4489069) (3100, 1.333591) (3200, 1.868292) (3300, 1.5771114) (3400, 2.223491) (3500, 2.003037) (3600, 2.2220948) (3700, 1.7694572) (3800, 2.1869361) (3900, 2.1263793) (4000, 1.4574677) (4100, 2.12546) (4200, 2.0298264) (4300, 2.2655075) (4400, 1.9079212) (4500, 2.7400007) (4600, 2.7095385) (4700, 2.8769479) (4800, 2.1872087) (4900, 2.0776663)
+};
+\addlegendentry{$\epsilon = 0.5$}
+
+\addplot[olive] coordinates {
+(0, 0.046459362) (100, 0.086777486) (200, 0.34701955) (300, 0.7021876) (400, 0.74912524) (500, 0.6881235) (600, 0.09215304) (700, 0.65425897) (800, 0.80900145) (900, 0.68840134) (1000, 1.4111269) (1100, 1.0782071) (1200, 2.011735) (1300, 1.901412) (1400, 0.6643786) (1500, 1.1655734) (1600, 1.4373999) (1700, 1.5262848) (1800, 1.0903087) (1900, 1.5450555) (2000, 2.1790001) (2100, 1.6609112) (2200, 1.4441974) (2300, 2.2514858) (2400, 2.2640066) (2500, 2.054192) (2600, 2.05643) (2700, 1.6811329) (2800, 1.3473744) (2900, 1.7148299) (3000, 1.4489069) (3100, 1.333591) (3200, 1.868292) (3300, 1.5771114) (3400, 2.223491) (3500, 2.003037) (3600, 2.2220948) (3700, 1.7694572) (3800, 2.1869361) (3900, 2.1263793) (4000, 1.4574677) (4100, 2.12546) (4200, 2.0298264) (4300, 2.2655075) (4400, 1.9079212) (4500, 2.7400007) (4600, 2.7095385) (4700, 2.8769479) (4800, 2.1872087) (4900, 2.0776663)
+};
+\addlegendentry{$\epsilon = 0.75$}
+
+\addplot[orange] coordinates {
+(0, 0.046459362) (100, 0.086777486) (200, 0.34701955) (300, 0.7021876) (400, 0.74912524) (500, 0.6881235) (600, 0.09215304) (700, 0.65425897) (800, 0.80900145) (900, 0.68840134) (1000, 1.4111269) (1100, 1.0782071) (1200, 2.011735) (1300, 1.901412) (1400, 0.6643786) (1500, 1.1655734) (1600, 1.4373999) (1700, 1.5262848) (1800, 1.0903087) (1900, 1.5450555) (2000, 2.1790001) (2100, 1.6609112) (2200, 1.4441974) (2300, 2.2514858) (2400, 2.2640066) (2500, 2.054192) (2600, 2.05643) (2700, 1.6811329) (2800, 1.3473744) (2900, 1.7148299) (3000, 1.4489069) (3100, 1.333591) (3200, 1.868292) (3300, 1.5771114) (3400, 2.223491) (3500, 2.003037) (3600, 2.2220948) (3700, 1.7694572) (3800, 2.1869361) (3900, 2.1263793) (4000, 1.4574677) (4100, 2.12546) (4200, 2.0298264) (4300, 2.2655075) (4400, 1.9079212) (4500, 2.7400007) (4600, 2.7095385) (4700, 2.8769479) (4800, 2.1872087) (4900, 2.0776663)
+};
+\addlegendentry{$\epsilon = 1$}
+
+\end{axis}
+\end{tikzpicture}
+
+&
+
+ \begin{tikzpicture}
+\begin{axis}[height=7.75cm, width=7.75cm, grid=major, xlabel=Number of episodes, ylabel=Average score, xmin=0, xmax=5000, ymin=-0.5, ymax=3.5, legend pos=south east]
+\addplot[blue] coordinates {
+(0, 0.046459362) (100, 0.086777486) (200, 0.34701955) (300, 0.7021876) (400, 0.74912524) (500, 0.6881235) (600, 0.09215304) (700, 0.65425897) (800, 0.80900145) (900, 0.68840134) (1000, 1.4111269) (1100, 1.0782071) (1200, 2.011735) (1300, 1.901412) (1400, 0.6643786) (1500, 1.1655734) (1600, 1.4373999) (1700, 1.5262848) (1800, 1.0903087) (1900, 1.5450555) (2000, 2.1790001) (2100, 1.6609112) (2200, 1.4441974) (2300, 2.2514858) (2400, 2.2640066) (2500, 2.054192) (2600, 2.05643) (2700, 1.6811329) (2800, 1.3473744) (2900, 1.7148299) (3000, 1.4489069) (3100, 1.333591) (3200, 1.868292) (3300, 1.5771114) (3400, 2.223491) (3500, 2.003037) (3600, 2.2220948) (3700, 1.7694572) (3800, 2.1869361) (3900, 2.1263793) (4000, 1.4574677) (4100, 2.12546) (4200, 2.0298264) (4300, 2.2655075) (4400, 1.9079212) (4500, 2.7400007) (4600, 2.7095385) (4700, 2.8769479) (4800, 2.1872087) (4900, 2.0776663)
+};
+\addlegendentry{$Q(s, a) = 30$}
+
+\addplot[cyan] coordinates {
+(0, 0.046459362) (100, 0.086777486) (200, 0.34701955) (300, 0.7021876) (400, 0.74912524) (500, 0.6881235) (600, 0.09215304) (700, 0.65425897) (800, 0.80900145) (900, 0.68840134) (1000, 1.4111269) (1100, 1.0782071) (1200, 2.011735) (1300, 1.901412) (1400, 0.6643786) (1500, 1.1655734) (1600, 1.4373999) (1700, 1.5262848) (1800, 1.0903087) (1900, 1.5450555) (2000, 2.1790001) (2100, 1.6609112) (2200, 1.4441974) (2300, 2.2514858) (2400, 2.2640066) (2500, 2.054192) (2600, 2.05643) (2700, 1.6811329) (2800, 1.3473744) (2900, 1.7148299) (3000, 1.4489069) (3100, 1.333591) (3200, 1.868292) (3300, 1.5771114) (3400, 2.223491) (3500, 2.003037) (3600, 2.2220948) (3700, 1.7694572) (3800, 2.1869361) (3900, 2.1263793) (4000, 1.4574677) (4100, 2.12546) (4200, 2.0298264) (4300, 2.2655075) (4400, 1.9079212) (4500, 2.7400007) (4600, 2.7095385) (4700, 2.8769479) (4800, 2.1872087) (4900, 2.0776663)
+};
+\addlegendentry{$Q(s, a) = 15$}
+
+\addplot[olive] coordinates {
+(0, 0.046459362) (100, 0.086777486) (200, 0.34701955) (300, 0.7021876) (400, 0.74912524) (500, 0.6881235) (600, 0.09215304) (700, 0.65425897) (800, 0.80900145) (900, 0.68840134) (1000, 1.4111269) (1100, 1.0782071) (1200, 2.011735) (1300, 1.901412) (1400, 0.6643786) (1500, 1.1655734) (1600, 1.4373999) (1700, 1.5262848) (1800, 1.0903087) (1900, 1.5450555) (2000, 2.1790001) (2100, 1.6609112) (2200, 1.4441974) (2300, 2.2514858) (2400, 2.2640066) (2500, 2.054192) (2600, 2.05643) (2700, 1.6811329) (2800, 1.3473744) (2900, 1.7148299) (3000, 1.4489069) (3100, 1.333591) (3200, 1.868292) (3300, 1.5771114) (3400, 2.223491) (3500, 2.003037) (3600, 2.2220948) (3700, 1.7694572) (3800, 2.1869361) (3900, 2.1263793) (4000, 1.4574677) (4100, 2.12546) (4200, 2.0298264) (4300, 2.2655075) (4400, 1.9079212) (4500, 2.7400007) (4600, 2.7095385) (4700, 2.8769479) (4800, 2.1872087) (4900, 2.0776663)
+};
+\addlegendentry{$Q(s, a) = 0$}
+
+\addplot[orange] coordinates {
+(0, 0.046459362) (100, 0.086777486) (200, 0.34701955) (300, 0.7021876) (400, 0.74912524) (500, 0.6881235) (600, 0.09215304) (700, 0.65425897) (800, 0.80900145) (900, 0.68840134) (1000, 1.4111269) (1100, 1.0782071) (1200, 2.011735) (1300, 1.901412) (1400, 0.6643786) (1500, 1.1655734) (1600, 1.4373999) (1700, 1.5262848) (1800, 1.0903087) (1900, 1.5450555) (2000, 2.1790001) (2100, 1.6609112) (2200, 1.4441974) (2300, 2.2514858) (2400, 2.2640066) (2500, 2.054192) (2600, 2.05643) (2700, 1.6811329) (2800, 1.3473744) (2900, 1.7148299) (3000, 1.4489069) (3100, 1.333591) (3200, 1.868292) (3300, 1.5771114) (3400, 2.223491) (3500, 2.003037) (3600, 2.2220948) (3700, 1.7694572) (3800, 2.1869361) (3900, 2.1263793) (4000, 1.4574677) (4100, 2.12546) (4200, 2.0298264) (4300, 2.2655075) (4400, 1.9079212) (4500, 2.7400007) (4600, 2.7095385) (4700, 2.8769479) (4800, 2.1872087) (4900, 2.0776663)
+};
+\addlegendentry{$Q(s, a) = -15$}
+
+\end{axis}
+\end{tikzpicture}
+
+\end{tabular}
+
+\caption{Performance of the minimax Q-Learning algorithm for different combinations of its parameters. The ``1 predator versus 1 prey'' scenario was tested. Unless otherwise stated, the parameters used were: $\alpha = 0.9, \gamma = 0.9, \epsilon = 0.1, Q(s, a) = 15$.}
+\label{fig:ql-params}
+\end{figure}
+
+\begin{figure}[ht!]
+ \centering
+ 
  \begin{tikzpicture}
 \begin{axis}[height=11cm, width=11cm, grid=major, xlabel=Number of episodes, ylabel=Average score, xmin=0, xmax=40000, ymin=-9, ymax=1.5, legend pos=south east]
 \addplot[blue] coordinates {
@@ -282,7 +393,7 @@ There is another subtlety we need to take care of. If we are in a setting with $
 \end{axis}
 \end{tikzpicture}
 
-\caption{Performance of the independent Q-Learning algorithm for different numbers of predators. In all cases, the parameters used were: $\alpha = 0.9, \gamma = 0.9, \epsilon = 0.1, Q(s, a) = 15$.}
+\caption{Performance of the independent Q-Learning algorithm for different numbers of predators. In all cases, the parameters used were: $\alpha = 0.9, \gamma = 0.9, \epsilon = 0.1, Q(s, a) = 1$.}
 \label{fig:ql-predators}
 \end{figure}
 
@@ -349,13 +460,14 @@ Something here...
 
 We will comment on the performance of the algorithm when considering different numbers of predators, while keeping the rest of the parameters fixed. Our results are summarized in figure \ref{fig:wolf-predators}. We will also compare these results with those we obtained for the independent Q-Learning algorithm.
 
-We can again notice how the solutions become worse the higher the number of predators is, just as it was the case with Q-Learning. However, the performance is different for each case. For 1 and 2 predators, the solutions found by GIGA-WoLF are better than those of independent Q-Learning: they archieve scores of 2 ($T = 16.3 $) versus 0.5 ($T = 29.4$), respectively. Scores around 2 are close to the theoretical best score possible for this problem, given that the prey also learns. For the case of 3 predators, no differences can be appreciated between both algorithms. However, in the 4 predators scenario, GIGA-WoLF is surprisingly unable to make any improvement to the solutions found, while Q-Learning is still able to slowly improve the average score.
+We can again notice how the solutions become worse the higher the number of predators is, just as it was the case with Q-Learning. However, the performance is different for each case. For 1 and 2 predators, the solutions found by GIGA-WoLF are better than those of independent Q-Learning: they archieve scores of 2 ($T = 16.3 $) versus 0.5 ($T = 29.4$), respectively. For the case of 3 predators, no differences can be appreciated between both algorithms. However, in the 4 predators scenario, GIGA-WoLF is surprisingly unable to make any improvement to the solutions found, while Q-Learning is still able to slowly improve the average score.
 
 \section{Conclusion}
 
-Something here...
+We have implemented and studied the performance of the independent Q-Learning algorithm, the minimax Q-Learning algorithm, and a model-free, multi-timestep version of the GIGA-WoLF algorithm. We also derived a score system and a reduced state-space encoding suitable for the multi-predator scenario. We can summarize our main conclusions from this assignment as follows:
 
 \begin{itemize}
+ \item The best solution for the 1 predator scenario was found by the minimax Q-Learning algorithm ($ T \approx 12 $).
  \item The independent Q-Learning algorithm manages to find good quality solutions for the scenarios with 1 and 2 predators.
  \item All solutions found for the cases having 3 or 4 predators did not manage to catch the prey quicker and/or more often than it takes the predators to collide into each other.
  \item Choices of intermediate values for the parameters $\gamma$ and $\alpha$ seem to improve the convergence rate of independent Q-Learning. We obtained the best performance using $\epsilon = 0$. An initialization of the values of the $Q$ table to 0 was found to yield the best results.
