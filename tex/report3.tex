@@ -62,7 +62,7 @@ Minimax Q-Learning \cite{minimax}, avoids the problem of Independent Q-Learning 
 The Minimax Q-Learning algorithm is implemented by following the steps in \cite{hk} which in this assignment is tested for a one predator one pray scenario.
 
 \subsection{GIGA-WoLF}
-WoLF Win or Learn Fast \cite{GIGA-wolf} ANDRA which as the name suggest makes the agent learn fast when losing, and learn slowly when winning by changing the learning rate based on the performance of the agents policy. This approach can be combined with different learning schemes such as GIGA and Policy Hill Climbing (PHC)\cite{PHC}.
+WoLF Win or Learn Fast \cite{GIGA-wolf} \cite{PHC} which as the name suggest makes the agent learn fast when losing, and learn slowly when winning by changing the learning rate based on the performance of the agents policy. This approach can be combined with different learning schemes such as GIGA\cite{GIGA-wolf} and Policy Hill Climbing (PHC)\cite{PHC}.
 \\
 
 The WoLF approach is a so called Best-response learner. Instead of taking the optimal move in a state, the policy of the agent is now updated by increasing the probability of picking
@@ -77,7 +77,7 @@ the optimal move in the updated state with a learning rate $ \gamma $. The fast 
 Where P is a function that normalizes a vector so that this vector is a probability distribution.
  \\
  \\
- In the PHC \cite{PHC} the agent performs hill climbing in the space of policies by decreasing the probability of picking any other move then the optimal move in a state by $ \frac{\delta}{|(A)(s)|-1} $.
+ In the PHC \cite{PHC} the agent performs hill climbing in the space of policies by decreasing the probability of picking any other move then the optimal move in a state by $ \frac{\delta}{|A(s)|-1} $.
 The policy is then updated, with the exception that two values are kept for $ \delta$, one for if the current policy performs better than the average policy $ \delta_w$, and one for if the current policy performs worse than the average policy $\delta_l$.
 \section{Method}
 
