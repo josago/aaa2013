@@ -7,20 +7,22 @@ import aaa.assignment3.*;
 
 public class GIGAWoLF extends QLearningMulti
 {
-	public static final int NUM_EPISODES = 40000;
+	public static final int NUM_EPISODES = 100000;
 	
-	private final HashMap<State, HashMap<Integer, Float>> preyX, preyZ;
-	private final HashMap<State, HashMap<Integer, Float>> predatorsX, predatorsZ;
+	@SuppressWarnings("unchecked")
+	private final HashMap<State, HashMap<Integer, Float>> X[] = new HashMap[2];
+	@SuppressWarnings("unchecked")
+	private final HashMap<State, HashMap<Integer, Float>> Z[] = new HashMap[2];
 	
 	public GIGAWoLF(Agent prey, List<Agent> predators, float gamma, float eta, float decay, boolean wantPerformance)
 	{
 		// Initialization of variables:
 		
-		preyX = new HashMap<State, HashMap<Integer, Float>>();
-		preyZ = new HashMap<State, HashMap<Integer, Float>>();
+		X[Agent.TYPE_PREDATOR] = new HashMap<State, HashMap<Integer, Float>>();
+		Z[Agent.TYPE_PREDATOR] = new HashMap<State, HashMap<Integer, Float>>();
 		
-		predatorsX = new HashMap<State, HashMap<Integer, Float>>();
-		predatorsZ = new HashMap<State, HashMap<Integer, Float>>();
+		X[Agent.TYPE_PREY] = new HashMap<State, HashMap<Integer, Float>>();
+		Z[Agent.TYPE_PREY] = new HashMap<State, HashMap<Integer, Float>>();
 		
 		StateMulti env = new StateMulti(prey, prey, predators);
 		
@@ -29,7 +31,8 @@ public class GIGAWoLF extends QLearningMulti
 		
 		for (int i = 0; i < NUM_EPISODES; i++)
 		{
-			System.out.println(preyX.size() + " vs " + predatorsX.size());
+			// System.out.println(X[Agent.TYPE_PREY].size() + " vs " + X[Agent.TYPE_PREDATOR].size());
+			
 			StateMulti s = (StateMulti) env.clone();
 			
 			List<StateMulti> states = new ArrayList<StateMulti>();
@@ -43,7 +46,9 @@ public class GIGAWoLF extends QLearningMulti
 			
 			// Episode generation:
 			
-			while (!s.isFinal())
+			int steps = 0;
+			
+			while (!s.isFinal() && steps < SimulatorMulti.TURNS_LIMIT)
 			{
 				states.add((StateMulti) s.clone());
 				
@@ -51,17 +56,16 @@ public class GIGAWoLF extends QLearningMulti
 				
 				for (Agent agent: agents)
 				{
-					HashMap<State, HashMap<Integer, Float>> table = agent.getType() == Agent.TYPE_PREDATOR ? predatorsX : preyX;
-					
 					s.changeViewPoint(agent);
 					
-					int action = getAction(getPi(table, s));
+					int action = getAction(getPi(X[agent.getType()], s));
 					actions.get(agent).add(action);
 					
 					sPrime.move(agent, action);
 				}
 				
 				s = sPrime;
+				steps++;
 			}
 			
 			int rewardPrey = s.getReward(prey);
@@ -74,53 +78,59 @@ public class GIGAWoLF extends QLearningMulti
 			{
 				for (Agent agent: agents)
 				{
-					int   action = actions.get(agent).remove(0);
-					float reward = (float) (rewardPrey * Math.pow(gamma, states.size() - 1 - (t++)));
+					int   action = actions.get(agent).get(t);
+					float reward = (float) (rewardPrey * Math.pow(gamma, states.size() - 1 - t));
 					
-					if (agent.getType() == Agent.TYPE_PREDATOR)
+					if (reward != 0)
 					{
-						reward *= -1;
+						if (agent.getType() == Agent.TYPE_PREDATOR)
+						{
+							reward *= -1;
+						}
+						
+						state.changeViewPoint(agent);
+						
+						// Step (1):
+						
+						HashMap<Integer, Float> xOld = getPi(X[agent.getType()], state);
+						
+						HashMap<Integer, Float> xTemp = clonePi(xOld);
+						xTemp.put(action, xOld.get(action) + eta * reward);
+						normalizePi(xTemp);
+						
+						// Step (2):
+						
+						HashMap<Integer, Float> zOld = getPi(Z[agent.getType()], state);
+						
+						HashMap<Integer, Float> zNew = clonePi(zOld);
+						zNew.put(action, zOld.get(action) + (eta * reward) / 3);
+						normalizePi(zNew);
+						
+						Z[agent.getType()].put((State) state.clone(), zNew);
+						
+						float delta = Math.min(1, normPi(diffPi(zNew, zOld)) / normPi(diffPi(zNew, xTemp)));
+						
+						if (Float.isNaN(delta))
+						{
+							delta = 1;
+						}
+						
+						// Step (3):
+						
+						HashMap<Integer, Float> xNew = sumPi(clonePi(xTemp), prodPi(diffPi(zNew, xTemp), delta));
+						
+						X[agent.getType()].put((State) state.clone(), xNew);
 					}
-					
-					state.changeViewPoint(agent);
-					
-					// Step (1):
-					
-					HashMap<State, HashMap<Integer, Float>> table = agent.getType() == Agent.TYPE_PREDATOR ? predatorsX : preyX;
-					
-					HashMap<Integer, Float> xOld = getPi(table, state);
-					
-					HashMap<Integer, Float> xTemp = clonePi(xOld);
-					xTemp.put(action, xTemp.get(action) + eta * reward);
-					normalizePi(xTemp);
-					
-					// Step (2):
-					
-					table = agent.getType() == Agent.TYPE_PREDATOR ? predatorsZ : preyZ;
-					
-					HashMap<Integer, Float> zOld = getPi(table, state);
-					
-					HashMap<Integer, Float> zNew = clonePi(xOld);
-					zNew.put(action, zNew.get(action) + (eta * reward) / 3);
-					normalizePi(zNew);
-					
-					float delta = Math.min(1, normPi(diffPi(zNew, zOld)) / normPi(diffPi(zNew, xTemp)));
-					
-					// Step (3):
-					
-					HashMap<Integer, Float> xNew = sumPi(clonePi(xTemp), prodPi(diffPi(zNew, xTemp), delta));
-					
-					table = agent.getType() == Agent.TYPE_PREDATOR ? predatorsX : preyX;
-					
-					table.put(state, xNew);
 				}
+				
+				t++;
 			}
 			
 			eta *= decay;
 			
 			// Performance graph plot:
 			
-			if (wantPerformance && i % 200 == 0)
+			if (wantPerformance && i % 400 == 0)
 			{
 				performanceAdd(i, prey, predators);
 			}
@@ -138,7 +148,7 @@ public class GIGAWoLF extends QLearningMulti
 			{
 				this.agent = agent;
 				
-				table = agent.getType() == Agent.TYPE_PREDATOR ? predatorsX : preyX;
+				table = X[agent.getType()];
 			}
 			
 			@Override
@@ -174,9 +184,9 @@ public class GIGAWoLF extends QLearningMulti
 	private int getAction(HashMap<Integer, Float> pi)
 	{
 		double random = Math.random();
-		
+			
 		float sum = 0;
-		
+			
 		for (int action: State.AGENT_ACTIONS)
 		{
 			sum += pi.get(action);
@@ -201,7 +211,7 @@ public class GIGAWoLF extends QLearningMulti
 				pi.put(action, 1.0f / State.AGENT_ACTIONS.length);
 			}
 			
-			table.put(s, pi);
+			table.put((State) s.clone(), pi);
 		}
 		
 		return table.get(s);
@@ -222,15 +232,39 @@ public class GIGAWoLF extends QLearningMulti
 	private void normalizePi(HashMap<Integer, Float> pi)
 	{
 		float sum = 0;
+		float min = Float.POSITIVE_INFINITY;
 		
 		for (float prob: pi.values())
 		{
-			sum += prob;
+			min = Math.min(min, prob);
+		}
+		
+		for (float prob: pi.values())
+		{
+			if (min < 0)
+			{
+				sum += prob - min;
+			}
+			else
+			{
+				sum += prob;
+			}
 		}
 		
 		for (int action: State.AGENT_ACTIONS)
 		{
-			pi.put(action, pi.get(action) / sum);
+			if (sum == 0)
+			{
+				pi.put(action, 1.0f / State.AGENT_ACTIONS.length);
+			}
+			else if (min < 0)
+			{
+				pi.put(action, (pi.get(action) - min) / sum);
+			}
+			else
+			{
+				pi.put(action, pi.get(action) / sum);
+			}
 		}
 	}
 	

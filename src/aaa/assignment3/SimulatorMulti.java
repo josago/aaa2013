@@ -1,3 +1,4 @@
+
 package aaa.assignment3;
 
 import java.util.List;
@@ -11,7 +12,7 @@ import aaa.*;
  */
 public class SimulatorMulti
 {
-	public static int TURNS_LIMIT = 500;
+	public static int TURNS_LIMIT = 1000;
 	
 	/**
 	 * Runs a single simulation.
@@ -37,7 +38,6 @@ public class SimulatorMulti
 			
 			env.changeViewPoint(prey);
 			env.move(prey);
-			
 			
 			for (Agent predator: predators)
 			{
@@ -75,44 +75,44 @@ public class SimulatorMulti
 	 */
 	public static void printEnvironment(State env, Agent prey, List<Agent> predators)
 	{
-		System.out.print("â”Œ");
+		System.out.print("┌");
 		
 		for (int i = 0; i < State.ENVIRONMENT_SIZE - 1; i++)
 		{
-			System.out.print("â”€â”€â”€â”¬");
+			System.out.print("───┬");
 		}
 		
-		System.out.println("â”€â”€â”€â”�");
+		System.out.println("───┐");
 		
 		printEmptyLine(0, env, prey, predators);
 		
 		for (int i = 1; i < State.ENVIRONMENT_SIZE; i++)
 		{
-			System.out.print("â”œ");
+			System.out.print("├");
 			
 			for (int j = 0; j < State.ENVIRONMENT_SIZE - 1; j++)
 			{
-				System.out.print("â”€â”€â”€â”¼");
+				System.out.print("───┼");
 			}
 			
-			System.out.println("â”€â”€â”€â”¤");
+			System.out.println("───┤");
 			
 			printEmptyLine(i, env, prey, predators);
 		}
 		
-		System.out.print("â””");
+		System.out.print("└");
 		
 		for (int i = 0; i < State.ENVIRONMENT_SIZE - 1; i++)
 		{
-			System.out.print("â”€â”€â”€â”´");
+			System.out.print("───┴");
 		}
 		
-		System.out.println("â”€â”€â”€â”˜");
+		System.out.println("───┘");
 	}
 	
 	private static void printEmptyLine(int i, State env, Agent prey, List<Agent> predators)
 	{
-		System.out.print("â”‚");
+		System.out.print("│");
 		
 		for (int j = 0; j < State.ENVIRONMENT_SIZE; j++)
 		{
@@ -122,7 +122,7 @@ public class SimulatorMulti
 			{
 				if (env.getX(predator) == j && env.getY(predator) == i)
 				{
-					System.out.print(" " + predator.getSymbol() + " â”‚");
+					System.out.print(" " + predator.getSymbol() + " │");
 					
 					done = true;
 				}
@@ -130,14 +130,15 @@ public class SimulatorMulti
 
 			if (env.getX(prey) == j && env.getY(prey) == i)
 			{
-				System.out.print(" " + prey.getSymbol() + " â”‚");
+				System.out.print(" " + prey.getSymbol() + " │");
 			}
 			else if (!done)
 			{
-				System.out.print("   â”‚");
+				System.out.print("   │");
 			}
 		}
 		
 		System.out.println("");
 	}
 }
+
