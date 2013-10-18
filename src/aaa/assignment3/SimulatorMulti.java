@@ -38,6 +38,7 @@ public class SimulatorMulti
 			env.changeViewPoint(prey);
 			env.move(prey);
 			
+			
 			for (Agent predator: predators)
 			{
 				env.changeViewPoint(predator);
@@ -74,44 +75,44 @@ public class SimulatorMulti
 	 */
 	public static void printEnvironment(State env, Agent prey, List<Agent> predators)
 	{
-		System.out.print("┌");
+		System.out.print("â”Œ");
 		
 		for (int i = 0; i < State.ENVIRONMENT_SIZE - 1; i++)
 		{
-			System.out.print("───┬");
+			System.out.print("â”€â”€â”€â”¬");
 		}
 		
-		System.out.println("───┐");
+		System.out.println("â”€â”€â”€â”�");
 		
 		printEmptyLine(0, env, prey, predators);
 		
 		for (int i = 1; i < State.ENVIRONMENT_SIZE; i++)
 		{
-			System.out.print("├");
+			System.out.print("â”œ");
 			
 			for (int j = 0; j < State.ENVIRONMENT_SIZE - 1; j++)
 			{
-				System.out.print("───┼");
+				System.out.print("â”€â”€â”€â”¼");
 			}
 			
-			System.out.println("───┤");
+			System.out.println("â”€â”€â”€â”¤");
 			
 			printEmptyLine(i, env, prey, predators);
 		}
 		
-		System.out.print("└");
+		System.out.print("â””");
 		
 		for (int i = 0; i < State.ENVIRONMENT_SIZE - 1; i++)
 		{
-			System.out.print("───┴");
+			System.out.print("â”€â”€â”€â”´");
 		}
 		
-		System.out.println("───┘");
+		System.out.println("â”€â”€â”€â”˜");
 	}
 	
 	private static void printEmptyLine(int i, State env, Agent prey, List<Agent> predators)
 	{
-		System.out.print("│");
+		System.out.print("â”‚");
 		
 		for (int j = 0; j < State.ENVIRONMENT_SIZE; j++)
 		{
@@ -121,7 +122,7 @@ public class SimulatorMulti
 			{
 				if (env.getX(predator) == j && env.getY(predator) == i)
 				{
-					System.out.print(" " + predator.getSymbol() + " │");
+					System.out.print(" " + predator.getSymbol() + " â”‚");
 					
 					done = true;
 				}
@@ -129,11 +130,11 @@ public class SimulatorMulti
 
 			if (env.getX(prey) == j && env.getY(prey) == i)
 			{
-				System.out.print(" " + prey.getSymbol() + " │");
+				System.out.print(" " + prey.getSymbol() + " â”‚");
 			}
 			else if (!done)
 			{
-				System.out.print("   │");
+				System.out.print("   â”‚");
 			}
 		}
 		
