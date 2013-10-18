@@ -14,12 +14,13 @@ public class Test6
 	
 	public static final float ALPHA         = 0.9f;
 	public static final float GAMMA         = 0.9f;
-	public static final float EPSILON       = 0.1f;
+	public static final float EPSILON       = 1f;
 	public static final float VALUE_INITIAL = 15;
 	
 	public static void main(String[] args)
 	{
-		Agent prey = new PreySimple();
+	
+			Agent prey = new PreySimple();
 		List<Agent> predators = new ArrayList<Agent>();
 		
 		for (int i = 0; i < NUM_PREDATORS; i++)
@@ -31,6 +32,7 @@ public class Test6
 		
 		Agent preyNew = ql.buildAgent(prey);
 		List<Agent> predatorsNew = new ArrayList<Agent>();
+		
 		
 		for (Agent predator: predators)
 		{
@@ -86,7 +88,7 @@ public class Test6
 			
 			this.score = score;
 		}
-		
+	    
 		@Override
 		public void run()
 		{
