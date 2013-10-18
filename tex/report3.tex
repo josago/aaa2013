@@ -39,12 +39,8 @@ Nash equilibria found by agents using Independent Q-Learning might not be Pareto
 \subsection{Minimax Q-Learning}
 Minimax Q-Learning \cite{minimax}, avoids the problem of Independent Q-Learning by taking the actions of the opponent of each agent into account. A policy for each agent is computed by finding assigning probabilities to actions for each agent in each state, assuming that the opponent will try to minimize the reward of the agent. 
 The Minimax Q-Learning algorithm is implemented by following the steps in \cite{hk} which in this assignment is tested for a one predator one pray scenario.
-prey scenario,
 \subsection{GIGA-WoLF}
 \section{Method}
-<<<<<<< HEAD
-Something here...
-=======
 
 \subsection{Independent Q-Learning}
 
@@ -56,7 +52,6 @@ Our implementation of the GIGA-WoLF algorithm was slightly modified to better fi
 
 Figure \ref{fig:wolf-predators} shows the performance of the GIGA-WoLF algorithm for ...
 
->>>>>>> e41620c600155a72e4dba95dffc22564a218c5d7
 \subsection{Scoring system}
 
 When more than one predator is introduced into the environment, the length of the games alone is no longer a sufficient indicator for the performance of the agents. This is due to the fact that, no matter how long the game lasted, it could have ended either by the predators catching the prey or these colliding into each other. We thus need a more informative measure to evaluate the performance of our algorithms. We were interested in measures having a single dimension, since these ones are the easiest to visualize. Ideally, higher values of such a measure should indicate a better performance of the predators. Furthermore, and no matter which team won the game, shorter games should yield a stronger indication of a better (worse) behaviour for the winning (losing) team.
