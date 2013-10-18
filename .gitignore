@@ -13,3 +13,5 @@
 *.blg
 *.out
 *.backup
+
+/bin
