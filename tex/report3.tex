@@ -3,6 +3,7 @@
 \usepackage{pgfplots}
 \usepackage[hidelinks]{hyperref}
 \usepackage[left=2cm,top=2cm,right=2cm,bottom=2cm]{geometry}
+\usepackage{amsmath,amssymb}
 
 %opening
 \title{Autonomous Agents - Assignment 3 Report}
@@ -38,7 +39,6 @@ Nash equilibria found by agents using Independent Q-Learning might not be Pareto
 
 \subsection{Minimax Q-Learning}
 Minimax Q-Learning \cite{minimax}, avoids the problem of Independent Q-Learning by taking the actions of the opponent of each agent into account. A policy for each agent is computed by finding assigning probabilities to actions for each agent in each state, assuming that the opponent will try to minimize the reward of the agent. 
-The Minimax Q-Learning algorithm is implemented by following the steps in \cite{hk} which in this assignment is tested for a one predator one pray scenario.
 \subsection{GIGA-WoLF}
 \section{Method}
 
@@ -49,8 +49,31 @@ All results plotted in our figures represent the average performance of ten exec
 Figure \ref{fig:ql-params} shows the performance of the independent Q-Learning algorithm for different combinations of its parameters. Figure \ref{fig:ql-predators} shows the performance of the algorithm for different numbers of predators. We used the settings: $\alpha = 0.9, \gamma = 0.9, \epsilon = 0.1, Q(s, a) = 15$ for this last experiment.
 
 \subsection{Minimax Q-Learning}
+The Minimax Q-Learning algorithm is implemented by following the steps in \cite{hk} which in this assignment is tested for a one predator one pray scenario. We can write the payoff of row player as $V_{row}(s)$ and column player as $V_{col}(s)$:
+\begin{align}
+ V_{row}(s) = \max_{y\in \Delta^m} \min_{x\in \Delta^n} yAx \\
+ V_{col}(s) = \min_{x\in \Delta^n} \max_{y\in \Delta^m} yAx
+\end{align}
+in which, A is the payoff matrix, and both x and y are probability vectors. We want to prove that they are equal. First we observe that when y is fixed, $yA = (z_1,z_2, \dots)$ and $z_i$ is the expected value is x chooses pure column i. Because column player wants to minimize the payoff, he will choose the minimum $ z_0 $, and this can be formulated in the following way:
+\begin{align}
+\max_{y\in \Delta^m} \min_{x\in \Delta^n} yAx = \min_{x\in \Delta^n} \max_{y\in \Delta^m} yAx
+\end{align}
+After that, we notice that this can be formulated as a linear programming problem:
+\begin{align}
+maximize : &= \min_i (yA)_i \\
+s.t : \sum_{i=1}^{m}y_i &= 1 \\
+y_i \geq 0
+\end{align}
+The above linear program can be rewritten as to the following LP without changing the optimal value:
+\begin{align}
+maximize : t \\
+s.t : \sum_{i=1}^{m}y_i a_{ij} &\geq t \\
+\sum_{i=1}^{m}y_i = 1 \\
+y_i \geq 0
+\end{align}
+%1.4
+%1.7
 
-Something here...
 
 \subsection{GIGA-WoLF}
 
