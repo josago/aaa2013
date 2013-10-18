@@ -32,7 +32,6 @@ Nash equilibria found by agents using Independent Q-Learning might not be Pareto
 
 \subsection{Minimax Q-Learning}
 
-<<<<<<< HEAD
 Minimax Q-Learning \cite{minimax}, avoids the problem of Independent Q-Learning by taking the actions of the opponent of each agent into account. As noted in [4], by taking into account the actions of other players and the ensuing rewards, an agent using this algorithm explicitly learns a Nash equilibrium. Thus this algorithm is a so called Equilibrium learner.
 
 A policy for each agent is computed by finding assigning probabilities to actions for each agent in each state, assuming that the opponent will try to minimize the reward of the agent. 
@@ -57,12 +56,10 @@ S&-1&1&0\\
 If we Consider the two player game Rock-Scissors-Paper", where two persons simultaneously make a hand sign corresponding to one of the three items. Playing Rock (R) beats Scissors (S), Scissors beats Paper(P), and Paper beats Rock. 
 When both persons play the same action(both R, both S, or both P), then it is a draw game. For two players, we have the following payoff table listed in figure \ref{fig:psr}. The payoffs are as following, -1 for losing, 0 for a draw and 1 for wining.
 In game theory, this is the two player zero-sum game and based on the definition of Nash equilibrium, we know there is no pure strategy solution for this game and the optimal mixed solution is a distribution of 1/3,1/3,1/3. 
-=======
+
 Minimax Q-Learning \cite{minimax}, avoids the problem of Independent Q-Learning by taking the actions of the opponent of each agent into account. A policy for each agent is computed by finding assigning probabilities to actions for each agent in each state, assuming that the opponent will try to minimize the reward of the agent. 
 
 The Minimax Q-Learning algorithm is implemented by following the steps in \cite{hk} which in this assignment is tested for a one predator one pray scenario.
-prey scenario,
->>>>>>> 1fe85cd21edbe31a08b52e101bdcc938a0216311
 
 \subsection{GIGA-WoLF}
 WoLF Win or Learn Fast \cite{GIGA-wolf} ANDRA which as the name suggest makes the agent learn fast when losing, and learn slowly when winning by changing the learning rate based on the performance of the agents policy. This approach can be combined with different learning schemes such as GIGA and Policy Hill Climbing (PHC)\cite{PHC}.
