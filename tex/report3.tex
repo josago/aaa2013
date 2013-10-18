@@ -509,6 +509,7 @@ We can then evaluate the test results for different values of initialization of 
 
 However and more importantly the Minimax Q-learning algorithm is an Equilibria learner. To be more certain that the policy is converging to an equilibria we have consider to use an method by freezing the agent, meaning that we stop an agent (either the prey or the predator) from updating its policy, and observe whether we see a change in the number of steps per episode. 
 If we freeze the prey before policies have converged to a Nash (or other) equilibrium, we will expect the number of steps per episode to go down, as the predator will learn to catch the prey more efficiently. Likewise we will expect the number of steps per episode to go up if we freeze the predator before an equilibrium has been reached. If we freeze either agent after an equilibrium has been reached, we will expect to see no change in the number of steps per episode.
+This would be something to consider to include in future experiments.
 
 \subsection{Q-learning vs Minimax Q-learning}
 Given the data we have obtained, we can only compare the performance of the two algorithms for a running period of 5000 episodes. However we can already see how Minimax converges in fewer steps and reaches higher peaks of performance then the Independent Q-Learning algorithm in self-play.
