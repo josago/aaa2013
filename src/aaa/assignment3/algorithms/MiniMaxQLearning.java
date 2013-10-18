@@ -26,7 +26,7 @@ public class MiniMaxQLearning extends QLearningMulti
 		
 		pi = new HashMap<StateActionPair, Float>();
 		
-		float alpha = 1.0f;
+		float alpha = 0.5f;
 		
 		Agent prey     = new PreySimple();
 		Agent predator = new PredatorRandom();
@@ -61,7 +61,7 @@ public class MiniMaxQLearning extends QLearningMulti
 				
 				int reward = stateAfter.getReward(predator);
 				
-				StateActionOpponent sao = new StateActionOpponent(stateBefore, action, opponent);
+				StateActionOpponent sao = new StateActionOpponent((State) stateBefore.clone(), action, opponent);
 				
 				if (!Q.containsKey(sao))
 				{
