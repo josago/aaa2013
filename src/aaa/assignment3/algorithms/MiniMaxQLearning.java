@@ -41,18 +41,12 @@ public class MiniMaxQLearning extends QLearningMulti
 		
 		for (int i = 0; i < NUM_EPISODES; i++)
 		{
-			
-			
-			
-			//System.out.println(pi.size());
-			
-			
 			StateMulti s = (StateMulti) env.clone();
-			
+
 			int x = 0;
 			while (!s.isFinal()&&x < SimulatorMulti.TURNS_LIMIT)
+
 			{
-				
 				StateMulti stateBefore = (StateMulti) s.clone();
 				
 				stateBefore.changeViewPoint(predator);
