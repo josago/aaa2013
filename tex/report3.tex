@@ -356,8 +356,11 @@ We can again notice how the solutions become worse the higher the number of pred
 Something here...
 
 \begin{itemize}
- \item Important conclusion here...
- \item Another important conclusion here...
+ \item The independent Q-Learning algorithm manages to find good quality solutions for the scenarios with 1 and 2 predators.
+ \item All solutions found for the cases having 3 or 4 predators did not manage to catch the prey quicker and/or more often than it takes the predators to collide into each other.
+ \item Choices of intermediate values for the parameters $\gamma$ and $\alpha$ seem to improve the convergence rate of independent Q-Learning. We obtained the best performance using $\epsilon = 0$. An initialization of the values of the $Q$ table to 0 was found to yield the best results.
+ \item The GIGA-WoLF algorithm manages to improve the solutions found by independent Q-Learning for the cases with 1 and 2 predators, it yields similar results for 3 predators, and it does not work with 4 predators.
+ \item The huge state-space that results from having more than 2 predators seriously limits the applicability and usefulness of the algorithms we implemented for this assignment. 
 \end{itemize}
 
 \thebibliography{}
