@@ -59,7 +59,7 @@ In game theory, this is the two player zero-sum game and based on the definition
 
 Minimax Q-Learning \cite{minimax}, avoids the problem of Independent Q-Learning by taking the actions of the opponent of each agent into account. A policy for each agent is computed by finding assigning probabilities to actions for each agent in each state, assuming that the opponent will try to minimize the reward of the agent. 
 
-The Minimax Q-Learning algorithm is implemented by following the steps in \cite{hk} which in this assignment is tested for a one predator one pray scenario.
+The Minimax Q-Learning algorithm is implemented by following the steps in \cite{hk}.
 
 \subsection{GIGA-WoLF}
 WoLF Win or Learn Fast \cite{GIGA-wolf} \cite{PHC} which as the name suggest makes the agent learn fast when losing, and learn slowly when winning by changing the learning rate based on the performance of the agents policy. This approach can be combined with different learning schemes such as GIGA\cite{GIGA-wolf} and Policy Hill Climbing (PHC)\cite{PHC}.
@@ -505,11 +505,14 @@ Even if the results are similar, with $\alpha = 1$ performance is a bit worse as
 
 From the results we show in plot 3, we can see how with $\epsilon = 0$ we covergence is reached in a lower number of episodes then for the other values of $\epsilon$. The convergence value is then similar for all the values of $\epsilon$. We have to consider however that episodesed generated using the random policy (defined by $epsilon = 1$) tend to last more than episodes generated with a soft policy, so less number of episodes don't necessarily equal to lower time. 
 
-We can then evaluate the test results for different values of inizialization of the Q-table. We can see how for optimistic values of Q(s,a) such as Q(s,a)=15 and Q(s,a)=30 give similar result as for Q(s,a)=1.
+We can then evaluate the test results for different values of initialization of the Q-table. We can see how for optimistic values of Q(s,a) such as Q(s,a)=15 and Q(s,a)=30 give similar result as for Q(s,a)=1.
 
+However and more importantly the Minimax Q-learning algorithm is an Equilibria learner. To be more certain that the policy is converging to an equilibria we have consider to use an method by freezing the agent, meaning that we stop an agent (either the prey or the predator) from updating its policy, and observe whether we see a change in the number of steps per episode. 
+If we freeze the prey before policies have converged to a Nash (or other) equilibrium, we will expect the number of steps per episode to go down, as the predator will learn to catch the prey more efficiently. Likewise we will expect the number of steps per episode to go up if we freeze the predator before an equilibrium has been reached. If we freeze either agent after an equilibrium has been reached, we will expect to see no change in the number of steps per episode.
 
 \subsection{Q-learning vs Minimax Q-learning}
-Given the data we have obtained, we can only compare the performance of the two algorithms for a running period of 5000 episodes. However we can already see how Minimax converges in fewer steps and reaches higher peaks of performance. Also the various parameters affect less the performance in Minimax, while in Q-learning all the parameters have a visible influence on the outcome of the algorithm.
+Given the data we have obtained, we can only compare the performance of the two algorithms for a running period of 5000 episodes. However we can already see how Minimax converges in fewer steps and reaches higher peaks of performance then the Independent Q-Learning algorithm in self-play.
+Also the various parameters affect less the performance in Minimax, while in Q-learning all the parameters have a visible influence on the outcome of the algorithm.
 
 \subsection{GIGA-WoLF}
 
