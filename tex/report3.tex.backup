@@ -13,18 +13,38 @@
 \maketitle
 
 \section{Introduction}
-In this assignment we worked on a predator versus prey grid world scenario, in which both the predator and the prey are learning agents  \cite{Assignment}. \cite{vlasis} There are small changes made to the grid world scenario compared to previous assignments.%We have implemented and evaluated several algorithms for each agent to use. For one algorithm, Independent Q-Learning, we have used a scenario in which several predators chase a single prey. The results of these evaluations will be presented in section 3.
+In this assignment we worked on a predator versus prey grid world scenario, in which both the predator and the prey are learning agents  \cite{Assignment}. There are small changes made to the grid world scenario compared to previous assignments.%We have implemented and evaluated several algorithms for each agent to use. For one algorithm, Independent Q-Learning, we have used a scenario in which several predators chase a single prey. 
+\\
+\\
+Unlike the previous assignments, the prey is now also a learning agent. In addition the environment is extended so that it can contain more than one predator. A terminal state is now defined as any state in which any two or more agents in the environment (predator or prey) occupy the same square in the grid.
+
+Predators must work together in this scenario to catch the prey. If any predator catches the
+prey, all predators receive a reward of 10. The prey receives a reward of -10 in this case.
+However, if two or more predators occupy the same square the prey receives a reward of
+10 and all predators receive a reward of -10. This situation trumps catching the prey: if two
+predators occupy the same square while a third predator caught the prey, the prey ‘gets away’
+and receives a positive reward, while all other agents receive a negative reward. Similarly, if two
+predators catch the prey at the same time, and thus occupy the same square, the prey also gets
+away.
 
 \section{Theoretical description of the algorithms}
 For this assignment we have implemented the following algorithms: Independent Q-Learning \cite{vlasis}, Minimax Q-Learning \cite{minimax}, Generalized Infinitesimal Gradient Ascent Win or Learn Fast(GIGA-WoLF) \cite{GIGA-wolf}. Each algorithm will be described concisely below.
 
 \subsection{Independent Q-Learning}
 In Independent Q-Learning each agent in the environment treats all other agents as being part of the environment. An agent employing Independent Q-Learning does not try to model other agents, or try to learn their behavior \cite{vlasis}. The agent then uses Q-Learning to learn a state-actionvalue function, mapping actions in states to values.
-A problem with this algorithm is that the Q-Learning algorithm assumes a static environment, in which state transition probabilities do not change. This assumption is not valid for independent Q-Learning, as other learning agents might change their behavior over time. Since the agent models other agents as part of the environment, the environment thus becomes dynamic.
-\subsection{Minimax Q-Learning}
-\subsection{GIGA-WoLF}
+A problem with this algorithm is that the Q-Learning algorithm \cite{SB} assumes a static environment, in which state transition probabilities do not change. This assumption is not valid for independent Q-Learning, as other learning agents might change their behavior over time. Since the agent models other agents as part of the environment in other words the environment becomes dynamic.
+\\ \\
+Nash equilibria found by agents using Independent Q-Learning might not be Pareto optimal. Furthermore in a self play scenario, i.e. when an Independent Q-Learning agent plays another Independent Q-Learning agent, it is possible that neither of their policies converge. This happens in situations where the only equilibria are mixed equilibria, i.e. using policies that are not fully deterministic.
 
+\subsection{Minimax Q-Learning}
+Minimax Q-Learning \cite{minimax}, avoids the problem of Independent Q-Learning by taking the actions of the opponent of each agent into account. A policy for each agent is computed by finding assigning probabilities to actions for each agent in each state, assuming that the opponent will try to minimize the reward of the agent. 
+The Minimax Q-Learning algorithm is implemented by following the steps in \cite{hk} which in this assignment is tested for a one predator one pray scenario.
+prey scenario,
+\subsection{GIGA-WoLF}
 \section{Method}
+<<<<<<< HEAD
+Something here...
+=======
 
 All results plotted in our figures represent the average performance of ten executions of the corresponding algorithm. We did this in order to reduce the noise present in our plots and thus be able to better visualize and interpret the results. Furthermore, and in order to provide more robust results, the scores of the algorithms are always averaged across 1000 games.
 
@@ -42,6 +62,7 @@ Our implementation of the GIGA-WoLF algorithm was slightly modified to better fi
 
 Figure \ref{fig:wolf-predators} shows the performance of the GIGA-WoLF algorithm for different numbers of predators. We again used the same setting as we did for figure \ref{fig:ql-predators} of the independent Q-Learning algorithm.
 
+>>>>>>> e41620c600155a72e4dba95dffc22564a218c5d7
 \subsection{Scoring system}
 
 When more than one predator is introduced into the environment, the length of the games alone is no longer a sufficient indicator for the performance of the agents. This is due to the fact that, no matter how long the game lasted, it could have ended either by the predators catching the prey or these colliding into each other. We thus need a more informative measure to evaluate the performance of our algorithms. We were interested in measures having a single dimension, since these ones are the easiest to visualize. Ideally, higher values of such a measure should indicate a better performance of the predators. Furthermore, and no matter which team won the game, shorter games should yield a stronger indication of a better (worse) behaviour for the winning (losing) team.
@@ -277,7 +298,15 @@ There is another subtlety we need to take care of. If we are in a setting with $
 
 \subsection{Independent Q-Learning}
 
-Something here...
+We will first comment the different behaviours of the algorithm when using different parameter settings on the ``1 predator versus 1 prey'' scenario. Our results are summarized in figure \ref{fig:ql-params}. We will also compare these results with those we obtained for the stardard Q-Learning algorithm we implemented for the previous assignment.
+
+First of all, we can see how different values of $\gamma$ yield very different solutions. With $\gamma = 0$ the agents do not look into the future at all and the performance is the worst of all: around 0.2 ($T \approx 38.1 $). This is the expected result. However, and more surprisingly, intermediate values of $\gamma$ seem to perform better than high ones: we got averages scores of around 1.25 ($T \approx 20.7 $) for $\gamma = 0.3$ and $\gamma = 0.6$ but scores around 0.75 ($T \approx 25.6 $) for $\gamma = 0.9$. These results are different from those we got for the standard Q-Learning version, where we found that higher values of $\gamma$ always improved the found solutions.
+
+The behaviour shown for different values of the parameter $\alpha$ is similar to the previous case. Extreme values give the worst results, while more intermediate ones perform better. We obtained scores around 0.6 ($ T \approx 27.7 $) for $\alpha = 0.1$ and $\alpha = 1$, and scores around 1.75 ($ T \approx 17.5 $) for $\alpha = 0.4$ and $\alpha = 0.7$. It is also worth mentioning how the algorithm experiences a sudden improvement on performance at a given threshold for the number of episodes generated. The location of this point seems to depend on the choice of the parameter itself. This can be observed across most cases we studied in figure \ref{fig:ql-params}. Finally, these results are different from those we got for the standard Q-Learning version, where we found that higher values of $\alpha$ always improved the found solutions.
+
+...
+
+We will now comment on the performance of the algorithm when considering different numbers of predators while keeping the rest of the parameters fixed. Our results are summarized in figure \ref{fig:ql-predators}.
 
 \subsection{Minimax Q-Learning}
 
@@ -302,7 +331,7 @@ Something here...
 	\emph{Vlassis Nicos} \\
 	A Concise Introduction to Multiagent Systems and Distributed Artificial Intelligence \\
 	Morgan and Claypool Publishers, 2007 
-	
+
 \bibitem{SB}
   \emph{Sutton and Barto}.\\
   Reinforcement Learning: An Introduction, Richard S. Sutton, Andrew G Barto. \\
@@ -311,12 +340,23 @@ Something here...
  \bibitem{minimax}
  Michael L. Littman \\
  Markov games as a framework for multi-agent reinforcement learning \\
- Brown University / Bellcore \\
+ Brown University / Bellcore, 1994 \\
  \url{http://www.cs.rutgers.edu/~mlittman/papers/refer.html} \\
+ 
+ \bibitem{hk}
+ Lecture notes from: \\ 
+ Topics in Algorithms: Combinatorial Optimization and Approximation Algorithms \\
+ The Chinese University of Hong Kong \\
+ Lecture 14 \\
+ \url{http://appsrv.cse.cuhk.edu.hk/~chi/csc5160-2008/notes.html}
  
  \bibitem{GIGA-wolf}
  Michael Bowling \\
- Convergence and no-regret in Multiagent Learning \\
+ Convergence and no-regret in Multiagent Learning, 2004 \\
  \url{http://webdocs.cs.ualberta.ca/~bowling/papers/04nips.pdf}
 
+%WoLF PHC:
+%Bowling and Veloso (2001),
+% Rational and Convergent Learning in Stochastic Games
+%  http://www.cs.cmu.edu/~mmv/papers/01ijcai-mike.pdf
 \end{document}
