@@ -1,11 +1,7 @@
 package aaa.assignment2.tests;
 
-
 import aaa.*;
 import aaa.assignment2.algorithms.ModelFreeAlgorithm;
-import aaa.assignment2.algorithms.MonteCarloOffPolicy;
-import aaa.assignment2.algorithms.MonteCarloOnPolicy;
-import aaa.assignment2.algorithms.QLearning;
 import aaa.assignment2.algorithms.Sarsa;
 
 public class Test9
@@ -24,7 +20,7 @@ public class Test9
 				for (int i = 0; i < 10; i++)
 				{
 					System.out.print(i + "...");
-					new Sarsa(env, 0.1f, GAMMA, 1, 0, true);
+					new Sarsa(env, 0.1f, GAMMA, 1f, 0f);
 				}
 				
 				System.out.println("");

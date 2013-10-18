@@ -2,6 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="C:/Users/Acer/Desktop/lp_solve_5.5_java/lib/lpsolve55j.jar"/>
+	<classpathentry kind="lib" path="/home/josago/Universiteit/Autonomous Agents/Assignments/lp_solve_5.5_java/lib/lpsolve55j.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

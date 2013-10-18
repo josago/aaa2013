@@ -26,7 +26,7 @@ public class MiniMaxQLearning extends QLearningMulti
 		
 		pi = new HashMap<StateActionPair, Float>();
 		
-		float alpha = 1.0f;
+		float alpha = 0.5f;
 		
 		Agent prey     = new PreySimple();
 		Agent predator = new PredatorRandom();
@@ -41,97 +41,96 @@ public class MiniMaxQLearning extends QLearningMulti
 		
 		for (int i = 0; i < NUM_EPISODES; i++)
 		{
-			
-			
-			
-			//System.out.println(pi.size());
-			
-			
 			StateMulti s = (StateMulti) env.clone();
-			
+
 			int x = 0;
-			while (!s.isFinal())
+			
+			while (!s.isFinal() && x < SimulatorMulti.TURNS_LIMIT)
 			{
+				s.changeViewPoint(predator);
+				int action   = getAction(s, epsilon, predator);
 				
-				StateMulti stateBefore = (StateMulti) s.clone();
+				s.changeViewPoint(prey);
+				int opponent = getAction(s, epsilon, prey);
 				
-				stateBefore.changeViewPoint(predator);
-				int action   = getAction(stateBefore, epsilon, predator);
+				StateMulti sPrime = (StateMulti) s.clone();
+				sPrime.move(predator, action);
+				sPrime.move(prey,     opponent);
 				
-				stateBefore.changeViewPoint(prey);
-				int opponent = getAction(stateBefore, epsilon, prey);
+				int reward = sPrime.getReward(predator);
 				
-				StateMulti stateAfter = (StateMulti) stateBefore.clone();
-				stateAfter.move(predator, action);
-				stateAfter.move(prey,     opponent);
-				
-				int reward = stateAfter.getReward(predator);
-				
-				StateActionOpponent sao = new StateActionOpponent(stateBefore, action, opponent);
+				s.changeViewPoint(predator);
+				StateActionOpponent sao = new StateActionOpponent((StateMulti) s.clone(), action, opponent);
 				
 				if (!Q.containsKey(sao))
 				{
 					Q.put(sao, 1.0f);
 				}
 				
-				if (!V.containsKey(stateAfter))
+				if (!V.containsKey(sPrime))
 				{
-					V.put(stateAfter, 1.0f);
+					V.put(sPrime, 1.0f);
 				}
 				
-				Q.put(sao, (1 - alpha) * Q.get(sao) + alpha * (reward + gamma * V.get(stateAfter)));
+				Q.put(sao, (1 - alpha) * Q.get(sao) + alpha * (reward + gamma * V.get(sPrime)));
 				
-				linearProg(stateBefore);
+				linearProg(s);
 				
 				alpha *= decay;
 				
-				s = stateAfter;
+				s = sPrime;
 				
-				
+				x++;
 			}
 			
-			
-			
-			if (i%5 == 0) performanceAdd(i, prey, predators);
+			if (i % 5 == 0)
+			{
+				performanceAdd(i, prey, predators);
+			}
 		}
 	}
 	
-	public Agent buildAgent(Agent agent)
-	
-	
+	public Agent buildAgent( final Agent agent)
 	{
 		
-		
-		
-		HashMap<State, List<Integer>> pi = new HashMap<State, List<Integer>>();
-		
-		
-		for (StateActionPair sa: this.pi.keySet())
-		{
+		class mmAgent implements Agent{
+			private  HashMap<StateActionPair, Float> pi2 = new HashMap<StateActionPair, Float>();
 			
-			if (!pi.containsKey(sa.state))
-			{
-				pi.put(sa.state, new ArrayList<Integer>());
+			public mmAgent(HashMap<StateActionPair, Float> pi){
+				this.pi2 = pi;
 			}
 			
-			if (this.pi.get(sa) > 0 && agent.getType() == Agent.TYPE_PREDATOR)
-			{
-				pi.get(sa.state).add(sa.action);
+			@Override
+			public int getType() {
+				// TODO Auto-generated method stub
+				return agent.getType();
 			}
-			else if (this.pi.get(sa) == 0 && agent.getType() == Agent.TYPE_PREY)
-			{
-				pi.get(sa.state).add(sa.action);
+
+			@Override
+			public String getSymbol() {
+				// TODO Auto-generated method stub
+				return agent.getSymbol();
 			}
-		}
-		
-		for(State s : pi.keySet()){
-			for(Integer i: pi.get(s)){
-				System.out.println("State"+s+":"+i);
+
+			@Override
+			public float pi(State env, int action) {
+
+				for(StateActionPair sa: pi2.keySet()){
+					if (sa.state == env&& sa.action == action) return pi2.get(sa); 
+				}
+				
+			    return 0.2f;
+				
+			
+				}
+				
+				
 			}
-		}
+			
+
 	
 	
-		return AgentUtils.buildPredator(pi);
+		return new mmAgent(pi);
 	}
 	
 	private int getAction(State s, float epsilon, Agent agent)
