@@ -81,9 +81,9 @@ public class MiniMaxQLearning extends QLearningMulti
 					V.put(s, Q_INITIAL);
 				}
 				
-				if (!V.containsKey(Q_INITIAL))
+				if (!V.containsKey(sPrime))
 				{
-					V.put(sPrime, 1.0f);
+					V.put(sPrime, Q_INITIAL);
 				}
 				
 				Q.put(sao, (1 - alpha) * Q.get(sao) + alpha * (reward + gamma * V.get(sPrime)));
@@ -130,15 +130,18 @@ public class MiniMaxQLearning extends QLearningMulti
 			public float pi(State env, int action) {
 				
 				
-
-				for(StateActionPair sa: pi2.keySet()){
-					if (sa.state == env&& sa.action == action){
+				StateActionPair sa = new StateActionPair((State)env.clone(), action);
+			
+				if (pi.containsKey(sa)){
 						if (agent.getType()== Agent.TYPE_PREDATOR) return pi2.get(sa); 
-						else return 1-pi2.get(sa);
+						else return (1-pi2.get(sa))/4.0f;
 					}
+				else{
+					pi.put(sa, 0.2f);
+					return 0.2f;
 				}
 				
-			    return 0.2f;
+			    
 				
 			
 				}
@@ -189,7 +192,7 @@ public class MiniMaxQLearning extends QLearningMulti
 				}
 				else // TYPE_PREY:
 				{
-					sum += (1 - epsilon) * (1 - pi.get(sa))/4;
+					sum += (1 - epsilon) * (1 - pi.get(sa))/4.0f;
 				}
 					
 				if (sum > random)
@@ -208,7 +211,7 @@ public class MiniMaxQLearning extends QLearningMulti
 	
 		if (!V.containsKey(s))
 		{
-			V.put(s, 1.0f);
+			V.put(s, Q_INITIAL);
 		}
 	
 			
