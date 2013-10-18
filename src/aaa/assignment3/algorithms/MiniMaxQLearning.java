@@ -9,7 +9,7 @@ import lpsolve.*;
 
 public class MiniMaxQLearning extends QLearningMulti
 {
-	public static final int NUM_EPISODES = 1000;
+	public static final int NUM_EPISODES = 50000;
 	
 	private final HashMap<State, Float> V;
 	private final HashMap<StateActionOpponent, Float> Q;
@@ -45,8 +45,13 @@ public class MiniMaxQLearning extends QLearningMulti
 
 			int x = 0;
 			
-			while (!s.isFinal() && x < SimulatorMulti.TURNS_LIMIT)
+			while (!s.isFinal() && x < SimulatorMulti.TURNS_LIMIT/3)
+				
+				
 			{
+				
+				
+				
 				s.changeViewPoint(predator);
 				int action   = getAction(s, epsilon, predator);
 				
@@ -66,7 +71,7 @@ public class MiniMaxQLearning extends QLearningMulti
 				
 				if (!Q.containsKey(sao))
 				{
-					Q.put(sao, 1.0f);
+					Q.put(sao, 10.0f);
 				}
 				
 				if (!V.containsKey(sPrime))
@@ -85,10 +90,10 @@ public class MiniMaxQLearning extends QLearningMulti
 				x++;
 			}
 			
-			if (i % 5 == 0)
-			{
-				performanceAdd(i, prey, predators);
-			}
+			
+			
+				if(i % 50 == 0) performanceAdd(i, prey, predators);
+		
 		}
 	}
 	
@@ -116,9 +121,14 @@ public class MiniMaxQLearning extends QLearningMulti
 
 			@Override
 			public float pi(State env, int action) {
+				
+				
 
 				for(StateActionPair sa: pi2.keySet()){
-					if (sa.state == env&& sa.action == action) return pi2.get(sa); 
+					if (sa.state == env&& sa.action == action){
+						if (agent.getType()== Agent.TYPE_PREDATOR) return pi2.get(sa); 
+						else return 1-pi2.get(sa);
+					}
 				}
 				
 			    return 0.2f;

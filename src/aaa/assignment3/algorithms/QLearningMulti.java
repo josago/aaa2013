@@ -149,7 +149,7 @@ public class QLearningMulti extends ModelFreeAlgorithm
 			}
 		}
 		
-		/*synchronized (performance)
+		synchronized (performance)
 		{
 			List<Float> terms = performance.get(iterations);
 
@@ -161,7 +161,7 @@ public class QLearningMulti extends ModelFreeAlgorithm
 			}
 				
 			System.out.print("(" + iterations + ", " + sum / terms.size() + ") ");
-		}*/
+		}
 	}
 	
 	public static void performanceClear()
