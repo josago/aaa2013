@@ -8,7 +8,7 @@ import aaa.assignment3.algorithms.QLearningMulti;
 
 public class Test4
 {
-	public static final int NUM_PREDATORS   = 2;
+	public static final int NUM_PREDATORS   = 1;
 	public static final int NUM_THREADS     = 10;
 	
 	public static final float ALPHA         = 0.9f;
@@ -19,6 +19,8 @@ public class Test4
 	public static void main(String[] args)
 	{
 		// Initialization:
+		
+		System.out.println("Test4...");
 		
 		Agent prey = new PreySimple();
 		List<Agent> predators = new ArrayList<Agent>();
@@ -32,15 +34,56 @@ public class Test4
 		
 		// Q-Learning:
 		
-		QLearningMulti.performanceClear();
-		
-		for (int i = 0; i < NUM_THREADS; i++)
+		for (float valueInitial: new float[] {30, 15, 0, -15})
 		{
-			new QLearningMulti(env, prey, predators, ALPHA, GAMMA, EPSILON, VALUE_INITIAL, false, true);
+			QLearningMulti.performanceClear();
 			
-			System.out.println(i + " iterations for " + NUM_PREDATORS + " predators...");
+			List<QLearningMultiThread> t = new ArrayList<QLearningMultiThread>();
+			
+			for (int i = 0; i < NUM_THREADS; i++)
+			{
+				QLearningMultiThread ql = new QLearningMultiThread(env, prey, predators, valueInitial);
+				ql.start();
+				
+				t.add(ql);
+			}
+			
+			for (QLearningMultiThread ql: t)
+			{
+				try {
+					ql.join();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+			System.out.println("\nvalueInitial = " + valueInitial);
+			QLearningMulti.printPerformance();
+		}
+	}
+	
+	static class QLearningMultiThread extends Thread
+	{
+		private final StateMulti env;
+		private final Agent prey;
+		private final List<Agent> predators;
+		
+		private final float valueInitial;
+		
+		public QLearningMultiThread(StateMulti env, Agent prey, List<Agent> predators, float valueInitial)
+		{
+			this.env = env;
+			this.prey = prey;
+			this.predators = predators;
+			
+			this.valueInitial = valueInitial;
 		}
 		
-		QLearningMulti.printPerformance();
+		@Override
+		public void run()
+		{
+			new QLearningMulti(env, prey, predators, ALPHA, GAMMA, EPSILON, valueInitial, false, true);
+		}
 	}
 }
