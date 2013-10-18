@@ -42,15 +42,21 @@ The Minimax Q-Learning algorithm is implemented by following the steps in \cite{
 \subsection{GIGA-WoLF}
 \section{Method}
 
+All results plotted in our figures represent the average performance of ten executions of the corresponding algorithm. We did this in order to reduce the noise present in our plots and thus be able to better visualize and interpret the results. Furthermore, and in order to provide more robust results, the scores of the algorithms are always averaged across 1000 games.
+
 \subsection{Independent Q-Learning}
+
+Figure \ref{fig:ql-params} shows the performance of the independent Q-Learning algorithm for different combinations of its parameters. Figure \ref{fig:ql-predators} shows the performance of the algorithm for different numbers of predators. We used the settings: $\alpha = 0.9, \gamma = 0.9, \epsilon = 0.1, Q(s, a) = 15$ for this last experiment.
 
 \subsection{Minimax Q-Learning}
 
+Something here...
+
 \subsection{GIGA-WoLF}
 
-Our implementation of the GIGA-WoLF algorithm was slightly modified to better fit the proposed problem. In the first place, we adapted the algorithm to the model-free case. The original method considers the derivative of the $\pi$ function with respect of all actions, but we cannot do this 
+Our implementation of the GIGA-WoLF algorithm was slightly modified to better fit the proposed problem. In the first place, we adapted the algorithm to the model-free case. The original method considers the derivative of the probability distribution over actions with respect of all actions, but we cannot do this without a model of the world, because we cannot know what the rewards would have been if we had taken a different action than the one we took. In order to be able to apply GIGA-WoLF to this assignment, we only update the partial derivative with respect of the action that was actually taken by the agent. Moreover, we cannot use the inmediate rewards, as the authors of the original algorithm suggest, but the expected rewards for the algorithm to work properly in a multi-timestep environment.
 
-Figure \ref{fig:wolf-predators} shows the performance of the GIGA-WoLF algorithm for ...
+Figure \ref{fig:wolf-predators} shows the performance of the GIGA-WoLF algorithm for different numbers of predators. We again used the same setting as we did for figure \ref{fig:ql-predators} of the independent Q-Learning algorithm.
 
 \subsection{Scoring system}
 
@@ -85,7 +91,7 @@ First of all, we will extend our original idea for a reduced state-space encodin
 
 Furthermore, it is now essential to know which agent ``we are'', and this information needs to be included in the state representation somehow. If this information was not encoded, it would be impossible to distinguish between predators in a multi-predator setting, and the algorithms would not be able to know which predator should perform a certain action from the usual set (\{\textit{North, South, East, West, Stay}\}). Since the description of the problem does not mention changing the set of actions available, it follows that each agent must perceive a different, private observation of the true state of the world for the algorithms to work properly. These private observations will still keep the true state fully observable; only the perspective is changed, but all the information about the world remains encoded in these observations. Instead of adding a new variable to the states to encode this extra information, we decided to encode it in an indirect way: the distances encoded in the state will always be calculated from the agent ``we are'' to each other agent. This choice is preferable over adding a new variable because it does not increase the size of the state-space.
 
-There is another subtlety we need to take care of. If we are in a setting with $N$ predators, there are, for example, $N!$ different ways we can encode the distances from the prey to the rest of the predators which represent an equivalent state of the world, since all predators share the same state-value function. In order to further reduce the state-space, we sorted these distances according to some arbitrary ordering, so that those equivalent combinations are collapsed into a single state. Note that if the distances from one predator to the rest of the agents are considered instead, the distance to the prey must be encoded in a fixed position. It follows from here that the state-values for the prey and the predators do not necessarily sum to zero in all cases, since the states are no longer comparable.
+There is another subtlety we need to take care of. If we are in a setting with $N$ predators, there are, for example, $N!$ different ways we can encode the distances from the prey to the rest of the predators which represent an equivalent state of the world, since all predators share the same state-value function. In order to further reduce the state-space, we sorted these distances according to some arbitrary ordering, so that those equivalent combinations are collapsed into a single state. Note that if the distances from one predator to the rest of the agents are considered instead, the distance to the prey must be encoded in a fixed position. It follows from here that the state-values for the prey and the predators do not necessarily sum to zero in all cases, since their private observations are no longer comparable.
 
 \section{Results}
 
@@ -242,8 +248,8 @@ There is another subtlety we need to take care of. If we are in a setting with $
 \end{axis}
 \end{tikzpicture}
 
-\caption{Caption here...}
-\label{fig:ql-values}
+\caption{Performance of the independent Q-Learning algorithm for different numbers of predators. In all cases, the parameters used were: $\alpha = 0.9, \gamma = 0.9, \epsilon = 0.1, Q(s, a) = 15$.}
+\label{fig:ql-predators}
 \end{figure}
 
 \begin{figure}
@@ -279,11 +285,21 @@ There is another subtlety we need to take care of. If we are in a setting with $
 \end{axis}
 \end{tikzpicture}
 
-\caption{Caption here...}
+\caption{Performance of the GIGA-WoLF algorithm for different numbers of predators. In all cases, the parameters used were: $\alpha = 0.9, \gamma = 0.9, \epsilon = 0.1, Q(s, a) = 15$.}
 \label{fig:wolf-predators}
 \end{figure}
 
 \section{Discussion}
+
+\subsection{Independent Q-Learning}
+
+Something here...
+
+\subsection{Minimax Q-Learning}
+
+Something here...
+
+\subsection{GIGA-WoLF}
 
 Something here...
 
@@ -302,7 +318,7 @@ Something here...
 	\emph{Vlassis Nicos} \\
 	A Concise Introduction to Multiagent Systems and Distributed Artificial Intelligence \\
 	Morgan and Claypool Publishers, 2007 
-	
+
 \bibitem{SB}
   \emph{Sutton and Barto}.\\
   Reinforcement Learning: An Introduction, Richard S. Sutton, Andrew G Barto. \\
