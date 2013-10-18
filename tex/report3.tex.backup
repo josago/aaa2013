@@ -13,6 +13,7 @@
 \maketitle
 
 \section{Introduction}
+
 In this assignment we worked on a predator versus prey grid world scenario, in which both the predator and the prey are learning agents  \cite{Assignment}. There are small changes made to the grid world scenario compared to previous assignments.%We have implemented and evaluated several algorithms for each agent to use. For one algorithm, Independent Q-Learning, we have used a scenario in which several predators chase a single prey. 
 \\
 \\
@@ -28,23 +29,25 @@ predators catch the prey at the same time, and thus occupy the same square, the 
 away.
 
 \section{Theoretical description of the algorithms}
+
 For this assignment we have implemented the following algorithms: Independent Q-Learning \cite{vlasis}, Minimax Q-Learning \cite{minimax}, Generalized Infinitesimal Gradient Ascent Win or Learn Fast(GIGA-WoLF) \cite{GIGA-wolf}. Each algorithm will be described concisely below.
 
 \subsection{Independent Q-Learning}
+
 In Independent Q-Learning each agent in the environment treats all other agents as being part of the environment. An agent employing Independent Q-Learning does not try to model other agents, or try to learn their behavior \cite{vlasis}. The agent then uses Q-Learning to learn a state-actionvalue function, mapping actions in states to values.
 A problem with this algorithm is that the Q-Learning algorithm \cite{SB} assumes a static environment, in which state transition probabilities do not change. This assumption is not valid for independent Q-Learning, as other learning agents might change their behavior over time. Since the agent models other agents as part of the environment in other words the environment becomes dynamic.
 \\ \\
 Nash equilibria found by agents using Independent Q-Learning might not be Pareto optimal. Furthermore in a self play scenario, i.e. when an Independent Q-Learning agent plays another Independent Q-Learning agent, it is possible that neither of their policies converge. This happens in situations where the only equilibria are mixed equilibria, i.e. using policies that are not fully deterministic.
 
 \subsection{Minimax Q-Learning}
+
 Minimax Q-Learning \cite{minimax}, avoids the problem of Independent Q-Learning by taking the actions of the opponent of each agent into account. A policy for each agent is computed by finding assigning probabilities to actions for each agent in each state, assuming that the opponent will try to minimize the reward of the agent. 
 The Minimax Q-Learning algorithm is implemented by following the steps in \cite{hk} which in this assignment is tested for a one predator one pray scenario.
 prey scenario,
+
 \subsection{GIGA-WoLF}
+
 \section{Method}
-<<<<<<< HEAD
-Something here...
-=======
 
 All results plotted in our figures represent the average performance of ten executions of the corresponding algorithm. We did this in order to reduce the noise present in our plots and thus be able to better visualize and interpret the results. Furthermore, and in order to provide more robust results, the scores of the algorithms are always averaged across 1000 games.
 
@@ -62,7 +65,6 @@ Our implementation of the GIGA-WoLF algorithm was slightly modified to better fi
 
 Figure \ref{fig:wolf-predators} shows the performance of the GIGA-WoLF algorithm for different numbers of predators. We again used the same setting as we did for figure \ref{fig:ql-predators} of the independent Q-Learning algorithm.
 
->>>>>>> e41620c600155a72e4dba95dffc22564a218c5d7
 \subsection{Scoring system}
 
 When more than one predator is introduced into the environment, the length of the games alone is no longer a sufficient indicator for the performance of the agents. This is due to the fact that, no matter how long the game lasted, it could have ended either by the predators catching the prey or these colliding into each other. We thus need a more informative measure to evaluate the performance of our algorithms. We were interested in measures having a single dimension, since these ones are the easiest to visualize. Ideally, higher values of such a measure should indicate a better performance of the predators. Furthermore, and no matter which team won the game, shorter games should yield a stronger indication of a better (worse) behaviour for the winning (losing) team.
@@ -97,6 +99,8 @@ First of all, we will extend our original idea for a reduced state-space encodin
 Furthermore, it is now essential to know which agent ``we are'', and this information needs to be included in the state representation somehow. If this information was not encoded, it would be impossible to distinguish between predators in a multi-predator setting, and the algorithms would not be able to know which predator should perform a certain action from the usual set (\{\textit{North, South, East, West, Stay}\}). Since the description of the problem does not mention changing the set of actions available, it follows that each agent must perceive a different, private observation of the true state of the world for the algorithms to work properly. These private observations will still keep the true state fully observable; only the perspective is changed, but all the information about the world remains encoded in these observations. Instead of adding a new variable to the states to encode this extra information, we decided to encode it in an indirect way: the distances encoded in the state will always be calculated from the agent ``we are'' to each other agent. This choice is preferable over adding a new variable because it does not increase the size of the state-space.
 
 There is another subtlety we need to take care of. If we are in a setting with $N$ predators, there are, for example, $N!$ different ways we can encode the distances from the prey to the rest of the predators which represent an equivalent state of the world, since all predators share the same state-value function. In order to further reduce the state-space, we sorted these distances according to some arbitrary ordering, so that those equivalent combinations are collapsed into a single state. Note that if the distances from one predator to the rest of the agents are considered instead, the distance to the prey must be encoded in a fixed position. It follows from here that the state-values for the prey and the predators do not necessarily sum to zero in all cases, since their private observations are no longer comparable.
+
+\newpage
 
 \section{Results}
 
@@ -222,11 +226,11 @@ There is another subtlety we need to take care of. If we are in a setting with $
 \label{fig:ql-params}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[ht!]
  \centering
  
  \begin{tikzpicture}
-\begin{axis}[height=12cm, width=12cm, grid=major, xlabel=Number of episodes, ylabel=Average score, xmin=0, xmax=40000, ymin=-9, ymax=1.5, legend pos=south east]
+\begin{axis}[height=11cm, width=11cm, grid=major, xlabel=Number of episodes, ylabel=Average score, xmin=0, xmax=40000, ymin=-9, ymax=1.5, legend pos=south east]
 \addplot[blue] coordinates {
 (0, 0.12311333) (200, 0.37291035) (400, 0.005859607) (600, 0.049466293) (800, 0.11737791) (1000, 0.17613216) (1200, 0.07521633) (1400, 0.18682627) (1600, 0.05445082) (1800, 0.09551313) (2000, 0.27491662) (2200, 0.13851231) (2400, 0.040507913) (2600, 0.23153378) (2800, 0.043900598) (3000, 0.06416984) (3200, 0.17793338) (3400, 0.05202268) (3600, 0.17570023) (3800, 0.32845342) (4000, 0.40452927) (4200, 0.11411854) (4400, 0.14853871) (4600, 0.07157968) (4800, 0.21031915) (5000, 0.08820571) (5200, 0.072937086) (5400, 0.08486481) (5600, 0.07941788) (5800, 0.4452494) (6000, 0.13701701) (6200, 0.025847754) (6400, 0.004841691) (6600, 0.14917505) (6800, 0.04229796) (7000, 0.121590786) (7200, 0.18316235) (7400, 0.12732571) (7600, 0.25809836) (7800, 0.17852926) (8000, 0.28181237) (8200, 0.13457195) (8400, 0.18755656) (8600, 0.24483277) (8800, 0.4035685) (9000, 0.48188838) (9200, 0.7513958) (9400, 0.5798128) (9600, 0.83779556) (9800, 0.9586124) (10000, 0.76200897) (10200, 0.7967857) (10400, 0.86692333) (10600, 0.4330651) (10800, 0.6652868) (11000, 0.3608077) (11200, 0.41720352) (11400, 0.7206782) (11600, 0.9752733) (11800, 0.92140144) (12000, 0.64785194) (12200, 0.7753569) (12400, 1.1302389) (12600, 0.76504636) (12800, 0.6460804) (13000, 0.6453099) (13200, 0.79733175) (13400, 0.7816915) (13600, 0.5568686) (13800, 0.50720525) (14000, 0.6182007) (14200, 0.54308236) (14400, 0.72989583) (14600, 0.5691778) (14800, 0.76986367) (15000, 0.75844496) (15200, 0.6575198) (15400, 0.814738) (15600, 0.72703487) (15800, 0.98957306) (16000, 0.55759645) (16200, 0.67091566) (16400, 0.64596766) (16600, 0.60687184) (16800, 0.63569313) (17000, 0.42546326) (17200, 0.56136364) (17400, 0.70533943) (17600, 0.526573) (17800, 0.62348706) (18000, 0.90752506) (18200, 0.93750405) (18400, 0.7518081) (18600, 0.55356145) (18800, 0.5527333) (19000, 0.6229305) (19200, 0.64682955) (19400, 0.81080806) (19600, 0.83201253) (19800, 0.8350899) (20000, 0.51495993) (20200, 0.60367537) (20400, 0.83035755) (20600, 0.594895) (20800, 0.68623) (21000, 0.6662826) (21200, 0.71033686) (21400, 0.696892) (21600, 0.7549724) (21800, 1.0706741) (22000, 0.48375833) (22200, 0.73100114) (22400, 0.80411315) (22600, 0.60265803) (22800, 0.60719985) (23000, 0.7628744) (23200, 0.7751014) (23400, 0.79276013) (23600, 0.5995053) (23800, 0.60920525) (24000, 0.79524785) (24200, 0.8686073) (24400, 0.67053753) (24600, 0.86897624) (24800, 0.530098) (25000, 0.98808223) (25200, 0.66511005) (25400, 0.80210364) (25600, 0.61496335) (25800, 0.7197734) (26000, 0.6306582) (26200, 0.5673961) (26400, 0.7825887) (26600, 0.46658596) (26800, 0.78488076) (27000, 0.64838743) (27200, 0.7862601) (27400, 0.83730656) (27600, 0.6311794) (27800, 0.70044917) (28000, 0.56972855) (28200, 0.5652089) (28400, 0.83283055) (28600, 0.80763096) (28800, 0.8154031) (29000, 0.58667314) (29200, 1.0039911) (29400, 0.54685885) (29600, 0.64115965) (29800, 0.82638836) (30000, 0.7565814) (30200, 0.72281563) (30400, 0.8781006) (30600, 0.7074866) (30800, 0.51842356) (31000, 0.8090357) (31200, 1.0285946) (31400, 0.6957286) (31600, 0.6890055) (31800, 0.5831901) (32000, 0.71191686) (32200, 0.66293126) (32400, 0.97838193) (32600, 0.85442805) (32800, 1.0186008) (33000, 0.6731355) (33200, 0.7920691) (33400, 0.89382666) (33600, 0.89441955) (33800, 0.875887) (34000, 0.9308016) (34200, 0.41515762) (34400, 0.7541516) (34600, 0.68967533) (34800, 0.6128123) (35000, 0.88829285) (35200, 0.9801734) (35400, 0.37671837) (35600, 0.6159856) (35800, 0.56980926) (36000, 0.7098284) (36200, 0.5036374) (36400, 0.77363306) (36600, 0.65814906) (36800, 0.6641292) (37000, 0.6302255) (37200, 0.6118248) (37400, 0.5816266) (37600, 0.60756665) (37800, 0.6900208) (38000, 0.8891732) (38200, 0.7472557) (38400, 0.6912061) (38600, 0.6355242) (38800, 0.48562765) (39000, 0.9072425) (39200, 0.87221575) (39400, 0.82227844) (39600, 0.8674716) (39800, 0.55969286) (40000, 1.0123445) (40200, 0.5727665) (40400, 0.6666588) (40600, 0.48632938) (40800, 0.44210234) (41000, 0.8067209) (41200, 0.5338333) (41400, 1.0775373) (41600, 1.0583549) (41800, 0.8582168) (42000, 0.6688322) (42200, 0.7719201)
  (42400, 0.6783194) (42600, 0.39015734) (42800, 0.5586302) (43000, 0.60920686) (43200, 0.7198567) (43400, 0.68543106) (43600, 0.88556534) (43800, 0.71035475) (44000, 0.43958923) (44200, 0.71291566) (44400, 0.61034644) (44600, 0.8237655) (44800, 0.7812962) (45000, 0.600354) (45200, 0.64789253) (45400, 0.7088817) (45600, 1.0528073) (45800, 0.6915912) (46000, 0.7195931) (46200, 0.5560597) (46400, 0.89496577) (46600, 0.8038976) (46800, 0.75193614) (47000, 0.7810347) (47200, 1.0323086) (47400, 0.6744882) (47600, 0.65002835) (47800, 0.55864114) (48000, 0.5548241) (48200, 0.79452276) (48400, 0.46607953) (48600, 0.80551004) (48800, 0.9458439) (49000, 0.727809) (49200, 0.8037875) (49400, 0.82720166) (49600, 0.5427888) (49800, 0.5866451)
@@ -257,11 +261,11 @@ There is another subtlety we need to take care of. If we are in a setting with $
 \label{fig:ql-predators}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[ht!]
  \centering
 
 \begin{tikzpicture}
-\begin{axis}[height=12cm, width=12cm, grid=major, xlabel=Number of episodes, ylabel=Average score, xmin=0, xmax=100000, ymin=-8, ymax=3.5, legend pos=south east]
+\begin{axis}[height=11cm, width=11cm, grid=major, xlabel=Number of episodes, ylabel=Average score, xmin=0, xmax=100000, ymin=-8, ymax=3.5, legend pos=south east]
 \addplot[blue] coordinates {
 (0, 0.16920511) (400, 1.9766676) (800, 2.088796) (1200, 2.1020548) (1600, 1.9827542) (2000, 2.2746904) (2400, 2.271511) (2800, 2.1979728) (3200, 2.0247173) (3600, 2.7095475) (4000, 2.4572377) (4400, 2.4617016) (4800, 2.1537654) (5200, 2.462025) (5600, 2.3549528) (6000, 2.3013642) (6400, 1.8053299) (6800, 2.0858593) (7200, 2.4677732) (7600, 2.1222756) (8000, 2.5114472) (8400, 2.4997025) (8800, 1.7545398) (9200, 2.0200927) (9600, 2.1909037) (10000, 2.303992) (10400, 2.2787614) (10800, 2.4820445) (11200, 2.135238) (11600, 2.8599105) (12000, 1.786717) (12400, 2.6064813) (12800, 2.3883212) (13200, 2.295629) (13600, 2.372367) (14000, 2.2485588) (14400, 2.5293941) (14800, 2.4854167) (15200, 2.0863836) (15600, 2.3460336) (16000, 1.9097147) (16400, 1.9735503) (16800, 1.8973777) (17200, 1.7260906) (17600, 1.9099077) (18000, 1.5874639) (18400, 2.5311701) (18800, 2.3355916) (19200, 2.2218578) (19600, 2.6236167) (20000, 2.4319654) (20400, 2.5308275) (20800, 2.4686258) (21200, 2.551325) (21600, 1.8995049) (22000, 2.0329206) (22400, 2.5533679) (22800, 2.2071474) (23200, 2.3356333) (23600, 2.4390283) (24000, 2.306083) (24400, 2.4430234) (24800, 1.965725) (25200, 2.2249932) (25600, 2.385394) (26000, 2.3412435) (26400, 2.744463) (26800, 2.0771594) (27200, 2.6189387) (27600, 2.233161) (28000, 2.8614166) (28400, 1.9849805) (28800, 2.5947475) (29200, 2.5378191) (29600, 2.0148432) (30000, 2.4301813) (30400, 2.4392827) (30800, 2.277186) (31200, 2.320915) (31600, 1.9826343) (32000, 2.1308858) (32400, 2.0470283) (32800, 2.5138204) (33200, 3.009943) (33600, 2.3319843) (34000, 2.901621) (34400, 2.727213) (34800, 2.5457182) (35200, 2.429074) (35600, 2.3803408) (36000, 2.4088204) (36400, 2.5778337) (36800, 2.2299862) (37200, 2.2097008) (37600, 2.6659727) (38000, 2.5446177) (38400, 2.9337063) (38800, 1.8514656) (39200, 2.4288664) (39600, 2.1419418) (40000, 2.1943822) (40400, 2.2137606) (40800, 3.0630212) (41200, 2.2824235) (41600, 2.4218829) (42000, 2.2426906) (42400, 1.8541353) (42800, 2.3236456) (43200, 2.470672) (43600, 2.479773) (44000, 2.0153997) (44400, 2.3882236) (44800, 1.9066124) (45200, 2.342893) (45600, 2.4584577) (46000, 2.251821) (46400, 2.434686) (46800, 1.7861954) (47200, 2.5584447) (47600, 2.1367776) (48000, 2.0562708) (48400, 2.3847327) (48800, 2.6039386) (49200, 2.4999802) (49600, 2.6944718) (50000, 2.1322515) (50400, 2.642565) (50800, 2.557328) (51200, 2.3821676) (51600, 2.4263165) (52000, 2.1731539) (52400, 2.4509132) (52800, 2.27011) (53200, 2.4050765) (53600, 1.9359404) (54000, 2.465085) (54400, 2.4517252) (54800, 2.6613038) (55200, 2.290509) (55600, 2.1615014) (56000, 2.6704202) (56400, 2.5951486) (56800, 2.042022) (57200, 2.7052) (57600, 2.3990595) (58000, 2.1095634) (58400, 2.0379348) (58800, 1.959369) (59200, 2.6249323) (59600, 2.7212129) (60000, 2.619786) (60400, 2.1776316) (60800, 2.4179704) (61200, 2.177219) (61600, 2.6713538) (62000, 1.880399) (62400, 2.2810118) (62800, 2.640202) (63200, 2.019245) (63600, 2.3428402) (64000, 2.2439876) (64400, 2.5744388) (64800, 2.9073517) (65200, 2.3737066) (65600, 2.6170864) (66000, 2.25619) (66400, 1.8965149) (66800, 2.2518854) (67200, 2.8917902) (67600, 2.238103) (68000, 2.2819839) (68400, 2.4149046) (68800, 2.4882522) (69200, 2.3462572) (69600, 2.2530575) (70000, 2.2525158) (70400, 2.3745947) (70800, 2.2064626) (71200, 2.5819988) (71600, 2.5279503) (72000, 2.3594916) (72400, 2.5993032) (72800, 2.1990664) (73200, 2.224335) (73600, 2.4447246) (74000, 2.4410434) (74400, 2.3576746) (74800, 2.4187772) (75200, 2.4143047) (75600, 2.3830922) (76000, 2.7061234) (76400, 2.8033917) (76800, 2.628542) (77200, 2.4479291) (77600, 1.7076519) (78000, 2.784805) (78400, 2.8030474) (78800, 2.339035) (79200, 2.2035894) (79600, 2.210538) (80000, 2.5209954) (80400, 2.3164468) (80800, 2.2517667) (81200, 2.2478647) (81600, 2.0239086) (82000, 2.752134) (82400, 2.2042196) (82800, 2.6103213) (83200, 2.1108556) (83600, 2.479548) (84000, 2.4191852) (84400, 2.4476902) (84800, 2.392043) (85200, 2.2877505) (85600, 1.890017) (86000, 2.1295006) (86400, 2.6127307) (86800, 2.0891192) (87200, 2.3774054) (87600, 2.
 4725196) (88000, 1.5224049) (88400, 2.4465303) (88800, 2.582193) (89200, 2.207094) (89600, 3.2222357) (90000, 2.1115313) (90400, 2.203459) (90800, 2.5811884) (91200, 1.8882127) (91600, 2.7580304) (92000, 2.553495) (92400, 1.9486139) (92800, 2.037308) (93200, 2.5639787) (93600, 2.22401) (94000, 2.339635) (94400, 2.5742283) (94800, 2.2082024) (95200, 2.2437906) (95600, 1.794068) (96000, 2.3948383) (96400, 1.937189) (96800, 2.3859758) (97200, 2.323481) (97600, 2.6361818) (98000, 2.1191392) (98400, 2.0511239) (98800, 1.9735801) (99200, 1.9870577) (99600, 2.1110122)
@@ -290,9 +294,11 @@ There is another subtlety we need to take care of. If we are in a setting with $
 \end{axis}
 \end{tikzpicture}
 
-\caption{Performance of the GIGA-WoLF algorithm for different numbers of predators. In all cases, the parameters used were: $\alpha = 0.9, \gamma = 0.9, \epsilon = 0.1, Q(s, a) = 15$.}
+\caption{Performance of the GIGA-WoLF algorithm for different numbers of predators. In all cases, the parameters used were: $\gamma = 0.9, \eta = 0.1$.}
 \label{fig:wolf-predators}
 \end{figure}
+
+\newpage
 
 \section{Discussion}
 
@@ -300,13 +306,15 @@ There is another subtlety we need to take care of. If we are in a setting with $
 
 We will first comment the different behaviours of the algorithm when using different parameter settings on the ``1 predator versus 1 prey'' scenario. Our results are summarized in figure \ref{fig:ql-params}. We will also compare these results with those we obtained for the stardard Q-Learning algorithm we implemented for the previous assignment.
 
-First of all, we can see how different values of $\gamma$ yield very different solutions. With $\gamma = 0$ the agents do not look into the future at all and the performance is the worst of all: around 0.2 ($T \approx 38.1 $). This is the expected result. However, and more surprisingly, intermediate values of $\gamma$ seem to perform better than high ones: we got averages scores of around 1.25 ($T \approx 20.7 $) for $\gamma = 0.3$ and $\gamma = 0.6$ but scores around 0.75 ($T \approx 25.6 $) for $\gamma = 0.9$. These results are different from those we got for the standard Q-Learning version, where we found that higher values of $\gamma$ always improved the found solutions.
+First of all, we can see how different values of $\gamma$ yield very different solutions. With $\gamma = 0$ the agents do not look into the future at all and the performance is the worst of all: around 0.2 ($T \approx 38.1 $). This is the expected result. However, and more surprisingly, intermediate values of $\gamma$ seem to perform better than high ones: we got averages scores of around 1.25 ($T \approx 20.7 $) for $\gamma = 0.3$ and $\gamma = 0.6$ but scores around 0.75 ($T \approx 25.6 $) for $\gamma = 0.9$. These results are different from those we got for the standard Q-Learning version, where we found that higher values of $\gamma$ always improved the solutions found.
 
-The behaviour shown for different values of the parameter $\alpha$ is similar to the previous case. Extreme values give the worst results, while more intermediate ones perform better. We obtained scores around 0.6 ($ T \approx 27.7 $) for $\alpha = 0.1$ and $\alpha = 1$, and scores around 1.75 ($ T \approx 17.5 $) for $\alpha = 0.4$ and $\alpha = 0.7$. It is also worth mentioning how the algorithm experiences a sudden improvement on performance at a given threshold for the number of episodes generated. The location of this point seems to depend on the choice of the parameter itself. This can be observed across most cases we studied in figure \ref{fig:ql-params}. Finally, these results are different from those we got for the standard Q-Learning version, where we found that higher values of $\alpha$ always improved the found solutions.
+The behaviour shown for different values of the parameter $\alpha$ is similar to the previous case. Extreme values give the worst results, while more intermediate ones perform better. We obtained scores around 0.6 ($ T \approx 27.7 $) for $\alpha = 0.1$ and $\alpha = 1$, and scores around 1.75 ($ T \approx 17.5 $) for $\alpha = 0.4$ and $\alpha = 0.7$. It is also worth mentioning how the algorithm experiences a sudden improvement on performance at a given threshold for the number of episodes generated. The location of this point seems to depend on the choice of the parameter itself. This can be observed across most cases we studied in figure \ref{fig:ql-params}. Finally, these results are different from those we got for the standard Q-Learning version, where we found that higher values of $\alpha$ always improved the solutions found.
 
-...
+Different values of the parameter $\epsilon$ also show similar behaviours to the previous cases. The best results are obtained with a completely greedy policy ($\epsilon = 0$), which obtains a remarkably good score, around 2 ($T = 16.3 $). This case also looks the most stable, since less noice is noticeable in the plot when compared to the rest of cases. Higher values of $\epsilon$ yield worse results, with $\epsilon = 1$ performing slightly better than the rest. These results are completely opposite to those we got for the standard Q-Learning version, where we found that higher values of $\epsilon$ always improved the solutions found.
 
-We will now comment on the performance of the algorithm when considering different numbers of predators while keeping the rest of the parameters fixed. Our results are summarized in figure \ref{fig:ql-predators}.
+Finally, 
+
+We will now comment on the performance of the algorithm when considering different numbers of predators, while keeping the rest of the parameters fixed. Our results are summarized in figure \ref{fig:ql-predators}. Firstly, it is surprising that the solutions become worse the higher the number of predators is. We would expect that having more predators should help in the task of catching the prey more quickly, since the predators could coordinate to surround the prey. For 1 and 2 predators, the solutions found by the algorithm manage to catch the prey quicker on average ($ T \approx 22.9 $) than the predators take to collide into each other. This is not the case for 3 (final score around -1, $ T \approx 22.9 $) and 4 predators (final score around -5, $ T \approx 7.6 $). The more predators we add, the sooner they will collide into each other. This suggests that the state-space is too large for the algorithm to find good solutions to the problem in those cases in a reasonable amount of time. We can see how the performance steadily and slowly increases for the cases of 3 and 4 predators, but we were not able to generate more episodes for these due to the lack of memory of the computing system we used to perform our experiments.
 
 \subsection{Minimax Q-Learning}
 
@@ -320,22 +328,27 @@ Something here...
 
 Something here...
 
+\begin{itemize}
+ \item Important conclusion here...
+ \item Another important conclusion here...
+\end{itemize}
+
 \thebibliography{}
 %\url{http://www.wikibooks.org}
 %\href{http://www.wikibooks.org}{Wikibooks home}
 \bibitem{Assignment}
   \emph{Assignment}.\\
-  Assignments Autonomous Agents, D.M Roijers, September 2, 2013
+  Assignments Autonomous Agents, D.M Roijers, September 2, 2013 \\
 
 \bibitem{vlasis}  
 	\emph{Vlassis Nicos} \\
 	A Concise Introduction to Multiagent Systems and Distributed Artificial Intelligence \\
-	Morgan and Claypool Publishers, 2007 
+	Morgan and Claypool Publishers, 2007 \\
 
 \bibitem{SB}
   \emph{Sutton and Barto}.\\
   Reinforcement Learning: An Introduction, Richard S. Sutton, Andrew G Barto. \\
-  \url{http://webdocs.cs.ualberta.ca/~sutton/book/ebook/}
+  \url{http://webdocs.cs.ualberta.ca/~sutton/book/ebook/} \\
  
  \bibitem{minimax}
  Michael L. Littman \\
@@ -348,7 +361,7 @@ Something here...
  Topics in Algorithms: Combinatorial Optimization and Approximation Algorithms \\
  The Chinese University of Hong Kong \\
  Lecture 14 \\
- \url{http://appsrv.cse.cuhk.edu.hk/~chi/csc5160-2008/notes.html}
+ \url{http://appsrv.cse.cuhk.edu.hk/~chi/csc5160-2008/notes.html} \\
  
  \bibitem{GIGA-wolf}
  Michael Bowling \\
